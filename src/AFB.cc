@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: MuonTree.cc,v 1.15 2010/10/22 16:47:00 efe Exp $
+// $Id: AFB.cc,v 1.1 2010/11/04 14:47:04 efe Exp $
 //
 //
 #include <memory>
@@ -23,6 +23,9 @@ Implementation:
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/Event.h"
+
+#include "FWCore/Framework/interface/EventSetupRecord.h"
+
 #include "FWCore/Framework/interface/Run.h"
 #include "TH1.h"
 #include "TH1F.h"
@@ -114,6 +117,37 @@ Implementation:
 #include "DataFormats/Math/interface/deltaR.h"
 #include "TTree.h"
 
+//electron
+//electron
+#include "DataFormats/GsfTrackReco/interface/GsfTrack.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectron.h"
+#include "DataFormats/EgammaCandidates/interface/GsfElectronFwd.h"
+#include "DataFormats/EgammaReco/interface/ElectronSeed.h"
+#include "DataFormats/EgammaReco/interface/ElectronSeedFwd.h"
+#include "DataFormats/EgammaReco/interface/BasicCluster.h"
+#include "DataFormats/EgammaReco/interface/BasicClusterFwd.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
+
+//HFelectron
+#include "DataFormats/EgammaReco/interface/HFEMClusterShape.h"
+#include "DataFormats/EgammaReco/interface/HFEMClusterShapeAssociation.h"
+#include "RecoEgamma/EgammaHFProducers/plugins/HFRecoEcalCandidateProducer.h"
+#include "RecoEgamma/EgammaHFProducers/interface/HFRecoEcalCandidateAlgo.h"
+#include "DataFormats/EgammaReco/interface/HFEMClusterShapeFwd.h"
+#include "RecoEgamma/EgammaHFProducers/plugins/HFEMClusterProducer.h"
+#include "DataFormats/RecoCandidate/interface/RecoEcalCandidate.h"
+#include "DataFormats/RecoCandidate/interface/RecoEcalCandidateFwd.h"
+#include "DataFormats/HcalRecHit/interface/HcalRecHitCollections.h"
+#include "Geometry/CaloGeometry/interface/CaloGeometry.h"
+#include "DataFormats/EgammaReco/interface/SuperCluster.h"
+#include "DataFormats/EgammaReco/interface/SuperClusterFwd.h"
+
+#include "DataFormats/EgammaReco/interface/BasicCluster.h"
+#include "DataFormats/EgammaReco/interface/BasicClusterFwd.h"
+#include <map>
+#include "DataFormats/Common/interface/AssociationMap.h"
+
+
 class TH1F;
 class TH2F;
 class TStyle;
@@ -137,6 +171,10 @@ public:
 
   const edm::ValueMap<double>& getValueMap(const edm::Event& iEvent,edm::InputTag& inputTag);
       
+  //void produce(const edm::Handle<SuperClusterCollection>& SuperClusters,
+  //				      const HFEMClusterShapeAssociationCollection& AssocShapes,
+  //	     RecoEcalCandidateCollection& RecoECand);
+
 
 private:
   //  virtual void beginJob(const edm::EventSetup&) ;
@@ -146,6 +184,10 @@ private:
 
   bool IsMuMatchedToHLTMu ( const reco::Muon & , std::vector<reco::Particle> ,double ,double );
 
+
+
+
+
   // ----------member data ---------------------------
 
   float DeltaPhi(float phi1, float phi2);
@@ -153,9 +195,9 @@ private:
   edm::InputTag muonTag_;
   string CaloJetAlg;
   edm::InputTag  JPTAlg, JPTAlgL2L3;
-  edm::InputTag trigTag_, triggerSummaryLabel_, hltTag_;
+  edm::InputTag trigTag_, triggerSummaryLabel_, hltTag_, hltTag2_, hltTag3_;
   string muonTrig_;
-  string L3FilterName_;
+  string L3FilterName_, L3FilterName2_, L3FilterName3_;
   edm::Service<TFileService> fs;
   TTree * myTree;
   int event, run,lumi,bxnumber,realdata;
@@ -163,6 +205,10 @@ private:
   int sort_index_for_mu_tree;
   float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonE[50], RecMuonM[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50],RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50],RecMuonVx[50],RecMuonVy[50],RecMuonVz[50];
   int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50];
+
+  float RecElec_Pt[50], RecElec_Px[50], RecElec_Py[50],RecElec_Pz[50],RecElec_eta[50],RecElec_phi[50],RecElec_GsfTrk_d0[50],RecElec_dr03TkSumPt[50],RecElec_dr03EcalRecHitSumEt[50],RecElec_dr03HcalTowerSumEt[50],RecElec_scSigmaIEtaIEta[50],RecElec_deltaPhiSuperClusterTrackAtVtx[50],RecElec_deltaEtaSuperClusterTrackAtVtx[50],RecElec_hadronicOverEm[50],RecElec_gsfTrack_numberOfLostHits[50];
+  int recelec_index,RecElec_Charge[50],RecElec_IsEB[50], RecElec_IsEE[50]; 
+
   //particle information
   int par_index, mom[50], daug[50];
   float ParticlePt[50], ParticleEta[50], ParticlePhi[50], ParticlePx[50], ParticlePy[50], ParticlePz[50], ParticleE[50], ParticleM[50];
@@ -193,6 +239,8 @@ private:
   float caloMETY, pfMETY;
   float muCorrMET, muCorrSET;
 
+
+
   reco::helper::JetIDHelper *jetID;
 
 };
@@ -208,7 +256,12 @@ AFB::AFB(const edm::ParameterSet& iConfig)
   jetID = new reco::helper::JetIDHelper(iConfig.getParameter<ParameterSet>("JetIDParams"));
   triggerSummaryLabel_ = iConfig.getParameter<edm::InputTag>("triggerSummaryLabel");
   hltTag_ = iConfig.getParameter<edm::InputTag>("hltTag");
+  hltTag2_ = iConfig.getParameter<edm::InputTag>("hltTag2");
+  hltTag3_ = iConfig.getParameter<edm::InputTag>("hltTag3");
   L3FilterName_ = iConfig.getParameter<std::string>("L3FilterName");  
+  L3FilterName2_ = iConfig.getParameter<std::string>("L3FilterName2");  
+  L3FilterName3_ = iConfig.getParameter<std::string>("L3FilterName3");  
+
 }
 
 AFB::~AFB()
@@ -259,6 +312,25 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   iEvent.getByLabel("ak5PFJets","",PFjets);
   PFJetCollection::const_iterator i_jet;
    
+  //Electrons
+  edm::Handle<reco::GsfElectronCollection> elecs_h;	
+  iEvent.getByLabel("gsfElectrons",elecs_h);
+  //iEvent.getByLabel("electronCollection_",elecs_h);
+  const GsfElectronCollection* elec = elecs_h.failedToGet() ? 0 : &*elecs_h;
+
+  //HF electrons
+  edm::Handle<reco::RecoEcalCandidateCollection> hfelecs_h;	
+  iEvent.getByLabel("hfRecoEcalCandidate",hfelecs_h);
+  const RecoEcalCandidateCollection* hfelec = hfelecs_h.failedToGet() ? 0 : &*hfelecs_h;
+
+  Handle<SuperClusterCollection> SCH_h;
+  iEvent.getByLabel("hfEMClusters",SCH_h);
+  const SuperClusterCollection* SCH = SCH_h.failedToGet() ? 0 : &*SCH_h; //???
+  Handle<HFEMClusterShapeAssociationCollection> ASH_h;
+  iEvent.getByLabel("hfEMClusters",ASH_h);
+  const HFEMClusterShapeAssociationCollection* ASH = ASH_h.failedToGet() ? 0 : &*ASH_h;//??
+
+  
 
   Handle<BeamSpot> beamSpotHandle;
   if (!iEvent.getByLabel(InputTag("offlineBeamSpot"), beamSpotHandle)) {
@@ -326,7 +398,8 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if ( &toc !=0 ) {
       const trigger::Keys & k = triggerObj->filterKeys(ia);
       for (trigger::Keys::const_iterator ki = k.begin(); ki !=k.end(); ++ki ) {
-	if (name == L3FilterName_  ) { 
+	//	if (name == L3FilterName_  ) { 
+	if (name == L3FilterName_ || name == L3FilterName2_ || name == L3FilterName3_ ) { 
 	  HLTMuMatched.push_back(toc[*ki].particle());
 	  nMuHLT++;     
 	}
@@ -619,6 +692,59 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
    
   //-----------------------END MUONS--------------------------------------------------------------------------------------------------------------------
 
+//--------------------------ELECTRONS-----------------------------------------------------------------------------------------------------------------
+  for (int jj = 0; jj<50; ++jj){
+    RecElec_Pt[jj] = -99.;
+    RecElec_Px[jj] = -99.;
+    RecElec_Py[jj] = -99.;
+    RecElec_Pz[jj] = -99.;
+    RecElec_eta[jj] = -99.;
+    RecElec_phi[jj] = -99.;
+    RecElec_Charge[jj] = -99.;
+    RecElec_GsfTrk_d0[jj] = -99.;
+    RecElec_IsEB[jj] = -99.;
+    RecElec_IsEE[jj] = -99.;
+    RecElec_dr03TkSumPt[jj] = -99.;
+    RecElec_dr03EcalRecHitSumEt[jj] = -99.;
+    RecElec_dr03HcalTowerSumEt[jj] = -99.;
+    RecElec_scSigmaIEtaIEta[jj] = -99.;
+    RecElec_deltaPhiSuperClusterTrackAtVtx[jj] = -99.;
+    RecElec_deltaEtaSuperClusterTrackAtVtx[jj] = -99.;
+    RecElec_hadronicOverEm[jj] = -99.;
+    RecElec_gsfTrack_numberOfLostHits[jj] = -99.;
+
+  }
+  recelec_index = 0;
+  for(GsfElectronCollection::const_iterator el = elec->begin(); el != elec->end();  ++el) {
+	RecElec_Pt[recelec_index] = el->pt();
+        RecElec_Px[recelec_index] = el->px();
+	RecElec_Py[recelec_index] = el->py();
+	RecElec_Pz[recelec_index] = el->pz();
+	RecElec_eta[recelec_index] = el->eta();
+	RecElec_phi[recelec_index] = el->phi();	
+	RecElec_Charge[recelec_index] = el->charge();
+	RecElec_GsfTrk_d0[recelec_index] = el->gsfTrack()->d0();
+	RecElec_IsEB[recelec_index] = el->isEB();
+	RecElec_IsEE[recelec_index] = el->isEE();
+	RecElec_dr03TkSumPt[recelec_index] = el->dr03TkSumPt();
+	RecElec_dr03EcalRecHitSumEt[recelec_index] = el->dr03EcalRecHitSumEt();
+	RecElec_dr03HcalTowerSumEt[recelec_index] = el->dr03HcalTowerSumEt();
+	RecElec_scSigmaIEtaIEta[recelec_index] = el->scSigmaIEtaIEta();
+	RecElec_deltaPhiSuperClusterTrackAtVtx[recelec_index] = el->deltaPhiSuperClusterTrackAtVtx();
+	RecElec_deltaEtaSuperClusterTrackAtVtx[recelec_index] = el->deltaEtaSuperClusterTrackAtVtx();
+	RecElec_hadronicOverEm[recelec_index] = el->hadronicOverEm();
+	RecElec_gsfTrack_numberOfLostHits[recelec_index] = el->gsfTrack()->numberOfLostHits();
+        ++recelec_index; 
+  }
+
+    for(reco::RecoEcalCandidateCollection::const_iterator hfe = hfelec->begin(); hfe != hfelec->end();  ++hfe){
+      //          cout<<hfe->et()<<"  "<<hfe->px()<<"  "<<hfe->py()<<"  "<<hfe->pz()<<"  "<<hfe->energy()<<endl;
+    }
+
+
+//--------------------------END ELECTRONS-----------------------------------------------------------------------------------------------------------------
+
+
 
   //-----------------------RECO JETS--------------------------------------------------------------------------------------------------------------------
   reco_jet = 0;
@@ -723,7 +849,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   }
   //-----------------------------end of pf jets--------------------------------------------------------------------------
 
-
+  // cout<<"clusShape.e9e25()    "<<clusShape.e9e25()<<"  "<<"clusShape.eCOREe9()    "<<clusShape.eCOREe9()<<"  "<<"(clusShape.eSeL()   "<<(clusShape.eSeL()<<endl;
 
   myTree->Fill();//!!!!!!
 
@@ -772,6 +898,28 @@ void AFB::beginJob()
   
   myTree->Branch("RecMuonglmuon_charge",RecMuonglmuon_charge,"RecMuonglmuon_charge[sort_index_for_mu_tree]/I");
   myTree->Branch("hltmatchedmuon",hltmatchedmuon,"hltmatchedmuon[sort_index_for_mu_tree]/I");
+
+  myTree->Branch("recelec_index",&recelec_index,"recelec_index/I");
+  myTree->Branch("RecElec_Pt",RecElec_Pt,"RecElec_Pt[recelec_index]/F");
+  myTree->Branch("RecElec_Px",RecElec_Px,"RecElec_Px[recelec_index]/F");
+  myTree->Branch("RecElec_Py",RecElec_Py,"RecElec_Py[recelec_index]/F");
+  myTree->Branch("RecElec_Pz",RecElec_Pz,"RecElec_Pz[recelec_index]/F");
+  myTree->Branch("RecElec_eta",RecElec_eta,"RecElec_eta[recelec_index]/F");
+  myTree->Branch("RecElec_phi",RecElec_phi,"RecElec_phi[recelec_index]/F");
+  myTree->Branch("RecElec_Charge",RecElec_Charge,"RecElec_Charge[recelec_index]/I");
+  myTree->Branch("RecElec_GsfTrk_d0",RecElec_GsfTrk_d0,"RecElec_GsfTrk_d0[recelec_index]/F");
+  myTree->Branch("RecElec_IsEB",RecElec_IsEB,"RecElec_IsEB[recelec_index]/I");
+  myTree->Branch("RecElec_IsEE",RecElec_IsEE,"RecElec_IsEE[recelec_index]/I");
+  myTree->Branch("RecElec_dr03TkSumPt",RecElec_dr03TkSumPt,"RecElec_dr03TkSumPt[recelec_index]/F");
+  myTree->Branch("RecElec_dr03EcalRecHitSumEt",RecElec_dr03EcalRecHitSumEt,"RecElec_dr03EcalRecHitSumEt[recelec_index]/F");
+  myTree->Branch("RecElec_dr03HcalTowerSumEt",RecElec_dr03HcalTowerSumEt,"RecElec_dr03HcalTowerSumEt[recelec_index]/F");
+  myTree->Branch("RecElec_scSigmaIEtaIEta",RecElec_scSigmaIEtaIEta,"RecElec_scSigmaIEtaIEta[recelec_index]/F");
+  myTree->Branch("RecElec_deltaPhiSuperClusterTrackAtVtx",RecElec_deltaPhiSuperClusterTrackAtVtx,"RecElec_deltaPhiSuperClusterTrackAtVtx[recelec_index]/F");
+  myTree->Branch("RecElec_deltaEtaSuperClusterTrackAtVtx",RecElec_deltaEtaSuperClusterTrackAtVtx,"RecElec_deltaEtaSuperClusterTrackAtVtx[recelec_index]/F");
+  myTree->Branch("RecElec_hadronicOverEm",RecElec_hadronicOverEm,"RecElec_hadronicOverEm[recelec_index]/F");
+  myTree->Branch("RecElec_gsfTrack_numberOfLostHits",RecElec_gsfTrack_numberOfLostHits,"RecElec_gsfTrack_numberOfLostHits[recelec_index]/F");
+
+
 
   // myTree->Branch("id_muon",id_muon,"id_muon[sort_index_for_mu_tree]/I");
   myTree->Branch("techTrigger",techTrigger, "techTrigger[44]/I");
@@ -865,7 +1013,6 @@ void AFB::beginJob()
   myTree->Branch("vtxZerr",vtxZerr,"vtxZerr[nVertices]/F");
   myTree->Branch("vtxisValid",vtxisValid,"vtxisValid[nVertices]/I");
   myTree->Branch("vtxisFake",vtxisFake,"vtxisFake[nVertices]/I");
-
 
 }
 
