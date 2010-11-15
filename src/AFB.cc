@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: AFB.cc,v 1.2 2010/11/12 17:41:54 efe Exp $
+// $Id: AFB.cc,v 1.3 2010/11/15 12:39:56 efe Exp $
 //
 //
 #include <memory>
@@ -256,10 +256,10 @@ AFB::AFB(const edm::ParameterSet& iConfig)
   jetID = new reco::helper::JetIDHelper(iConfig.getParameter<ParameterSet>("JetIDParams"));
   triggerSummaryLabel_ = iConfig.getParameter<edm::InputTag>("triggerSummaryLabel");
   hltTag_ = iConfig.getParameter<edm::InputTag>("hltTag");
-//  hltTag2_ = iConfig.getParameter<edm::InputTag>("hltTag2");
+  hltTag2_ = iConfig.getParameter<edm::InputTag>("hltTag2");
   hltTag3_ = iConfig.getParameter<edm::InputTag>("hltTag3");
   L3FilterName_ = iConfig.getParameter<std::string>("L3FilterName");  
-//  L3FilterName2_ = iConfig.getParameter<std::string>("L3FilterName2");  
+  L3FilterName2_ = iConfig.getParameter<std::string>("L3FilterName2");  
   L3FilterName3_ = iConfig.getParameter<std::string>("L3FilterName3");  
 
 }
@@ -411,8 +411,8 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       const trigger::Keys & k = triggerObj->filterKeys(ia);
       for (trigger::Keys::const_iterator ki = k.begin(); ki !=k.end(); ++ki ) {
 	//	if (name == L3FilterName_  ) { 
-	if ( (run <= 146111 && name == L3FilterName_) || ( run >=147196 && name == L3FilterName3_) ) { 
-	  cout<<name << "=?" << L3FilterName_<<"  "<<L3FilterName3_<<endl;
+	if ( (run <= 146111 && name == L3FilterName_) || (run >=147196 && run <148108 && name == L3FilterName2_) || ( run >=148108 && name == L3FilterName3_) ) { 
+	  cout<<name << "=?" << L3FilterName_<<"  "<<L3FilterName2_<<"   "<<L3FilterName3_<<endl;
 	  HLTMuMatched.push_back(toc[*ki].particle());
 	  nMuHLT++;     
 	}
