@@ -20,7 +20,7 @@ process.source = cms.Source("PoolSource",
 #'/store/data/Run2010A/Mu/RECO/Jul16thReReco-v1/0049/7E1C8196-2691-DF11-8CE1-002618943925.root'
 #'/store/data/Run2010A/Mu/RECO/v4/000/141/961/90CA5CBA-CF9B-DF11-A2D5-000423D9A212.root',
 #        '/store/data/Run2010A/Mu/RECO/v4/000/141/961/8464C5BE-CF9B-DF11-8A93-0030487CBD0A.root',
-#'/store/data/Run2010B/Mu/RECO/PromptReco-v2/000/148/029/F45C8B32-62DA-DF11-B00D-001D09F282F5.root',
+'/store/data/Run2010B/Mu/RECO/PromptReco-v2/000/148/029/F45C8B32-62DA-DF11-B00D-001D09F282F5.root',
 # '/store/data/Run2010B/Mu/AOD/PromptReco-v2/000/148/029/FC072AA6-65DA-DF11-B79C-001D09F253C0.root',
 #        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/148/029/F88601B1-6CDA-DF11-BC5C-0030487A3C9A.root',
 #'/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/711/12D053B9-8DE7-DF11-8390-000423D94E70.root',
@@ -32,10 +32,10 @@ process.source = cms.Source("PoolSource",
 #        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/446/1A1521D7-6AE6-DF11-95C8-0030487CD840.root',
 #        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/D40D99D9-42E6-DF11-B429-0030487CD77E.root',
 #        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/D0C10A9A-51E6-DF11-9821-0030487CD7C6.root',
-        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/A05625F6-52E6-DF11-AD7F-0030487C7828.root',
-        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/9E477415-55E6-DF11-B6C2-0030487CD7CA.root',
-        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/9CFD7152-57E6-DF11-9626-0030487C778E.root',
-        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/8448E1F5-52E6-DF11-8CBD-0030487CAEAC.root',
+#        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/A05625F6-52E6-DF11-AD7F-0030487C7828.root',
+#        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/9E477415-55E6-DF11-B6C2-0030487CD7CA.root',
+#        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/9CFD7152-57E6-DF11-9626-0030487C778E.root',
+#        '/store/data/Run2010B/Electron/RECO/PromptReco-v2/000/149/442/8448E1F5-52E6-DF11-8CBD-0030487CAEAC.root',
 
     )
 )
