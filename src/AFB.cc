@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: AFB.cc,v 1.1 2010/11/04 14:47:04 efe Exp $
+// $Id: AFB.cc,v 1.2 2010/11/12 17:41:54 efe Exp $
 //
 //
 #include <memory>
@@ -256,10 +256,10 @@ AFB::AFB(const edm::ParameterSet& iConfig)
   jetID = new reco::helper::JetIDHelper(iConfig.getParameter<ParameterSet>("JetIDParams"));
   triggerSummaryLabel_ = iConfig.getParameter<edm::InputTag>("triggerSummaryLabel");
   hltTag_ = iConfig.getParameter<edm::InputTag>("hltTag");
-  hltTag2_ = iConfig.getParameter<edm::InputTag>("hltTag2");
+//  hltTag2_ = iConfig.getParameter<edm::InputTag>("hltTag2");
   hltTag3_ = iConfig.getParameter<edm::InputTag>("hltTag3");
   L3FilterName_ = iConfig.getParameter<std::string>("L3FilterName");  
-  L3FilterName2_ = iConfig.getParameter<std::string>("L3FilterName2");  
+//  L3FilterName2_ = iConfig.getParameter<std::string>("L3FilterName2");  
   L3FilterName3_ = iConfig.getParameter<std::string>("L3FilterName3");  
 
 }
@@ -378,15 +378,27 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   //  int itrig1 = triggerNames.triggerIndex(muonTrig_);
   //  if (triggerResults->accept(itrig1)) hlt_trigger_fired = 1;
 
+
+  for (int ee = 0;ee<44;ee++){ 
+    techTrigger[ee] = tWord.at(ee);
+  }
+
+  event = iEvent.id().event();
+  run = iEvent.id().run();
+  lumi = iEvent.luminosityBlock();
+  bxnumber = iEvent.bunchCrossing();
+  realdata = iEvent.isRealData();
+
   //---------------------For trigger matching-----------------------------------
   
   Handle<trigger::TriggerEvent> triggerObj;
-  iEvent.getByLabel(triggerSummaryLabel_,triggerObj);
+  iEvent.getByLabel(triggerSummaryLabel_,triggerObj); 
   const trigger::TriggerObjectCollection & toc(triggerObj->getObjects());
   size_t nMuHLT =0;
   std::vector<reco::Particle>  HLTMuMatched; 
   for ( size_t ia = 0; ia < triggerObj->sizeFilters(); ++ ia) {
     std::string fullname = triggerObj->filterTag(ia).encode();
+    //   cout<<"full name:   "<<fullname<<endl;	
     std::string name;
     size_t p = fullname.find_first_of(':');
     if ( p != std::string::npos) {
@@ -399,7 +411,8 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       const trigger::Keys & k = triggerObj->filterKeys(ia);
       for (trigger::Keys::const_iterator ki = k.begin(); ki !=k.end(); ++ki ) {
 	//	if (name == L3FilterName_  ) { 
-	if (name == L3FilterName_ || name == L3FilterName2_ || name == L3FilterName3_ ) { 
+	if ( (run <= 146111 && name == L3FilterName_) || ( run >=147196 && name == L3FilterName3_) ) { 
+	  cout<<name << "=?" << L3FilterName_<<"  "<<L3FilterName3_<<endl;
 	  HLTMuMatched.push_back(toc[*ki].particle());
 	  nMuHLT++;     
 	}
@@ -408,15 +421,8 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   }
 
   //----------------------------------------------------------------------------
-  for (int ee = 0;ee<44;ee++){ 
-    techTrigger[ee] = tWord.at(ee);
-  }
 
-  event = iEvent.id().event();
-  run = iEvent.id().run();
-  lumi = iEvent.luminosityBlock();
-  bxnumber = iEvent.bunchCrossing();
-  realdata = iEvent.isRealData();
+
   //--------------------met-------------------------------------------------
   caloMET = (caloMEThandle->front()).et();
   caloSET = (caloMEThandle->front()).sumEt();
