@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: AFB.cc,v 1.3 2010/11/15 12:39:56 efe Exp $
+// $Id: AFB.cc,v 1.4 2010/11/15 14:12:11 efe Exp $
 //
 //
 #include <memory>
@@ -533,6 +533,34 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   int glmuon_muonHits[50] = {};
   int glmuon_charge[50] = {};
   int hlt_tmp[50] = {};
+  for (int gg = 0;gg<50;gg++){
+    rec_eta_muon[gg] = 0;
+    rec_phi_muon[gg] = 0;
+    rec_pt_muon[gg] = 0;
+    rec_px_muon[gg] = 0;
+    rec_py_muon[gg] = 0;
+    rec_pz_muon[gg] = 0;
+    rec_vx_muon[gg] = 0;
+    rec_vy_muon[gg] = 0;
+    rec_vz_muon[gg] = 0;
+    rec_e_muon[gg] = 0;
+    rec_m_muon[gg] = 0;
+    rec_n_used_sta[gg] = 0;
+    rec_typeGlobal_muon[gg] = 0;
+    rec_typeTracker_muon[gg] = 0;
+    rec_typeStandAlone_muon[gg] = 0;
+    rec_iso_sumpt[gg] = 0;
+    rec_iso_relative[gg] = 0;
+    rec_iso_CalComb[gg] = 0;
+    glmuon_dxy[gg] = 0;
+    glmuon_dz[gg] = 0;
+    glmuon_normalizedChi2[gg] = 0;
+    glmuon_trackerHits[gg] = 0;
+    tkmuon_pixelhits[gg] = 0;
+    glmuon_muonHits[gg] = 0;
+    glmuon_charge[gg] = 0;
+    hlt_tmp[gg] = 0;   
+  }
   MuonCollection::const_iterator muon;
   std::vector<reco::Muon>  highPtGlbMuons; 
   for (unsigned int i=0; i<muons->size(); i++ ){	

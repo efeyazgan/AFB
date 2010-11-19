@@ -22,6 +22,8 @@
 #include "TLine.h"
 #include "TEllipse.h"
 #include "TMath.h"
+#include "TMatrixD.h"
+#include "TMatrixDBase.h"
 #include "TLatex.h"
 using namespace std;
 void tree1r()
@@ -36,21 +38,21 @@ void tree1r()
 
 
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@final set 198.1 nb-1 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  
+  /*
     myTree.Add("/data1/efe/ntuples/7TeV/june14_firstbunch_Zs_monday_wpixandvtx.root");
     myTree.Add("/data1/efe/ntuples/7TeV/135149_monday_wpixandvtx.root");
     myTree.Add("/data1/efe/ntuples/7TeV/muons_promptreco.root");
     myTree.Add("/data1/efe/ntuples/7TeV/muons_july_rereco.root");
     myTree.Add("/data1/efe/ntuples/7TeV/muons_july_rereco_140126_for_missing_event.root");
-  
+  */
   //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   //-------------------rest-----------------------------------------------------------------
-  
+  /*
     myTree.Add("/data1/efe/ntuples/7TeV/ZASYM/new_wjson_combined_updated.root");
     //myTree.Add("/data2/efe/ntuples/aug23_142928_143179.root");
     myTree.Add("/data2/efe/ntuples/new_wjson_combined_updated_NEW_142928_143336.root");
     myTree.Add("/data2/efe/ntuples/muons_143337_144114_jsonv1.root");
-  
+  */
   //----------------------------------------------------------------------------------------
 
   //@@@@@@@@ 2010B @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -66,6 +68,16 @@ void tree1r()
   //  myTree.Add("/data2/efe/ntuples/ttbar_madgraph_Spring10_START3X_V26_S09_v1.root");
   //--------------------------------------------------------------------------------------
 
+
+  //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%3_8_3%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  //data
+  /*
+  myTree.Add("/data2/efe/ntuples/383/minbias_sept17.root");
+  myTree.Add("/data2/efe/ntuples/383/mu_sept17.root");
+  myTree.Add("/data2/efe/ntuples/383/2010B_sept17.root");
+  */
+  myTree.Add("/data2/efe/ntuples/383/DY_powheg.root");
+  //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   //myTree.Add("/data2/efe/pythia.root");
   //myTree.Add("/data1/efe/ntuples/7TeV/zmmpowheg_qedfsr_off.root"); 
   //myTree.Add("/data1/efe/ntuples/7TeV/Aug5_muons_140182_141961.root"); 
@@ -201,10 +213,14 @@ void tree1r()
 
   TFile *theFile = new TFile("Muon_out.root","RECREATE");
   theFile->cd();
-  
+  /*  
   float xAxis_AFB[15] = {40,70,78,86,88,90,92,94,100,105,110,140,200,300,600}; 
   float xAxis_AFB_TOPLOT[14] = {55,74,82,87,89,91,93,97,102.5,107.5,125,170,250,450}; 
-  
+  */
+
+  float xAxis_AFB[10] = {40,60,80,85,89,93,97,102,120,140}; 
+  float xAxis_AFB_TOPLOT[9] = {50,70,82.5,87,91,95,99.5,111,130}; 
+
   float xAxis_AFB5[6] = {40,70,85,95,110,140}; 
   float xAxis_AFB5_TOPLOT[5] = {55,77.5,90,102.5,125}; 
 
@@ -222,11 +238,18 @@ void tree1r()
   }
 
   TH1F *h_MZ = new TH1F("h_MZ","M(Z)#rightarrow #mu#mu",90, 20,160 );
+  TH1F *h_MZ__RECO = new TH1F("h_MZ__RECO","M(Z)#rightarrow #mu#mu",90, 20,160 );
+
   TH1F *h_costhetaCSreco = new TH1F("h_costhetaCSreco","",6,-1.,1.);
   TH1F *h_costhetaCSreco_morebins = new TH1F("h_costhetaCSreco_morebins","",24,-1.,1.);
   TH1F *h_costhetaCSreco_y_gt_1 = new TH1F("h_costhetaCSreco_y_gt_1","",6,-1.,1.);
   TH1F *h_costhetaCSreco_y_lt_1 = new TH1F("h_costhetaCSreco_y_lt_1","",6,-1.,1.);
+
   TH1F *h_gen_costhetaCSreco = new TH1F("h_gen_costhetaCSreco","",6,-1.,1.);
+  TH1F *h_costhetaCSreco__RECO = new TH1F("h_costhetaCSreco__RECO","",6,-1.,1.);
+
+
+
   TH1F *h_gen_eta3_costhetaCSreco = new TH1F("h_gen_eta3_costhetaCSreco","",6,-1.,1.);
   TH1F *h_gen_costhetaCSreco_y_gt_1 = new TH1F("h_gen_costhetaCSreco_y_gt_1","",6,-1.,1.);
   TH1F *h_gen_costhetaCSreco_y_lt_1 = new TH1F("h_gen_costhetaCSreco_y_lt_1","",6,-1.,1.);
@@ -406,6 +429,17 @@ void tree1r()
   TH2F *h_ptz_eta_pfjet_leading = new TH2F("h_ptz_eta_pfjet_leading","",40,0,200,30,-3,3);
   TProfile *h_eta_mass = new TProfile("h_eta_mass","",10,-2,2);
 
+  TH1F *h_dr_gr = new TH1F("h_dr_gr","",100,0,2);
+
+  TProfile2D *h_FF = new TProfile2D("h_FF","",9,-0.5,8.5,9,-0.5,8.5,0,40);
+  TProfile2D *h_FB = new TProfile2D("h_FB","",9,-0.5,8.5,9,-0.5,8.5,0,40);
+  TProfile2D *h_BF = new TProfile2D("h_BF","",9,-0.5,8.5,9,-0.5,8.5,0,40);
+  TProfile2D *h_BB = new TProfile2D("h_BB","",9,-0.5,8.5,9,-0.5,8.5,0,40);
+
+  TProfile2D *h_FF_test = new TProfile2D("h_FF_test","",10,-0.5,8.5,10,-0.5,8.5,0,40);
+
+  TH2F *h_mzmz = new TH2F("h_mzmz","",10,40,140,10,40,140);
+
   float jetscale = 0.1;
   float jetscale_jpt = 0.05;
   float jetetascale =  0.02;
@@ -427,8 +461,14 @@ void tree1r()
   float AFB_Bbin2 = 0;
   float AFB_Fbin3 = 0;
   float AFB_Bbin3 = 0;
+
+
+
+
+
   float AFB_Fbin[30] = {};
   float AFB_Bbin[30] = {};
+
   float AFB_Fbin5[6] = {};
   float AFB_Bbin5[6] = {};
   float AFB_Fbin8[9] = {};
@@ -437,7 +477,7 @@ void tree1r()
   int comparison_count = 0;
 
   Int_t nevent = myTree.GetEntries();
-  //nevent = 1000;
+  //nevent = 50;
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);      
@@ -480,7 +520,7 @@ void tree1r()
       if (ParticleStatus[j] != 3) continue;
       if (abs(ParticleId[j]) != 13) continue;
       //    if (fabs(ParticleEta[j]) > 2.1) continue;
-      if (ParticlePt[j] < 20.) continue;
+      //if (ParticlePt[j] < 20.) continue;
       parton_pt[parpar] = ParticlePt[j];
       parton_eta[parpar] = ParticleEta[j];
       parton_phi[parpar] = ParticlePhi[j];
@@ -490,29 +530,38 @@ void tree1r()
       parton_pz[parpar] = ParticlePz[j];
       parton_m[parpar] = ParticleM[j];
       parton_e[parpar] = ParticleE[j];
-      parton_charge[parpar] = ParticleId[j]/abs(ParticleId[j]);
+      parton_charge[parpar] = -ParticleId[j]/abs(ParticleId[j]);//because mu- is = 13 not -13
       ++parpar;
     }
 
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@ Z Mass at parton level @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    if (!realdata && parpar!=2) continue;
+    if (sort_index_for_mu_tree < 2) continue;
+
+
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@ Z at the parton level @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     float MZ = 0;
+    float gen_sab = 1./sqrt(2.);
+    float gen_costhetaCSreco = -9999;
+    float gen_Qreco = -9999;
+    float gen_QZreco = -9999;
+    float gen_QTreco = -9999;
+    float gen_P1preco = -9999;
+    float gen_P2preco = -9999;
+    float gen_P1mreco = -9999;
+    float gen_P2mreco = -9999;
     float p1dotp2_b = parton_px[0]*parton_px[1]+parton_py[0]*parton_py[1]+parton_pz[0]*parton_pz[1];
     MZ = parton_m[0]+parton_m[1]+2*(parton_e[0]*parton_e[1]-p1dotp2_b);
     if (MZ < 0.) MZ = -1.*sqrt(fabs(MZ));
     if (MZ > 0.) MZ = sqrt(MZ);
-    if (parpar > 1){ 
-      if (MZ > 40. && MZ <= 140.){
+    /*
+    if (parton_pt[0] < 20.) continue;
+    if (parton_pt[1] < 20.) continue;
+    if (fabs(parton_eta[0]) > 2.1) continue;
+    if (fabs(parton_eta[1]) > 2.1) continue;
+    */
+    if (MZ > 40. && MZ < 140.){
 	h_MZ->Fill(MZ);
-	float gen_sab = 1./sqrt(2.);
-	float gen_costhetaCSreco = -9999;
-	float gen_Qreco = -9999;
-	float gen_QZreco = -9999;
-	float gen_QTreco = -9999;
-	float gen_P1preco = -9999;
-	float gen_P2preco = -9999;
-	float gen_P1mreco = -9999;
-	float gen_P2mreco = -9999;
-	//@@@@@@@gen costheta*@@@@@@@@@@@@@@@@@@@@
+
 	gen_Qreco = MZ;
 	gen_QTreco = sqrt(pow((parton_px[0]+parton_px[1]),2)+pow((parton_py[0]+parton_py[1]),2));
 	if (parton_charge[0] == -1){ 
@@ -530,17 +579,158 @@ void tree1r()
 	gen_QZreco = parton_pz[0]+parton_pz[1];
 	gen_costhetaCSreco = (2/(gen_Qreco*sqrt(gen_Qreco*gen_Qreco+gen_QTreco*gen_QTreco)))*(gen_P1preco*gen_P2mreco-gen_P1mreco*gen_P2preco);
 	if (gen_QZreco < 0.) gen_costhetaCSreco = -gen_costhetaCSreco;
-	if (fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1) h_gen_costhetaCSreco->Fill(gen_costhetaCSreco);
+	h_gen_costhetaCSreco->Fill(gen_costhetaCSreco);
 	if (fabs(parton_eta[0]) < 3. && fabs(parton_eta[1]) < 3.) h_gen_eta3_costhetaCSreco->Fill(gen_costhetaCSreco);
 	float gen_rap = 0.5*log((parton_e[0]+parton_e[1]+parton_pz[0]+parton_pz[1])/(parton_e[0]+parton_e[1]-parton_pz[0]-parton_pz[1]));
 	if (fabs(gen_rap) > 1.0) h_gen_costhetaCSreco_y_gt_1->Fill(gen_costhetaCSreco); 
 	if (fabs(gen_rap) < 1.0) h_gen_costhetaCSreco_y_lt_1->Fill(gen_costhetaCSreco); 
 	h_etadimuon_gen->Fill(gen_rap);
+
 	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@	  
       }
-    }
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      
+      //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+      //@@@@@@@@@@@@@@@@@@@@@@@@@@Z at reco level@@@@@@@@@@@@@@@@@@@
+      //      if (sort_index_for_mu_tree !=2) continue;
+      float dr_gr = - 9999.;
+      int check_dr = 0;
+      if (TMath::Max(parton_pt[0],parton_pt[1]) == parton_pt[0]){ 
+	dr_gr = DeltaR(parton_eta[0],RecMuonEta[0],parton_phi[0],RecMuonPhi[0]);
+	if (dr_gr < 0.4) check_dr++; 
+	dr_gr = DeltaR(parton_eta[1],RecMuonEta[1],parton_phi[1],RecMuonPhi[1]);
+	if (dr_gr < 0.4) check_dr++; 
+	h_dr_gr->Fill(dr_gr);
+      }
+      if (TMath::Max(parton_pt[0],parton_pt[1]) == parton_pt[1]){
+	dr_gr = DeltaR(parton_eta[1],RecMuonEta[0],parton_phi[1],RecMuonPhi[0]);
+	if (dr_gr < 0.4) check_dr++; 
+	dr_gr = DeltaR(parton_eta[0],RecMuonEta[1],parton_phi[0],RecMuonPhi[1]);
+	if (dr_gr < 0.4) check_dr++; 
+	h_dr_gr->Fill(dr_gr);
+      }
+     
+      /*
+      for (int yy = 0;yy<sort_index_for_mu_tree;yy++){
+	for (int yy_2 = 0;yy_2<parpar;yy_2++){
+	  dr_gr = DeltaR(parton_eta[yy_2],RecMuonEta[yy],parton_phi[yy_2],RecMuonPhi[yy]);
+	  h_dr_gr->Fill(dr_gr);
+	}
+      }
+      */
+
+      float MZ__RECO = 0;
+      float sab__RECO = 1./sqrt(2.);
+      float costhetaCSreco__RECO = -9999;
+      float Qreco__RECO = -9999;
+      float QZreco__RECO = -9999;
+      float QTreco__RECO = -9999;
+      float P1preco__RECO = -9999;
+      float P2preco__RECO = -9999;
+      float P1mreco__RECO = -9999;
+      float P2mreco__RECO = -9999;
+      float p1dotp2__RECO = RecMuonPx[0]*RecMuonPx[1]+RecMuonPy[0]*RecMuonPy[1]+RecMuonPz[0]*RecMuonPz[1];
+      MZ__RECO  = RecMuonM[0]+RecMuonM[1]+2*(RecMuonE[0]*RecMuonE[1]-p1dotp2__RECO);
+      //    if (event != 72675) continue;
+      /*
+      cout<<"-----------------------"<<endl;
+      cout<<"event  "<<event<<endl;
+      cout<<"gen eta:    "<<parton_eta[0]<<"   "<<parton_eta[1]<<endl;
+      cout<<"reco eta:   "<<RecMuonEta[0]<<"   "<<RecMuonEta[1]<<endl;
+      cout<<"gen pt:    "<<parton_pt[0]<<"   "<<parton_pt[1]<<endl;
+      cout<<"reco pt:   "<<RecMuonPt[0]<<"   "<<RecMuonPt[1]<<endl;      
+      cout<<"number of reco muons:  "<<sort_index_for_mu_tree<<endl;
+      cout<<"for mass reco:  "<<p1dotp2__RECO<<"  "<<MZ__RECO<<endl;
+      */
+      if (MZ__RECO < 0.) MZ__RECO = -1.*sqrt(fabs(MZ__RECO));
+      if (MZ__RECO > 0.) MZ__RECO = sqrt(MZ__RECO);
+
+      if (MZ__RECO > 40. && MZ__RECO < 140.){
+	h_MZ__RECO->Fill(MZ__RECO);
+	h_mzmz->Fill(MZ,MZ__RECO);
+	Qreco__RECO = MZ__RECO;
+	QTreco__RECO = sqrt(pow((RecMuonPx[0]+RecMuonPx[1]),2)+pow((RecMuonPy[0]+RecMuonPy[1]),2));
+	if (RecMuonglmuon_charge[0] == -1){ 
+	  P1preco__RECO = sab__RECO*(RecMuonE[0]+RecMuonPz[0]);
+	  P1mreco__RECO = sab__RECO*(RecMuonE[0]-RecMuonPz[0]);
+	  P2preco__RECO = sab__RECO*(RecMuonE[1]+RecMuonPz[1]);
+	  P2mreco__RECO = sab__RECO*(RecMuonE[1]-RecMuonPz[1]);
+	} 
+	if (RecMuonglmuon_charge[0] == +1){ 
+	  P1preco__RECO = sab__RECO*(RecMuonE[1]+RecMuonPz[1]);
+	  P1mreco__RECO = sab__RECO*(RecMuonE[1]-RecMuonPz[1]);
+	  P2preco__RECO = sab__RECO*(RecMuonE[0]+RecMuonPz[0]);
+	  P2mreco__RECO = sab__RECO*(RecMuonE[0]-RecMuonPz[0]);
+	}    
+	QZreco__RECO = RecMuonPz[0]+RecMuonPz[1];   
+	costhetaCSreco__RECO = (2/(Qreco__RECO*sqrt(Qreco__RECO*Qreco__RECO+QTreco__RECO*QTreco__RECO)))*(P1preco__RECO*P2mreco__RECO-P1mreco__RECO*P2preco__RECO);
+	if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;
+	h_costhetaCSreco__RECO->Fill(costhetaCSreco__RECO);   
+
+
+	/*
+	for (int jjj = 0; jjj<9; jjj++){
+	  if (MZ > xAxis_AFB[jjj] && MZ < xAxis_AFB[jjj+1]){
+	    if (gen_costhetaCSreco >= 0) AFB_Fbin_Reco[jjj]++;
+	    if (gen_costhetaCSreco < 0) AFB_Bbin_Reco[jjj]++;
+	  }  	
+	}
+	*/
+
+	
+      }
+      //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+  	float AFB_Fbin_Reco[11] = {0,0,0,0,0,0,0,0,0,0,0};
+	float AFB_Bbin_Reco[11] = {0,0,0,0,0,0,0,0,0,0,0};
+	float AFB_Fbin_Gen[11] = {0,0,0,0,0,0,0,0,0,0,0};
+	float AFB_Bbin_Gen[11] = {0,0,0,0,0,0,0,0,0,0,0};
+    
+	for (int jjj_k = 0; jjj_k<9; jjj_k++){
+	  if (MZ > xAxis_AFB[jjj_k] && MZ < xAxis_AFB[jjj_k+1]){
+	    if (gen_costhetaCSreco >= 0) AFB_Fbin_Gen[jjj_k] = 1;
+	    if (gen_costhetaCSreco < 0) AFB_Bbin_Gen[jjj_k] = 1;
+	  }  	
+	}
+
+	for (int jjj = 0; jjj<9; jjj++){
+	  if (MZ__RECO > xAxis_AFB[jjj] && MZ__RECO < xAxis_AFB[jjj+1]){
+	    if (costhetaCSreco__RECO >= 0) AFB_Fbin_Reco[jjj] = 1;
+	    if (costhetaCSreco__RECO < 0) AFB_Bbin_Reco[jjj] = 1;
+	  }  	
+	}
+	
+	/*
+	cout<<"MASS GEN:   "<<MZ<<"   MASS RECO:   "<<MZ__RECO<<endl;
+	cout<<"Q GEN:   "<<parton_charge[0]<<"    "<<parton_charge[1]<<endl;
+	cout<<"Q RECO:   "<<RecMuonglmuon_charge[0]<<"    "<<RecMuonglmuon_charge[1]<<endl;
+	cout<<"costheta GEN:    "<<gen_costhetaCSreco<<"   costheta RECO:    "<<costhetaCSreco__RECO<<endl;
+	*/
+
+	float RijFF[20][20]={};
+	float RijFB[20][20]={};
+	float RijBF[20][20]={};
+	float RijBB[20][20]={};
+	for (int i=0;i<9;i++){
+	  for (int j=0;j<9;j++){
+	    if (AFB_Fbin_Gen[j] != 0){
+	      RijFF[i][j] = AFB_Fbin_Reco[i]*1./AFB_Fbin_Gen[j]*1.;
+	      h_FF->Fill(i*1.,j*1.,RijFF[i][j],1);
+	    }
+	    if (AFB_Fbin_Gen[j] != 0){
+	      RijFB[i][j] = AFB_Bbin_Reco[i]*1./AFB_Fbin_Gen[j]*1.;
+	      h_FB->Fill(i*1.,j*1.,RijFB[i][j],1);
+	    }
+	    if (AFB_Bbin_Gen[j] != 0){
+	      RijBF[i][j] = AFB_Fbin_Reco[i]*1./AFB_Bbin_Gen[j]*1.;
+	      h_BF->Fill(i*1.,j*1.,RijBF[i][j],1);
+	    }
+	    if (AFB_Bbin_Gen[j] != 0){
+	      RijBB[i][j] = AFB_Bbin_Reco[i]*1./AFB_Bbin_Gen[j]*1.;
+	      h_BB->Fill(i*1.,j*1.,RijBB[i][j],1);
+	    }
+	  }
+	}
+
     //calo jets
     int sel_reco_jet = 0;
     float sel_reco_jet_eta[100] = {};
@@ -623,10 +813,10 @@ void tree1r()
 	  float MZmuon_test = RecMuonM[j]+RecMuonM[jk]+2*(RecMuonE[j]*RecMuonE[jk]-p1dotp2);
 	  if (MZmuon_test < 0.) MZmuon_test = -1.*sqrt(fabs(MZmuon_test));
 	  if (MZmuon_test > 0.) MZmuon_test = sqrt(MZmuon_test);
-	  //	  if (MZmuon_test > 40. && MZmuon_test < 140.){
+	  if (MZmuon_test < 40. || MZmuon_test > 140.) continue;
 	  float dimuonpt = sqrt(pow((RecMuonPx[0]+RecMuonPx[1]),2) +pow((RecMuonPy[0]+RecMuonPy[1]),2));
 	  //if (dimuonpt < 40.) continue;
-	  if (MZmuon_test < 20.) continue;
+	  //if (MZmuon_test < 20.) continue;
 	  float dimuonrapidity = 0.5*log((RecMuonE[0]+RecMuonE[1]+RecMuonPz[0]+RecMuonPz[1])/(RecMuonE[0]+RecMuonE[1]-RecMuonPz[0]-RecMuonPz[1]));
 	  float dimuonphi = atan2(RecMuonPy[0]+RecMuonPy[1],RecMuonPx[0]+RecMuonPx[1]);
 	  h_Z_rap_test->Fill(dimuonrapidity);
@@ -654,7 +844,7 @@ void tree1r()
     int numberofrecmuons_2 = 0;
     int abs_jet_mu_tag = 0;
     int common = 0;
-    float ptcut = 10;
+    float ptcut = 20;
     int index1[10],index2[10];//if (RecMuonIsoSumPt[j]/RecMuonPt[j] > 0.15) continue;
     for (int j = 0; j < sort_index_for_mu_tree; ++j){  
       for (int jk = j; jk < sort_index_for_mu_tree  ; ++jk){
@@ -673,7 +863,7 @@ void tree1r()
 	}
       }
       
-      if (common > 1) cout<<"common   "<<common<<endl;
+      //if (common > 1) cout<<"common   "<<common<<endl;
 
       h_pt_mu_0->Fill(RecMuonPt[j]);
       h_charge_0->Fill(RecMuonglmuon_charge[j]);
@@ -784,8 +974,8 @@ void tree1r()
       if (MZmuon < 0.) MZmuon = -1.*sqrt(fabs(MZmuon));
       if (MZmuon > 0.) MZmuon = sqrt(MZmuon);
       h_muon_leading_PT->Fill(TMath::Max(RecMuonPt[ind1],RecMuonPt[ind2]));				  
-           if (MZmuon > 20.){
-	     //if (MZmuon > 40. && MZmuon < 140.){
+          // if (MZmuon > 20.){
+      if (MZmuon > 40. && MZmuon < 140.){
 	select = 1;
 	float dimuonpt = sqrt(pow((RecMuonPx[ind1]+RecMuonPx[ind2]),2) +pow((RecMuonPy[ind1]+RecMuonPy[ind2]),2));
 	float dimuonrapidity = 0.5*log((RecMuonE[ind1]+RecMuonE[ind2]+RecMuonPz[ind1]+RecMuonPz[ind2])/(RecMuonE[ind1]+RecMuonE[ind2]-RecMuonPz[ind1]-RecMuonPz[ind2]));
@@ -914,15 +1104,15 @@ void tree1r()
     if (MZmuon > 40 && MZmuon < 70){	
       if (costhetaCSreco >= 0){ 
 	AFB_Fbin1++;
-	AFB_Fbin[0]++;
+	//	AFB_Fbin[0]++;
       }
       if (costhetaCSreco < 0){ 
 	AFB_Bbin1++;	
-	AFB_Bbin[0]++;
+	//	AFB_Bbin[0]++;
       }
     }
 
-    for (int jjj = 0; jjj<13; jjj++){
+    for (int jjj = 0; jjj<10; jjj++){
       if (MZmuon > xAxis_AFB[jjj] && MZmuon < xAxis_AFB[jjj+1]){
 	if (costhetaCSreco >= 0) AFB_Fbin[jjj]++;
 	if (costhetaCSreco < 0) AFB_Bbin[jjj]++;
@@ -958,7 +1148,7 @@ void tree1r()
 
 
 
-    for (int uu = 0; uu<16; uu++){
+    for (int uu = 0; uu<10; uu++){
       if (MZmuon > xAxis_AFB[uu] && MZmuon < xAxis_AFB[uu+1]){
 	if (costhetaCSreco >= 0) AFB_Freco[uu]++;
 	if (costhetaCSreco < 0) AFB_Breco[uu]++;
@@ -1062,7 +1252,7 @@ void tree1r()
 
   }// end of event loop
 
-
+  /*
   cout<<"-----------------------------------------------------------"<<endl;
   cout<<"cnt0   "<<cnt0<<"    "<<100.*cnt0/(1.0*cnt0)<<endl;
   cout<<"cnt1   "<<cnt1<<"    "<<100.*cnt1/(1.0*cnt1)<<endl;
@@ -1076,7 +1266,7 @@ void tree1r()
   cout<<"tot eff = "<<(1.*cntend)/(1.*cnt0)<<endl;
   cout<<"#Z+1jet events and tot eff(Vjets) = "<<vjets_count<<"  "<<(1.*vjets_count)/(1.*cnt0)<<endl;
   cout<<"#Z+Njet events and tot eff(Vjets) = "<<vjets_count_all<<"  "<<(1.*vjets_count_all)/(1.*cnt0)<<endl;
-
+  */
 
   float massbinbin[3];
   float error[3];
@@ -1095,18 +1285,182 @@ void tree1r()
   massbinerror[0] = sqrt((1-massbin[0]*massbin[0])/(AFB_Fbin1+AFB_Bbin1)); 
   massbinerror[1] = sqrt((1-massbin[1]*massbin[1])/(AFB_Fbin2+AFB_Bbin2));
   massbinerror[2] = sqrt((1-massbin[2]*massbin[2])/(AFB_Fbin3+AFB_Bbin3));
-
+  /*
   cout<<"Bin 1:   "<< massbin[0]<<"   "<<massbinerror[0]<<"  NF+NB=N="<<AFB_Fbin1<<"+"<<AFB_Bbin1<<"="<<AFB_Fbin1+AFB_Bbin1<<endl;
   cout<<"Bin 2:   "<<  massbin[1] <<"    "<<massbinerror[1]<<"  NF+NB=N="<<AFB_Fbin2<<"+"<<AFB_Bbin2<<"="<<AFB_Fbin2+AFB_Bbin2<<endl;
   cout<<"Bin 3:   "<<  massbin[2]<<"    "<<massbinerror[2]<<"  NF+NB=N="<<AFB_Fbin3<<"+"<<AFB_Bbin3<<"="<<AFB_Fbin3+AFB_Bbin3<<endl;
 
   cout<<"  "<<endl;
   cout<<" Number of events in M=60-120 GeV:   "<<comparison_count<<endl; 
+  */
+  //___________________________________________________________
+
+  ofstream f_ff,f_fb,f_bf,f_bb;
+  f_ff.open("Rij_FF.txt");
+  f_fb.open("Rij_FB.txt");
+  f_bf.open("Rij_BF.txt");
+  f_bb.open("Rij_BB.txt");
+
+  int dim = 9;
+  TMatrixD Rij__ff(dim,dim);
+  TMatrixD Rij__fb(dim,dim);
+  TMatrixD Rij__bf(dim,dim);
+  TMatrixD Rij__bb(dim,dim);
+  TArrayI row(dim),col(dim);
+  int totdim = dim*dim;
+  TArrayD data__ff(totdim);
+  TArrayD data__fb(totdim);
+  TArrayD data__bf(totdim);
+  TArrayD data__bb(totdim);
+  for (int i= 0;i<dim;i++){
+      row[i] = i;
+      col[i] = i;
+      for (int j=0;j<dim;j++){
+	int k = dim*i+j;//9 is the number of rows
+	data__ff[k] = h_FF->GetBinContent(i+1,j+1);
+	data__fb[k] = h_FB->GetBinContent(i+1,j+1);
+	data__bf[k] = h_BF->GetBinContent(i+1,j+1);
+	data__bb[k] = h_BB->GetBinContent(i+1,j+1);
+	f_ff << i <<"  "<< j <<"  "<<data__ff[k]<<endl;
+	f_fb << i <<"  "<< j <<"  "<<data__fb[k]<<endl;
+	f_bf << i <<"  "<< j <<"  "<<data__bf[k]<<endl;
+	f_bb << i <<"  "<< j <<"  "<<data__bb[k]<<endl;
+      }
+  }
+  Rij__ff.SetMatrixArray(data__ff.GetArray());
+  Rij__fb.SetMatrixArray(data__fb.GetArray());
+  Rij__bf.SetMatrixArray(data__bf.GetArray());
+  Rij__bb.SetMatrixArray(data__bb.GetArray());
+
+  f_ff.close();
+  f_fb.close();
+  f_bf.close();
+  f_bb.close();
+
+  const double *pData__ff = Rij__ff.GetMatrixArray();
+  const double *pData__fb = Rij__fb.GetMatrixArray();
+  const double *pData__bf = Rij__bf.GetMatrixArray();
+  const double *pData__bb = Rij__bb.GetMatrixArray();
+  /*  
+  cout<<"FF"<<endl;
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      if (pData__ff[k]) cout<<i<<"  "<<j<<"  "<<pData__ff[k]<<endl;
+      
+    }
+  }
+  cout<<"FB"<<endl;
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      if (pData__fb[k]) cout<<i<<"  "<<j<<"  "<<pData__fb[k]<<endl;
+    }
+  }
+  cout<<"BF"<<endl;
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      if (pData__bf[k]) cout<<i<<"  "<<j<<"  "<<pData__bf[k]<<endl;
+    }
+  }
+  cout<<"BB"<<endl;
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      if (pData__bb[k]) cout<<i<<"  "<<j<<"  "<<pData__bb[k]<<endl;
+    }
+  }
+  */
+  TMatrixD Orig_Rij__ff(dim,dim);
+  TMatrixD Orig_Rij__fb(dim,dim);
+  TMatrixD Orig_Rij__bf(dim,dim);
+  TMatrixD Orig_Rij__bb(dim,dim);
+  Orig_Rij__ff = Rij__ff;
+  Orig_Rij__fb = Rij__fb;
+  Orig_Rij__bf = Rij__bf;
+  Orig_Rij__bb = Rij__bb;
+  TMatrixD Inv_Rij__ff(dim,dim);
+  TMatrixD Inv_Rij__fb(dim,dim);
+  TMatrixD Inv_Rij__bf(dim,dim);
+  TMatrixD Inv_Rij__bb(dim,dim);
+  Inv_Rij__ff = Rij__ff.Invert();
+  Inv_Rij__fb = Rij__fb.Invert();
+  Inv_Rij__bf = Rij__bf.Invert();
+  Inv_Rij__bb = Rij__bb.Invert();
+  TMatrixD test__ff(dim,dim);
+  TMatrixD test__fb(dim,dim);
+  TMatrixD test__bf(dim,dim);
+  TMatrixD test__bb(dim,dim);
+  //multiplication with inverse for test
+  test__ff = Inv_Rij__ff*Orig_Rij__ff;
+  test__fb = Inv_Rij__fb*Orig_Rij__fb;
+  test__bf = Inv_Rij__bf*Orig_Rij__bf;
+  test__bb = Inv_Rij__bb*Orig_Rij__bb;
+
+  const double *testData__ff = test__ff.GetMatrixArray();
+  const double *testData__fb = test__fb.GetMatrixArray();
+  const double *testData__bf = test__bf.GetMatrixArray();
+  const double *testData__bb = test__bb.GetMatrixArray();
+  /*
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      if (i == j) cout<<i<<"  "<<j<<"  "<<testData__ff[k]<<endl;
+      
+    }
+  }
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      if (i == j) cout<<i<<"  "<<j<<"  "<<testData__fb[k]<<endl;
+    }
+  }
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      if (i == j) cout<<i<<"  "<<j<<"  "<<testData__bf[k]<<endl;
+    }
+  }
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      if (i == j) cout<<i<<"  "<<j<<"  "<<testData__bb[k]<<endl;
+    }
+  }
+  */
+
+  const double *invData__ff = Inv_Rij__ff.GetMatrixArray();
+  const double *invData__fb = Inv_Rij__fb.GetMatrixArray();
+  const double *invData__bf = Inv_Rij__bf.GetMatrixArray();
+  const double *invData__bb = Inv_Rij__bb.GetMatrixArray();
+
+  ofstream invf_ff,invf_fb,invf_bf,invf_bb;
+  invf_ff.open("InvRij_FF.txt");
+  invf_fb.open("InvRij_FB.txt");
+  invf_bf.open("InvRij_BF.txt");
+  invf_bb.open("InvRij_BB.txt");
+
+  for (int i= 0;i<dim;i++){
+    for (int j=0;j<dim;j++){
+      int k = dim*i+j;//9 is the number of rows
+      invf_ff << i <<"  "<< j <<"  "<< invData__ff[k] <<endl;
+      invf_fb << i <<"  "<< j <<"  "<< invData__fb[k] <<endl;
+      invf_bf << i <<"  "<< j <<"  "<< invData__bf[k] <<endl;
+      invf_bb << i <<"  "<< j <<"  "<< invData__bb[k] <<endl;      
+    }
+  }
+
+  invf_ff.close();
+  invf_fb.close();
+  invf_bf.close();
+  invf_bb.close();
+  //___________________________________________________________
 
 
   float afb_massbin_many[30] = {};
   float afb_error_massbin_many[30] = {};
-  for (int jjj=0;jjj<13;jjj++){
+  for (int jjj=0;jjj<10;jjj++){
     afb_massbin_many[jjj] = (AFB_Fbin[jjj]-AFB_Bbin[jjj])/(AFB_Fbin[jjj]+AFB_Bbin[jjj]);
     afb_error_massbin_many[jjj] = sqrt((1-afb_massbin_many[jjj]*afb_massbin_many[jjj])/(AFB_Fbin[jjj]+AFB_Bbin[jjj])); 
   }
@@ -1194,7 +1548,7 @@ void tree1r()
   
  
   TCanvas *cn_ewk = new TCanvas();
-  TGraph *p_manybins = new TGraphErrors(13, xAxis_AFB_TOPLOT,afb_massbin_many,0,afb_error_massbin_many);
+  TGraph *p_manybins = new TGraphErrors(9, xAxis_AFB_TOPLOT,afb_massbin_many,0,afb_error_massbin_many);
   p_manybins->SetMarkerStyle(26); 
   p_manybins->Draw("AP");
   cn_ewk->SaveAs("afbmanybins.C");
