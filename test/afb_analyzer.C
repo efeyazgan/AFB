@@ -436,9 +436,11 @@ void tree1r()
   TProfile2D *h_BF = new TProfile2D("h_BF","",9,-0.5,8.5,9,-0.5,8.5,0,40);
   TProfile2D *h_BB = new TProfile2D("h_BB","",9,-0.5,8.5,9,-0.5,8.5,0,40);
 
-  TProfile2D *h_FF_test = new TProfile2D("h_FF_test","",10,-0.5,8.5,10,-0.5,8.5,0,40);
+  TProfile2D *h_FF_test = new TProfile2D("h_FF_test","",10,-0.5,9.5,10,-0.5,9.5,0,40);
 
   TH2F *h_mzmz = new TH2F("h_mzmz","",10,40,140,10,40,140);
+
+  TH1F *h_gen_eta = new TH1F("h_gen_eta","",100,-6,6);
 
   float jetscale = 0.1;
   float jetscale_jpt = 0.05;
@@ -468,6 +470,12 @@ void tree1r()
 
   float AFB_Fbin[30] = {};
   float AFB_Bbin[30] = {};
+  float AFB_FbinGEN[30] = {};
+  float AFB_BbinGEN[30] = {};
+  float AFB_FbinREC[30] = {};
+  float AFB_BbinREC[30] = {};
+  float AFB_FbinREC_CORR[30] = {};
+  float AFB_BbinREC_CORR[30] = {};
 
   float AFB_Fbin5[6] = {};
   float AFB_Bbin5[6] = {};
@@ -475,6 +483,9 @@ void tree1r()
   float AFB_Bbin8[9] = {};
 
   int comparison_count = 0;
+
+
+
 
   Int_t nevent = myTree.GetEntries();
   //nevent = 50;
@@ -521,6 +532,7 @@ void tree1r()
       if (abs(ParticleId[j]) != 13) continue;
       //    if (fabs(ParticleEta[j]) > 2.1) continue;
       //if (ParticlePt[j] < 20.) continue;
+      h_gen_eta->Fill(ParticleEta[j]);
       parton_pt[parpar] = ParticlePt[j];
       parton_eta[parpar] = ParticleEta[j];
       parton_phi[parpar] = ParticlePhi[j];
@@ -685,17 +697,29 @@ void tree1r()
 	float AFB_Fbin_Gen[11] = {0,0,0,0,0,0,0,0,0,0,0};
 	float AFB_Bbin_Gen[11] = {0,0,0,0,0,0,0,0,0,0,0};
     
-	for (int jjj_k = 0; jjj_k<9; jjj_k++){
+	for (int jjj_k = 0; jjj_k<9; jjj_k++){//
 	  if (MZ > xAxis_AFB[jjj_k] && MZ < xAxis_AFB[jjj_k+1]){
-	    if (gen_costhetaCSreco >= 0) AFB_Fbin_Gen[jjj_k] = 1;
-	    if (gen_costhetaCSreco < 0) AFB_Bbin_Gen[jjj_k] = 1;
+	    if (gen_costhetaCSreco >= 0){ 
+	      AFB_Fbin_Gen[jjj_k] = 1;
+	      AFB_FbinGEN[jjj_k]++;
+	    }
+	    if (gen_costhetaCSreco < 0){ 
+	      AFB_Bbin_Gen[jjj_k] = 1;
+	      AFB_BbinGEN[jjj_k]++;	      
+	    }
 	  }  	
 	}
 
-	for (int jjj = 0; jjj<9; jjj++){
-	  if (MZ__RECO > xAxis_AFB[jjj] && MZ__RECO < xAxis_AFB[jjj+1]){
-	    if (costhetaCSreco__RECO >= 0) AFB_Fbin_Reco[jjj] = 1;
-	    if (costhetaCSreco__RECO < 0) AFB_Bbin_Reco[jjj] = 1;
+	for (int jjj_k = 0; jjj_k<9; jjj_k++){
+	  if (MZ__RECO > xAxis_AFB[jjj_k] && MZ__RECO < xAxis_AFB[jjj_k+1]){
+	    if (costhetaCSreco__RECO >= 0){ 
+	      AFB_Fbin_Reco[jjj_k] = 1;
+	      AFB_FbinREC[jjj_k]++;
+	    }
+	    if (costhetaCSreco__RECO < 0){
+	      AFB_Bbin_Reco[jjj_k] = 1;
+	      AFB_BbinREC[jjj_k]++;    
+	    }
 	  }  	
 	}
 	
@@ -1112,7 +1136,7 @@ void tree1r()
       }
     }
 
-    for (int jjj = 0; jjj<10; jjj++){
+    for (int jjj = 0; jjj<9; jjj++){
       if (MZmuon > xAxis_AFB[jjj] && MZmuon < xAxis_AFB[jjj+1]){
 	if (costhetaCSreco >= 0) AFB_Fbin[jjj]++;
 	if (costhetaCSreco < 0) AFB_Bbin[jjj]++;
@@ -1148,7 +1172,7 @@ void tree1r()
 
 
 
-    for (int uu = 0; uu<10; uu++){
+    for (int uu = 0; uu<9; uu++){
       if (MZmuon > xAxis_AFB[uu] && MZmuon < xAxis_AFB[uu+1]){
 	if (costhetaCSreco >= 0) AFB_Freco[uu]++;
 	if (costhetaCSreco < 0) AFB_Breco[uu]++;
@@ -1402,7 +1426,7 @@ void tree1r()
   const double *testData__fb = test__fb.GetMatrixArray();
   const double *testData__bf = test__bf.GetMatrixArray();
   const double *testData__bb = test__bb.GetMatrixArray();
-  /*
+  
   for (int i= 0;i<dim;i++){
     for (int j=0;j<dim;j++){
       int k = dim*i+j;//9 is the number of rows
@@ -1428,7 +1452,7 @@ void tree1r()
       if (i == j) cout<<i<<"  "<<j<<"  "<<testData__bb[k]<<endl;
     }
   }
-  */
+  
 
   const double *invData__ff = Inv_Rij__ff.GetMatrixArray();
   const double *invData__fb = Inv_Rij__fb.GetMatrixArray();
@@ -1458,11 +1482,107 @@ void tree1r()
   //___________________________________________________________
 
 
+  ifstream matrixfile_ff, matrixfile_fb, matrixfile_bf, matrixfile_bb;
+  
+  matrixfile_ff.open("InvRij_FF.txt");
+  matrixfile_fb.open("InvRij_FB.txt");
+  matrixfile_bf.open("InvRij_BF.txt");
+  matrixfile_bb.open("InvRij_BB.txt");
+  
+  /*
+  matrixfile_ff.open("Rij_FF.txt");
+  matrixfile_fb.open("Rij_FB.txt");
+  matrixfile_bf.open("Rij_BF.txt");
+  matrixfile_bb.open("Rij_BB.txt");
+  */
+
+  int ff_counter = 0;
+  int fb_counter = 0;
+  int bf_counter = 0;
+  int bb_counter = 0;
+
+  int a_ff, b_ff;
+  float c_ff;
+  int a_fb, b_fb;
+  float c_fb;
+  int a_bf, b_bf;
+  float c_bf;
+  int a_bb, b_bb;
+  float c_bb;
+  
+  int FF_corr_in_row[1000],FF_corr_in_col[1000];
+  float FF_corr_in_value[1000];
+  int FB_corr_in_row[1000],FB_corr_in_col[1000];
+  float FB_corr_in_value[1000];
+  int BF_corr_in_row[1000],BF_corr_in_col[1000];
+  float BF_corr_in_value[1000];
+  int BB_corr_in_row[1000],BB_corr_in_col[1000];
+  float BB_corr_in_value[1000];
+  
+
+  while(1){
+    if (!matrixfile_ff.good()) break;
+    matrixfile_ff >> a_ff >> b_ff >> c_ff;
+    FF_corr_in_row[ff_counter] = a_ff;
+    FF_corr_in_col[ff_counter] = b_ff;
+    FF_corr_in_value[ff_counter] = c_ff;
+    ++ff_counter;
+  }
+  while(1){
+    if (!matrixfile_fb.good()) break;
+    matrixfile_fb >> a_fb >> b_fb >> c_fb;
+    FB_corr_in_row[fb_counter] = a_fb;
+    FB_corr_in_col[fb_counter] = b_fb;
+    FB_corr_in_value[fb_counter] = c_fb;    
+    ++fb_counter;  
+  }
+  while(1){
+    if (!matrixfile_bf.good()) break;
+    matrixfile_bf >> a_bf >> b_bf >> c_bf;
+    BF_corr_in_row[bf_counter] = a_bf;
+    BF_corr_in_col[bf_counter] = b_bf;
+    BF_corr_in_value[bf_counter] = c_bf;    
+    ++bf_counter;  
+  }
+  while(1){
+    if (!matrixfile_bb.good()) break;
+    matrixfile_bb >> a_bb >> b_bb >> c_bb;
+    BB_corr_in_row[bb_counter] = a_bb;
+    BB_corr_in_col[bb_counter] = b_bb;
+    BB_corr_in_value[bb_counter] = c_bb;    
+    ++bb_counter;  
+  }
+
+
+
   float afb_massbin_many[30] = {};
   float afb_error_massbin_many[30] = {};
-  for (int jjj=0;jjj<10;jjj++){
+  float afb_massbin_manyGEN[30] = {};
+  float afb_error_massbin_manyGEN[30] = {};
+  float afb_massbin_manyREC[30] = {};
+  float afb_error_massbin_manyREC[30] = {};
+  float afb_massbin_manyREC_CORR[30] = {};
+  float afb_error_massbin_manyREC_CORR[30] = {};
+  for (int jjj=0;jjj<9;jjj++){
     afb_massbin_many[jjj] = (AFB_Fbin[jjj]-AFB_Bbin[jjj])/(AFB_Fbin[jjj]+AFB_Bbin[jjj]);
     afb_error_massbin_many[jjj] = sqrt((1-afb_massbin_many[jjj]*afb_massbin_many[jjj])/(AFB_Fbin[jjj]+AFB_Bbin[jjj])); 
+
+    afb_massbin_manyGEN[jjj] = (AFB_FbinGEN[jjj]-AFB_BbinGEN[jjj])/(AFB_FbinGEN[jjj]+AFB_BbinGEN[jjj]);
+    afb_error_massbin_manyGEN[jjj] = sqrt((1-afb_massbin_manyGEN[jjj]*afb_massbin_manyGEN[jjj])/(AFB_FbinGEN[jjj]+AFB_BbinGEN[jjj])); 
+
+    afb_massbin_manyREC[jjj] = (AFB_FbinREC[jjj]-AFB_BbinREC[jjj])/(AFB_FbinREC[jjj]+AFB_BbinREC[jjj]);
+    afb_error_massbin_manyREC[jjj] = sqrt((1-afb_massbin_manyREC[jjj]*afb_massbin_manyREC[jjj])/(AFB_FbinREC[jjj]+AFB_BbinREC[jjj])); 
+  }
+
+  for (int i=0;i<9;i++){
+    for (int j=0;j<9;j++){
+      int k = dim*i+j;
+      AFB_FbinREC_CORR[i] += AFB_FbinREC[j]*FF_corr_in_value[k] + AFB_BbinREC[j]*FB_corr_in_value[k];
+      AFB_BbinREC_CORR[i] += AFB_BbinREC[j]*BB_corr_in_value[k] + AFB_FbinREC[j]*BF_corr_in_value[k];
+      cout <<"@@@-->   "<<i<<"  "<<j<<"  "<<k<<"  "<<AFB_FbinREC[j]<<" * "<<FF_corr_in_value[k]<<"  "<< AFB_BbinREC[j]<<" *  "<<FB_corr_in_value[k]<<"  "<<AFB_FbinREC_CORR[i]<<endl;
+    }
+    afb_massbin_manyREC_CORR[i] = (AFB_FbinREC_CORR[i]-AFB_BbinREC_CORR[i])/(AFB_FbinREC_CORR[i]+AFB_BbinREC_CORR[i]);
+    afb_error_massbin_manyREC_CORR[i] = sqrt((1-afb_massbin_manyREC_CORR[i]*afb_massbin_manyREC_CORR[i])/(AFB_FbinREC_CORR[i]+AFB_BbinREC_CORR[i])); 
   }
 
   float afb_massbin_5[6] = {};
@@ -1552,6 +1672,22 @@ void tree1r()
   p_manybins->SetMarkerStyle(26); 
   p_manybins->Draw("AP");
   cn_ewk->SaveAs("afbmanybins.C");
+
+  TCanvas *cn_ewkGEN = new TCanvas();
+  TGraph *p_manybinsGEN = new TGraphErrors(9, xAxis_AFB_TOPLOT,afb_massbin_manyGEN,0,afb_error_massbin_manyGEN);
+  p_manybinsGEN->SetMarkerColor(4);
+  p_manybinsGEN->SetMarkerStyle(26); 
+  p_manybinsGEN->Draw("AP");
+  TGraph *p_manybinsREC = new TGraphErrors(9, xAxis_AFB_TOPLOT,afb_massbin_manyREC,0,afb_error_massbin_manyREC);
+  p_manybinsREC->SetMarkerStyle(24); 
+  p_manybinsREC->Draw("P");
+  TGraph *p_manybinsREC_CORR = new TGraph(9, xAxis_AFB_TOPLOT,afb_massbin_manyREC_CORR);
+  p_manybinsREC_CORR->SetMarkerColor(2);
+  p_manybinsREC_CORR->SetMarkerStyle(23); 
+  p_manybinsREC_CORR->Draw("P");
+  cn_ewkGEN->SaveAs("afbmanybinsGEN.C");
+
+
 
   TCanvas *cn5_ewk = new TCanvas();
   TGraph *p_5bins = new TGraphErrors(5, xAxis_AFB5_TOPLOT,afb_massbin_5,0,afb_error_massbin_5);
