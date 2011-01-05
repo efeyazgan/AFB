@@ -70,7 +70,7 @@ process.oneGoodVertexFilter = cms.EDFilter("VertexSelector",
 
 process.mu_HLT = cms.EDFilter("HLTHighLevel",
      TriggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
-     HLTPaths = cms.vstring('HLT_Mu9','HLT_Mu11','HLT_Mu15_v1'),   # provide list of HLT paths (or patterns) you want
+     HLTPaths = cms.vstring('HLT_Mu9','HLT_Mu11','HLT_Mu15_v1','HLT_DoubleMu3','HLT_DoubleMu3_v2'),   # provide list of HLT paths (or patterns) you want
      eventSetupPathsKey = cms.string(''), # not empty => use read paths from AlCaRecoTriggerBitsRcd via this key
      andOr = cms.bool(True),              # how to deal with multiple triggers: True (OR) accept if ANY is true, False (AND) accept if ALL are true
      throw = cms.bool(False)    # throw exception on unknown path names
@@ -89,9 +89,14 @@ process.demo = cms.EDAnalyzer("AFB",
                               hltTag = cms.InputTag("HLT_Mu9","","HLT"),
                               hltTag2 = cms.InputTag("HLT_Mu11","","HLT"),
                               hltTag3 = cms.InputTag("HLT_Mu15_v1","","HLT"),
+                              hltTag4 = cms.InputTag("HLT_DoubleMu3","","HLT"),
+                              hltTag5 = cms.InputTag("HLT_DoubleMu3_v2","","HLT"),
                               L3FilterName = cms.string("hltSingleMu9L3Filtered9"),
                               L3FilterName2 = cms.string("hltSingleMu11L3Filtered11"),
                               L3FilterName3 = cms.string("hltSingleMu15L3Filtered15"),
+                              L3FilterName4 = cms.string("hltDiMuonL3PreFiltered"),
+                              L3FilterName5 = cms.string("hltDiMuonL3PreFiltered3"),
+                   
 #                              muonTrig = cms.string("HLT_L2Mu9"),
                               JetIDParams = theJetIDParams
 )
