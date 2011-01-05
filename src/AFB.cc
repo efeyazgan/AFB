@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: AFB.cc,v 1.4 2010/11/15 14:12:11 efe Exp $
+// $Id: AFB.cc,v 1.5 2010/11/19 16:21:10 efe Exp $
 //
 //
 #include <memory>
@@ -195,16 +195,16 @@ private:
   edm::InputTag muonTag_;
   string CaloJetAlg;
   edm::InputTag  JPTAlg, JPTAlgL2L3;
-  edm::InputTag trigTag_, triggerSummaryLabel_, hltTag_, hltTag2_, hltTag3_;
+  edm::InputTag trigTag_, triggerSummaryLabel_, hltTag_, hltTag2_, hltTag3_, hltTag4_, hltTag5_;
   string muonTrig_;
-  string L3FilterName_, L3FilterName2_, L3FilterName3_;
+  string L3FilterName_, L3FilterName2_, L3FilterName3_, L3FilterName4_, L3FilterName5_;
   edm::Service<TFileService> fs;
   TTree * myTree;
   int event, run,lumi,bxnumber,realdata;
   int hlt_trigger_fired;
   int sort_index_for_mu_tree;
   float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonE[50], RecMuonM[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50],RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50],RecMuonVx[50],RecMuonVy[50],RecMuonVz[50];
-  int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50];
+  int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50],hltmatched_Dimuon[50];//,hltmatchedmuon2[50];
 
   float RecElec_Pt[50], RecElec_Px[50], RecElec_Py[50],RecElec_Pz[50],RecElec_eta[50],RecElec_phi[50],RecElec_GsfTrk_d0[50],RecElec_dr03TkSumPt[50],RecElec_dr03EcalRecHitSumEt[50],RecElec_dr03HcalTowerSumEt[50],RecElec_scSigmaIEtaIEta[50],RecElec_deltaPhiSuperClusterTrackAtVtx[50],RecElec_deltaEtaSuperClusterTrackAtVtx[50],RecElec_hadronicOverEm[50],RecElec_gsfTrack_numberOfLostHits[50];
   int recelec_index,RecElec_Charge[50],RecElec_IsEB[50], RecElec_IsEE[50]; 
@@ -258,9 +258,14 @@ AFB::AFB(const edm::ParameterSet& iConfig)
   hltTag_ = iConfig.getParameter<edm::InputTag>("hltTag");
   hltTag2_ = iConfig.getParameter<edm::InputTag>("hltTag2");
   hltTag3_ = iConfig.getParameter<edm::InputTag>("hltTag3");
+  hltTag4_ = iConfig.getParameter<edm::InputTag>("hltTag4");
+  hltTag5_ = iConfig.getParameter<edm::InputTag>("hltTag5");
+
   L3FilterName_ = iConfig.getParameter<std::string>("L3FilterName");  
   L3FilterName2_ = iConfig.getParameter<std::string>("L3FilterName2");  
   L3FilterName3_ = iConfig.getParameter<std::string>("L3FilterName3");  
+  L3FilterName4_ = iConfig.getParameter<std::string>("L3FilterName4");  
+  L3FilterName5_ = iConfig.getParameter<std::string>("L3FilterName5");  
 
 }
 
@@ -275,6 +280,9 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
 
   bool singleTrigFlag1 = false;
+  bool singleTrigFlag2 = false;
+  bool doubleTrigFlag1 = false;
+  bool doubleTrigFlag2 = false;
 
   Handle<GenParticleCollection> genParticles_h;
   iEvent.getByLabel("genParticles", genParticles_h);
@@ -396,6 +404,10 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   const trigger::TriggerObjectCollection & toc(triggerObj->getObjects());
   size_t nMuHLT =0;
   std::vector<reco::Particle>  HLTMuMatched; 
+  //for dimuons
+  size_t nDiMuHLT =0;
+  std::vector<reco::Particle>  HLTDiMuMatched; 
+  //--end of for dimuons
   for ( size_t ia = 0; ia < triggerObj->sizeFilters(); ++ ia) {
     std::string fullname = triggerObj->filterTag(ia).encode();
     //   cout<<"full name:   "<<fullname<<endl;	
@@ -415,6 +427,11 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  cout<<name << "=?" << L3FilterName_<<"  "<<L3FilterName2_<<"   "<<L3FilterName3_<<endl;
 	  HLTMuMatched.push_back(toc[*ki].particle());
 	  nMuHLT++;     
+	}
+	if ( (run < 147196 && name == L3FilterName4_) || (run >= 147196 && name == L3FilterName5_)){
+	  cout<<name << "=?" << L3FilterName4_<<"  "<<L3FilterName5_<<endl;
+	  HLTDiMuMatched.push_back(toc[*ki].particle());
+	  nDiMuHLT++;	  
 	}
       }    
     }
@@ -533,6 +550,9 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   int glmuon_muonHits[50] = {};
   int glmuon_charge[50] = {};
   int hlt_tmp[50] = {};
+  // int hlt_tmp2[50] = {};
+  int hlt_tmp_dimuon[50] = {};
+  // int hlt_tmp_dimuon2[50] = {};  
   for (int gg = 0;gg<50;gg++){
     rec_eta_muon[gg] = 0;
     rec_phi_muon[gg] = 0;
@@ -559,7 +579,8 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     tkmuon_pixelhits[gg] = 0;
     glmuon_muonHits[gg] = 0;
     glmuon_charge[gg] = 0;
-    hlt_tmp[gg] = 0;   
+    hlt_tmp[gg] = 0;
+    //   hlt_tmp2[gg] = 0;    
   }
   MuonCollection::const_iterator muon;
   std::vector<reco::Muon>  highPtGlbMuons; 
@@ -609,10 +630,41 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   //==============================================================
   unsigned int nHighPtGlbMu = highPtGlbMuons.size();
   if (nHighPtGlbMu > 0){
+    /*
     for(unsigned int i =0 ; i < nHighPtGlbMu ; i++) {
       reco::Muon muon1 = highPtGlbMuons[i];
       singleTrigFlag1 = IsMuMatchedToHLTMu ( muon1,  HLTMuMatched , 0.2, 1.0 );
       hlt_tmp[i] = int(singleTrigFlag1); 
+    }
+    */
+    if (nHighPtGlbMu>1 ){
+      for(unsigned int i =0 ; i < nHighPtGlbMu ; i++) {
+	reco::Muon muon1 = highPtGlbMuons[i];
+	for (unsigned int j =i+1; j <nHighPtGlbMu ; ++j ){
+	  reco::Muon muon2 = highPtGlbMuons[j];
+	  if (muon1.charge() == muon2.charge()) continue; 
+	  if (nMuHLT){
+	    singleTrigFlag1 = IsMuMatchedToHLTMu ( muon1,  HLTMuMatched , 0.2, 1.0 );
+	    singleTrigFlag2 = IsMuMatchedToHLTMu ( muon2,  HLTMuMatched , 0.2, 1.0 );
+	    hlt_tmp[i] = int(singleTrigFlag1); 
+	    hlt_tmp[j] = int(singleTrigFlag2); 
+	    //	    cout<<"SINGLE   i,j    hlt tmp1,2 :    "<< i<<"   "<<j<<"  "<<hlt_tmp[i] <<"   "<< hlt_tmp[j]<<endl;
+	  }
+	  if (nDiMuHLT){
+	    doubleTrigFlag1 = IsMuMatchedToHLTMu ( muon1,  HLTDiMuMatched , 0.2, 1.0 );
+	    doubleTrigFlag2 = IsMuMatchedToHLTMu ( muon2,  HLTDiMuMatched , 0.2, 1.0 );
+	    hlt_tmp_dimuon[i] = int(doubleTrigFlag1); 
+	    hlt_tmp_dimuon[j] = int(doubleTrigFlag2); 	  
+	    //	    cout<<"DOUBLE   i,j    hlt tmp dimuon 1,2 :    "<< i<<"   "<<j<<"  "<<hlt_tmp_dimuon1[i] <<"   "<< hlt_tmp_dimuon2[j]<<endl;
+	  }
+	} 
+      }   
+    }
+    for(unsigned int i =0 ; i < nHighPtGlbMu ; i++){
+      if (nMuHLT) cout<<"SINGLE   hlt tmp:    "<< i<<"   "<<hlt_tmp[i] <<endl;
+    }
+    for(unsigned int i =0 ; i < nHighPtGlbMu ; i++){
+      if (nDiMuHLT) cout<<"DOUBLE   hlt tmp:    "<< i<<"   "<<hlt_tmp_dimuon[i] <<endl;
     }
   }
   //==============================================================
@@ -714,6 +766,11 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     RecMuonglmuon_muonHits[sort_index_for_mu_tree] =  glmuon_muonHits[sort_reco_muon];
     RecMuonglmuon_charge[sort_index_for_mu_tree] = glmuon_charge[sort_reco_muon];
     hltmatchedmuon[sort_index_for_mu_tree] = hlt_tmp[sort_reco_muon];
+    hltmatched_Dimuon[sort_index_for_mu_tree] = hlt_tmp_dimuon[sort_reco_muon];
+    //    hltmatchedmuon2[sort_index_for_mu_tree] = hlt_tmp2[sort_reco_muon];
+    cout<<"INDEX AND MATCHED MUONS IN THE TREE and pt(SINGLE):    "<<sort_index_for_mu_tree<<"   "<<hltmatchedmuon[sort_index_for_mu_tree]<<"   "<<RecMuonPt[sort_index_for_mu_tree]<<endl;
+     cout<<"INDEX AND MATCHED MUONS IN THE TREE and pt (DOUBLE):    "<<sort_index_for_mu_tree<<"   "<<hltmatched_Dimuon[sort_index_for_mu_tree]<<"   "<<RecMuonPt[sort_index_for_mu_tree]<<endl;
+   
     /*
     cout<<"@@@@@@@@@@@@@@@@@@@@@@@@@"<<endl;
     cout<<"Written pt:    "<<RecMuonPt[sort_index_for_mu_tree]<<endl;
@@ -932,6 +989,8 @@ void AFB::beginJob()
   
   myTree->Branch("RecMuonglmuon_charge",RecMuonglmuon_charge,"RecMuonglmuon_charge[sort_index_for_mu_tree]/I");
   myTree->Branch("hltmatchedmuon",hltmatchedmuon,"hltmatchedmuon[sort_index_for_mu_tree]/I");
+  myTree->Branch("hltmatched_Dimuon",hltmatched_Dimuon,"hltmatched_Dimuon[sort_index_for_mu_tree]/I");
+  //  myTree->Branch("hltmatchedmuon2",hltmatchedmuon2,"hltmatchedmuon2[sort_index_for_mu_tree]/I");
 
   myTree->Branch("recelec_index",&recelec_index,"recelec_index/I");
   myTree->Branch("RecElec_Pt",RecElec_Pt,"RecElec_Pt[recelec_index]/F");

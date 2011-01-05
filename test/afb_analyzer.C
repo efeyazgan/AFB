@@ -25,9 +25,23 @@
 #include "TMatrixD.h"
 #include "TMatrixDBase.h"
 #include "TLatex.h"
+
+#include <TMath.h>
+#include <TFitter.h>
+#include <TVector.h>
+#include <TF1.h>
+#include <TGraph.h>
+#include "TUnfold.h"
+#include "TSystem.h"
+
+
 using namespace std;
 void tree1r()
 {
+
+  if (!TClass::GetDict("RooUnfold")) gSystem->Load("RooUnfold-1.0.2/libRooUnfold");
+    RooUnfoldResponse response (127, 0.5, 127.5);
+
 
 
   gStyle->SetPalette(1);
@@ -71,12 +85,24 @@ void tree1r()
 
   //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%3_8_3%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   //data
-  /*
-  myTree.Add("/data2/efe/ntuples/383/minbias_sept17.root");
-  myTree.Add("/data2/efe/ntuples/383/mu_sept17.root");
-  myTree.Add("/data2/efe/ntuples/383/2010B_sept17.root");
+  /* 
+     myTree.Add("/data2/efe/ntuples/383/minbias_sept17.root");
+     myTree.Add("/data2/efe/ntuples/383/mu_sept17.root");
+     myTree.Add("/data2/efe/ntuples/383/2010B_sept17.root");
   */
-  myTree.Add("/data2/efe/ntuples/383/DY_powheg.root");
+  //myTree.Add("/data2/efe/ntuples/383/DY_powheg.root");
+  //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%3_8_6%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  //data
+  /*
+    myTree.Add("/data2/efe/ntuples/386/386_2_minbias_sept17_132440_135735.root");
+    myTree.Add("/data2/efe/ntuples/386/386_Run2010B_Nov4ReReco_v1_146428_149442.root");//
+    myTree.Add("/data2/efe/ntuples/386/386_2_Run2010A_Nov4ReReco_v1_136033_144114.root");
+  */
+
+  //mc
+  myTree.Add("/data2/efe/ntuples/386/DY_powheg_wo_HLT_filter.root");
   //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   //myTree.Add("/data2/efe/pythia.root");
   //myTree.Add("/data1/efe/ntuples/7TeV/zmmpowheg_qedfsr_off.root"); 
@@ -90,7 +116,7 @@ void tree1r()
   int hlt_trigger_fired;
   int sort_index_for_mu_tree;
   float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonM[50], RecMuonE[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50], RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50]; 
-  int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50];
+  int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50],hltmatched_Dimuon[50];
 
   //particle information
   int par_index, mom[50], daug[50];
@@ -99,13 +125,12 @@ void tree1r()
   //  int id_muon[20];
   int RecMuonglmuon_charge[50];
   //reco jets 
-  int reco_jet,jpt_c,cjpt_c,pfNjets;
+  int reco_jet,pfNjets;
   float RecJetPt[50], RecJetEta[50], RecJetPhi[50], RecJetPx[50], RecJetPy[50], RecJetPz[50], RecJetE[50];
   int techTrigger[44];
   float RecCorrJetPt[50];
   float JetEMF[50],JetN90[50],JetFHPD[50],JetFRBX[50];
   float PFjetEta[30], PFjetPhi[30],PFjetPt[30],PFCorrjetPt[30],PFjetCEMF[30],PFjetNEMF[30];
-  float JPTPt[50], JPTEta[50], JPTPhi[50], JPTPx[50], JPTPy[50], JPTPz[50], JPTE[50];
 
   //met 
   float caloMET, caloSET, pfMET, pfSET;
@@ -143,6 +168,7 @@ void tree1r()
   myTree.SetBranchAddress("RecMuontkmuon_pixelhits",RecMuontkmuon_pixelhits);
   myTree.SetBranchAddress("RecMuonglmuon_charge",RecMuonglmuon_charge);
   myTree.SetBranchAddress("hltmatchedmuon",hltmatchedmuon);
+  myTree->Branch("hltmatched_Dimuon",hltmatched_Dimuon);
   //  myTree.SetBranchAddress("id_muon",id_muon);
   myTree.SetBranchAddress("techTrigger",techTrigger);
 
@@ -191,15 +217,6 @@ void tree1r()
   myTree.SetBranchAddress("muCorrSET", &muCorrSET);
   myTree.SetBranchAddress("RecNumberOfUsedStations",RecNumberOfUsedStations);
 
-  myTree.SetBranchAddress("jpt_c",&jpt_c);
-  myTree.SetBranchAddress("JPTPt",JPTPt);
-  myTree.SetBranchAddress("JPTEta",JPTEta);
-  myTree.SetBranchAddress("JPTPhi",JPTPhi);
-  myTree.SetBranchAddress("JPTPx",JPTPx);
-  myTree.SetBranchAddress("JPTPy",JPTPy);
-  myTree.SetBranchAddress("JPTPz",JPTPz);
-  myTree.SetBranchAddress("JPTE",JPTE);
-
   myTree.SetBranchAddress("pfNjets",&pfNjets);
   myTree.SetBranchAddress("PFjetEta",PFjetEta);
   myTree.SetBranchAddress("PFjetPhi",PFjetPhi);
@@ -213,20 +230,12 @@ void tree1r()
 
   TFile *theFile = new TFile("Muon_out.root","RECREATE");
   theFile->cd();
-  /*  
-  float xAxis_AFB[15] = {40,70,78,86,88,90,92,94,100,105,110,140,200,300,600}; 
-  float xAxis_AFB_TOPLOT[14] = {55,74,82,87,89,91,93,97,102.5,107.5,125,170,250,450}; 
-  */
-
-  float xAxis_AFB[10] = {40,60,80,85,89,93,97,102,120,140}; 
-  float xAxis_AFB_TOPLOT[9] = {50,70,82.5,87,91,95,99.5,111,130}; 
-
-  float xAxis_AFB5[6] = {40,70,85,95,110,140}; 
-  float xAxis_AFB5_TOPLOT[5] = {55,77.5,90,102.5,125}; 
-
-  float xAxis_AFB8[9] =        {40,70,82,88  ,91,93  ,98   ,115,140}; 
-  float xAxis_AFB8_TOPLOT[8] = {55,76,85,89.5,92,95.5,106.5,127.5}; 
-
+  
+  float xAxis_AFB[14] = {15,30,40,50,60,76,86,91,96,106,120,150,200,600}; 
+  float xAxis_AFB_TOPLOT[13] = {22.5,35,45,55,68,81,88.5,93.5,101,113,135,175,400};
+ 
+  //twice-1 fine binning with respect to xAxis_AFB needed for TUnfold 
+  float xAxis_AFB_TU[28] = {15,22.5,30,35,40,45,50,55,60,68,76,81,86,88.5,91,93.5,96,101,106,113,120,135,150,175,200,400,600,610};//27
 
   float AFB_F[30],AFB_B[30];
   float AFB_Freco[30],AFB_Breco[30];
@@ -238,7 +247,24 @@ void tree1r()
   }
 
   TH1F *h_MZ = new TH1F("h_MZ","M(Z)#rightarrow #mu#mu",90, 20,160 );
+  TH1F *h_MZ_test = new TH1F("h_MZ_test","M(Z)#rightarrow #mu#mu",90, 20,160 );
   TH1F *h_MZ__RECO = new TH1F("h_MZ__RECO","M(Z)#rightarrow #mu#mu",90, 20,160 );
+
+  //-------------------For Unfolding----------------------------------------//
+
+  TH1D *h_MZ_F = new TH1D("h_MZ_F","h_MZ_F",13,xAxis_AFB );//600
+  TH1D *h_MZ_B = new TH1D("h_MZ_B","h_MZ_B",13,xAxis_AFB );
+  TH1D *h_MZ__RECO_F = new TH1D("h_MZ__RECO_F","h_MZ__RECO_F",27, xAxis_AFB_TU );
+  TH1D *h_MZ__RECO_B = new TH1D("h_MZ__RECO_B","h_MZ__RECO_B",27,  xAxis_AFB_TU );
+  TH1D *h_MZ__OBS_F = new TH1D("h_MZ__OBS_F","h_MZ__OBS_F",13, xAxis_AFB );
+  TH1D *h_MZ__OBS_B = new TH1D("h_MZ__OBS_B","h_MZ__OBS_B",13,  xAxis_AFB );
+ 
+  TH2D *h_MZ_F_vs_MZ_RECO_F = new TH2D("h_MZ_F_vs_MZ_RECO_F","h_MZ_F_vs_MZ_RECO_F",13,xAxis_AFB,27, xAxis_AFB_TU);
+  TH2D *h_MZ_F_vs_MZ_RECO_B = new TH2D("h_MZ_F_vs_MZ_RECO_B","h_MZ_F_vs_MZ_RECO_B",13,xAxis_AFB,27, xAxis_AFB_TU);
+  TH2D *h_MZ_B_vs_MZ_RECO_F = new TH2D("h_MZ_B_vs_MZ_RECO_F","h_MZ_B_vs_MZ_RECO_F",13,xAxis_AFB,27, xAxis_AFB_TU);
+  TH2D *h_MZ_B_vs_MZ_RECO_B = new TH2D("h_MZ_B_vs_MZ_RECO_B","h_MZ_B_vs_MZ_RECO_B",13,xAxis_AFB,27, xAxis_AFB_TU);
+  
+  //------------------------------------------------------------------------
 
   TH1F *h_costhetaCSreco = new TH1F("h_costhetaCSreco","",6,-1.,1.);
   TH1F *h_costhetaCSreco_morebins = new TH1F("h_costhetaCSreco_morebins","",24,-1.,1.);
@@ -400,16 +426,7 @@ void tree1r()
   TH1F* h_muon_E_rap_m = new TH1F("h_muon_E_rap_m","",60,0,360);
   TH1F* h_muon_Pz_rap_p = new TH1F("h_muon_Pz_rap_p","",20,0,300);
   TH1F* h_muon_Pz_rap_m = new TH1F("h_muon_Pz_rap_m","",20,0,300);
-  TH1F* E_rap_p_test = new TH1F("E_rap_p_test","",30,0,360);
-  TH1F* E_rap_m_test = new TH1F("E_rap_m_test","",30,0,360);
-  TH1F* Pz_rap_p_test = new TH1F("Pz_rap_p_test","",20,0,300);
-  TH1F* Pz_rap_m_test = new TH1F("Pz_rap_m_test","",20,0,300);
-  TH1F* Pt_rap_p_test = new TH1F("Pt_rap_p_test","",15,0,300);
-  TH1F* Pt_rap_m_test = new TH1F("Pt_rap_m_test","",15,0,300);
-  TH1F *Phi_rap_p_test = new TH1F("Phi_rap_p_test","",12,-3.2,3.2);
-  TH1F *Phi_rap_m_test = new TH1F("Phi_rap_m_test","",12,-3.2,3.2);
   TH1F* h_muon_rapidity = new TH1F("h_muon_rapidity","",50,-2.5,2.5); //24.
-  TH1F* h_Z_rap_test = new TH1F("h_Z_rap_test","",12,-3,3); 
   TH1F* h_muon_rapidity_endcap = new TH1F("h_muon_rapidity_endcap","",24,-3,3);
   TH1F* h_muon_rapidity_barrel = new TH1F("h_muon_rapidity_barrel","",24,-3,3);
   TH1F* h_muon_rapidity_0inbarrel_1inendcap = new TH1F("h_muon_rapidity_0inbarrel_1inendcap","",24,-3,-3);
@@ -436,23 +453,24 @@ void tree1r()
   TProfile2D *h_BF = new TProfile2D("h_BF","",9,-0.5,8.5,9,-0.5,8.5,0,40);
   TProfile2D *h_BB = new TProfile2D("h_BB","",9,-0.5,8.5,9,-0.5,8.5,0,40);
 
-  TProfile2D *h_FF_test = new TProfile2D("h_FF_test","",10,-0.5,9.5,10,-0.5,9.5,0,40);
-
-  TH2F *h_mzmz = new TH2F("h_mzmz","",10,40,140,10,40,140);
-
   TH1F *h_gen_eta = new TH1F("h_gen_eta","",100,-6,6);
 
   float jetscale = 0.1;
   float jetscale_jpt = 0.05;
   float jetetascale =  0.02;
 
+  int numberofgenforward = 0;
+  int numberofgenbackward = 0;
+  int numberofgenforward_recoforward = 0;
+  int numberofgenforward_recobackward = 0;
+  int numberofgenbackward_recobackward = 0;
+  int numberofgenbackward_recoforward = 0;
+
   int cnt0 = 0;
   int cnt1 = 0;
   int cnt2 = 0;
   int cnt3 = 0;
   int cnt4 = 0;
-  int cnt5 = 0;
-  int cnt6 = 0;
   int cntend = 0;
   int vjets_count = 0;
   int vjets_count_all = 0;
@@ -464,28 +482,20 @@ void tree1r()
   float AFB_Fbin3 = 0;
   float AFB_Bbin3 = 0;
 
-
-
-
-
   float AFB_Fbin[30] = {};
   float AFB_Bbin[30] = {};
   float AFB_FbinGEN[30] = {};
   float AFB_BbinGEN[30] = {};
   float AFB_FbinREC[30] = {};
   float AFB_BbinREC[30] = {};
-  float AFB_FbinREC_CORR[30] = {};
-  float AFB_BbinREC_CORR[30] = {};
-
-  float AFB_Fbin5[6] = {};
-  float AFB_Bbin5[6] = {};
-  float AFB_Fbin8[9] = {};
-  float AFB_Bbin8[9] = {};
-
+ 
   int comparison_count = 0;
 
-
-
+  float r_test = 0.9;//ratio for test
+  float ratio_FF = 198839./222715;//198835./199684.;//209458./210360.;
+  float ratio_FB = 846./222715;//849./199684.;//902./210360.;
+  float ratio_BF = 802./218235.;//807./196230.;//854./206324.;
+  float ratio_BB = 195428./218235.;//195423./196230.;//205470./206324.;
 
   Int_t nevent = myTree.GetEntries();
   //nevent = 50;
@@ -547,10 +557,34 @@ void tree1r()
     }
 
     if (!realdata && parpar!=2) continue;
-    if (sort_index_for_mu_tree < 2) continue;
+    //   if (sort_index_for_mu_tree < 2) continue;//This effects GEN level too - be careful
 
 
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@ Z at the parton level @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@Z at reco level@@@@@@@@@@@@@@@@@@@
+    //      if (sort_index_for_mu_tree !=2) continue;
+    float dr_gr = - 9999.;
+    int check_dr = 0;
+    if (TMath::Max(parton_pt[0],parton_pt[1]) == parton_pt[0]){ 
+      dr_gr = DeltaR(parton_eta[0],RecMuonEta[0],parton_phi[0],RecMuonPhi[0]);
+      if (dr_gr < 0.4) check_dr++; 
+      dr_gr = DeltaR(parton_eta[1],RecMuonEta[1],parton_phi[1],RecMuonPhi[1]);
+      if (dr_gr < 0.4) check_dr++; 
+      h_dr_gr->Fill(dr_gr);
+    }
+    if (TMath::Max(parton_pt[0],parton_pt[1]) == parton_pt[1]){
+      dr_gr = DeltaR(parton_eta[1],RecMuonEta[0],parton_phi[1],RecMuonPhi[0]);
+      if (dr_gr < 0.4) check_dr++; 
+      dr_gr = DeltaR(parton_eta[0],RecMuonEta[1],parton_phi[0],RecMuonPhi[1]);
+      if (dr_gr < 0.4) check_dr++; 
+      h_dr_gr->Fill(dr_gr);
+    }
+
+
+
+
+
     float MZ = 0;
     float gen_sab = 1./sqrt(2.);
     float gen_costhetaCSreco = -9999;
@@ -563,197 +597,24 @@ void tree1r()
     float gen_P2mreco = -9999;
     float p1dotp2_b = parton_px[0]*parton_px[1]+parton_py[0]*parton_py[1]+parton_pz[0]*parton_pz[1];
     MZ = parton_m[0]+parton_m[1]+2*(parton_e[0]*parton_e[1]-p1dotp2_b);
-    if (MZ < 0.) MZ = -1.*sqrt(fabs(MZ));
-    if (MZ > 0.) MZ = sqrt(MZ);
-    /*
-    if (parton_pt[0] < 20.) continue;
-    if (parton_pt[1] < 20.) continue;
-    if (fabs(parton_eta[0]) > 2.1) continue;
-    if (fabs(parton_eta[1]) > 2.1) continue;
-    */
-    if (MZ > 40. && MZ < 140.){
-	h_MZ->Fill(MZ);
+    //if (MZ < 0.) MZ = -1.*sqrt(fabs(MZ));
+    MZ = sqrt(MZ);
+    float MZ_test = sqrt(2*parton_pt[0]*parton_pt[1]*(cosh(parton_eta[0]-parton_eta[1])-cos(parton_phi[0]-parton_phi[1])));
 
-	gen_Qreco = MZ;
-	gen_QTreco = sqrt(pow((parton_px[0]+parton_px[1]),2)+pow((parton_py[0]+parton_py[1]),2));
-	if (parton_charge[0] == -1){ 
-	  gen_P1preco = gen_sab*(parton_e[0]+parton_pz[0]);
-	  gen_P1mreco = gen_sab*(parton_e[0]-parton_pz[0]);
-	  gen_P2preco = gen_sab*(parton_e[1]+parton_pz[1]);
-	  gen_P2mreco = gen_sab*(parton_e[1]-parton_pz[1]);
-	} 
-	if (parton_charge[0] == +1){ 
-	  gen_P1preco = gen_sab*(parton_e[1]+parton_pz[1]);
-	  gen_P1mreco = gen_sab*(parton_e[1]-parton_pz[1]);
-	  gen_P2preco = gen_sab*(parton_e[0]+parton_pz[0]);
-	  gen_P2mreco = gen_sab*(parton_e[0]-parton_pz[0]);
-	}    
-	gen_QZreco = parton_pz[0]+parton_pz[1];
-	gen_costhetaCSreco = (2/(gen_Qreco*sqrt(gen_Qreco*gen_Qreco+gen_QTreco*gen_QTreco)))*(gen_P1preco*gen_P2mreco-gen_P1mreco*gen_P2preco);
-	if (gen_QZreco < 0.) gen_costhetaCSreco = -gen_costhetaCSreco;
-	h_gen_costhetaCSreco->Fill(gen_costhetaCSreco);
-	if (fabs(parton_eta[0]) < 3. && fabs(parton_eta[1]) < 3.) h_gen_eta3_costhetaCSreco->Fill(gen_costhetaCSreco);
-	float gen_rap = 0.5*log((parton_e[0]+parton_e[1]+parton_pz[0]+parton_pz[1])/(parton_e[0]+parton_e[1]-parton_pz[0]-parton_pz[1]));
-	if (fabs(gen_rap) > 1.0) h_gen_costhetaCSreco_y_gt_1->Fill(gen_costhetaCSreco); 
-	if (fabs(gen_rap) < 1.0) h_gen_costhetaCSreco_y_lt_1->Fill(gen_costhetaCSreco); 
-	h_etadimuon_gen->Fill(gen_rap);
-
-	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@	  
-      }
-      //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-      //@@@@@@@@@@@@@@@@@@@@@@@@@@Z at reco level@@@@@@@@@@@@@@@@@@@
-      //      if (sort_index_for_mu_tree !=2) continue;
-      float dr_gr = - 9999.;
-      int check_dr = 0;
-      if (TMath::Max(parton_pt[0],parton_pt[1]) == parton_pt[0]){ 
-	dr_gr = DeltaR(parton_eta[0],RecMuonEta[0],parton_phi[0],RecMuonPhi[0]);
-	if (dr_gr < 0.4) check_dr++; 
-	dr_gr = DeltaR(parton_eta[1],RecMuonEta[1],parton_phi[1],RecMuonPhi[1]);
-	if (dr_gr < 0.4) check_dr++; 
-	h_dr_gr->Fill(dr_gr);
-      }
-      if (TMath::Max(parton_pt[0],parton_pt[1]) == parton_pt[1]){
-	dr_gr = DeltaR(parton_eta[1],RecMuonEta[0],parton_phi[1],RecMuonPhi[0]);
-	if (dr_gr < 0.4) check_dr++; 
-	dr_gr = DeltaR(parton_eta[0],RecMuonEta[1],parton_phi[0],RecMuonPhi[1]);
-	if (dr_gr < 0.4) check_dr++; 
-	h_dr_gr->Fill(dr_gr);
-      }
-     
-      /*
-      for (int yy = 0;yy<sort_index_for_mu_tree;yy++){
-	for (int yy_2 = 0;yy_2<parpar;yy_2++){
-	  dr_gr = DeltaR(parton_eta[yy_2],RecMuonEta[yy],parton_phi[yy_2],RecMuonPhi[yy]);
-	  h_dr_gr->Fill(dr_gr);
-	}
-      }
-      */
-
-      float MZ__RECO = 0;
-      float sab__RECO = 1./sqrt(2.);
-      float costhetaCSreco__RECO = -9999;
-      float Qreco__RECO = -9999;
-      float QZreco__RECO = -9999;
-      float QTreco__RECO = -9999;
-      float P1preco__RECO = -9999;
-      float P2preco__RECO = -9999;
-      float P1mreco__RECO = -9999;
-      float P2mreco__RECO = -9999;
-      float p1dotp2__RECO = RecMuonPx[0]*RecMuonPx[1]+RecMuonPy[0]*RecMuonPy[1]+RecMuonPz[0]*RecMuonPz[1];
-      MZ__RECO  = RecMuonM[0]+RecMuonM[1]+2*(RecMuonE[0]*RecMuonE[1]-p1dotp2__RECO);
-      //    if (event != 72675) continue;
-      /*
-      cout<<"-----------------------"<<endl;
-      cout<<"event  "<<event<<endl;
-      cout<<"gen eta:    "<<parton_eta[0]<<"   "<<parton_eta[1]<<endl;
-      cout<<"reco eta:   "<<RecMuonEta[0]<<"   "<<RecMuonEta[1]<<endl;
-      cout<<"gen pt:    "<<parton_pt[0]<<"   "<<parton_pt[1]<<endl;
-      cout<<"reco pt:   "<<RecMuonPt[0]<<"   "<<RecMuonPt[1]<<endl;      
-      cout<<"number of reco muons:  "<<sort_index_for_mu_tree<<endl;
-      cout<<"for mass reco:  "<<p1dotp2__RECO<<"  "<<MZ__RECO<<endl;
-      */
-      if (MZ__RECO < 0.) MZ__RECO = -1.*sqrt(fabs(MZ__RECO));
-      if (MZ__RECO > 0.) MZ__RECO = sqrt(MZ__RECO);
-
-      if (MZ__RECO > 40. && MZ__RECO < 140.){
-	h_MZ__RECO->Fill(MZ__RECO);
-	h_mzmz->Fill(MZ,MZ__RECO);
-	Qreco__RECO = MZ__RECO;
-	QTreco__RECO = sqrt(pow((RecMuonPx[0]+RecMuonPx[1]),2)+pow((RecMuonPy[0]+RecMuonPy[1]),2));
-	if (RecMuonglmuon_charge[0] == -1){ 
-	  P1preco__RECO = sab__RECO*(RecMuonE[0]+RecMuonPz[0]);
-	  P1mreco__RECO = sab__RECO*(RecMuonE[0]-RecMuonPz[0]);
-	  P2preco__RECO = sab__RECO*(RecMuonE[1]+RecMuonPz[1]);
-	  P2mreco__RECO = sab__RECO*(RecMuonE[1]-RecMuonPz[1]);
-	} 
-	if (RecMuonglmuon_charge[0] == +1){ 
-	  P1preco__RECO = sab__RECO*(RecMuonE[1]+RecMuonPz[1]);
-	  P1mreco__RECO = sab__RECO*(RecMuonE[1]-RecMuonPz[1]);
-	  P2preco__RECO = sab__RECO*(RecMuonE[0]+RecMuonPz[0]);
-	  P2mreco__RECO = sab__RECO*(RecMuonE[0]-RecMuonPz[0]);
-	}    
-	QZreco__RECO = RecMuonPz[0]+RecMuonPz[1];   
-	costhetaCSreco__RECO = (2/(Qreco__RECO*sqrt(Qreco__RECO*Qreco__RECO+QTreco__RECO*QTreco__RECO)))*(P1preco__RECO*P2mreco__RECO-P1mreco__RECO*P2preco__RECO);
-	if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;
-	h_costhetaCSreco__RECO->Fill(costhetaCSreco__RECO);   
+    float MZ__RECO = 0;
+    float sab__RECO = 1./sqrt(2.);
+    float costhetaCSreco__RECO = -9999;
+    float Qreco__RECO = -9999;
+    float QZreco__RECO = -9999;
+    float QTreco__RECO = -9999;
+    float P1preco__RECO = -9999;
+    float P2preco__RECO = -9999;
+    float P1mreco__RECO = -9999;
+    float P2mreco__RECO = -9999;
+    float p1dotp2__RECO = -9999;
 
 
-	/*
-	for (int jjj = 0; jjj<9; jjj++){
-	  if (MZ > xAxis_AFB[jjj] && MZ < xAxis_AFB[jjj+1]){
-	    if (gen_costhetaCSreco >= 0) AFB_Fbin_Reco[jjj]++;
-	    if (gen_costhetaCSreco < 0) AFB_Bbin_Reco[jjj]++;
-	  }  	
-	}
-	*/
 
-	
-      }
-      //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-  	float AFB_Fbin_Reco[11] = {0,0,0,0,0,0,0,0,0,0,0};
-	float AFB_Bbin_Reco[11] = {0,0,0,0,0,0,0,0,0,0,0};
-	float AFB_Fbin_Gen[11] = {0,0,0,0,0,0,0,0,0,0,0};
-	float AFB_Bbin_Gen[11] = {0,0,0,0,0,0,0,0,0,0,0};
-    
-	for (int jjj_k = 0; jjj_k<9; jjj_k++){//
-	  if (MZ > xAxis_AFB[jjj_k] && MZ < xAxis_AFB[jjj_k+1]){
-	    if (gen_costhetaCSreco >= 0){ 
-	      AFB_Fbin_Gen[jjj_k] = 1;
-	      AFB_FbinGEN[jjj_k]++;
-	    }
-	    if (gen_costhetaCSreco < 0){ 
-	      AFB_Bbin_Gen[jjj_k] = 1;
-	      AFB_BbinGEN[jjj_k]++;	      
-	    }
-	  }  	
-	}
-
-	for (int jjj_k = 0; jjj_k<9; jjj_k++){
-	  if (MZ__RECO > xAxis_AFB[jjj_k] && MZ__RECO < xAxis_AFB[jjj_k+1]){
-	    if (costhetaCSreco__RECO >= 0){ 
-	      AFB_Fbin_Reco[jjj_k] = 1;
-	      AFB_FbinREC[jjj_k]++;
-	    }
-	    if (costhetaCSreco__RECO < 0){
-	      AFB_Bbin_Reco[jjj_k] = 1;
-	      AFB_BbinREC[jjj_k]++;    
-	    }
-	  }  	
-	}
-	
-	/*
-	cout<<"MASS GEN:   "<<MZ<<"   MASS RECO:   "<<MZ__RECO<<endl;
-	cout<<"Q GEN:   "<<parton_charge[0]<<"    "<<parton_charge[1]<<endl;
-	cout<<"Q RECO:   "<<RecMuonglmuon_charge[0]<<"    "<<RecMuonglmuon_charge[1]<<endl;
-	cout<<"costheta GEN:    "<<gen_costhetaCSreco<<"   costheta RECO:    "<<costhetaCSreco__RECO<<endl;
-	*/
-
-	float RijFF[20][20]={};
-	float RijFB[20][20]={};
-	float RijBF[20][20]={};
-	float RijBB[20][20]={};
-	for (int i=0;i<9;i++){
-	  for (int j=0;j<9;j++){
-	    if (AFB_Fbin_Gen[j] != 0){
-	      RijFF[i][j] = AFB_Fbin_Reco[i]*1./AFB_Fbin_Gen[j]*1.;
-	      h_FF->Fill(i*1.,j*1.,RijFF[i][j],1);
-	    }
-	    if (AFB_Fbin_Gen[j] != 0){
-	      RijFB[i][j] = AFB_Bbin_Reco[i]*1./AFB_Fbin_Gen[j]*1.;
-	      h_FB->Fill(i*1.,j*1.,RijFB[i][j],1);
-	    }
-	    if (AFB_Bbin_Gen[j] != 0){
-	      RijBF[i][j] = AFB_Fbin_Reco[i]*1./AFB_Bbin_Gen[j]*1.;
-	      h_BF->Fill(i*1.,j*1.,RijBF[i][j],1);
-	    }
-	    if (AFB_Bbin_Gen[j] != 0){
-	      RijBB[i][j] = AFB_Bbin_Reco[i]*1./AFB_Bbin_Gen[j]*1.;
-	      h_BB->Fill(i*1.,j*1.,RijBB[i][j],1);
-	    }
-	  }
-	}
 
     //calo jets
     int sel_reco_jet = 0;
@@ -827,41 +688,58 @@ void tree1r()
     int hlpr_1 = 0;
     int hlpr_2 = 0;
 
-    //@@@@@@@@@@@@@@ SIMPLE TEST @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    for (int j = 0; j < sort_index_for_mu_tree; ++j){  
-      for (int jk = j; jk < sort_index_for_mu_tree  ; ++jk){
-	if (j == jk) continue;
-	if (RecMuonPt[j] > 10. && RecMuonPt[jk] > 10 && fabs(RecMuonEta[j]) <2.1 && fabs(RecMuonEta[jk]) <2.1){
-	  //	if (RecMuonPt[j] > 10. && RecMuonPt[jk] > 10){
-	  float p1dotp2 = RecMuonPx[j]*RecMuonPx[jk]+RecMuonPy[j]*RecMuonPy[jk]+RecMuonPz[j]*RecMuonPz[jk];
-	  float MZmuon_test = RecMuonM[j]+RecMuonM[jk]+2*(RecMuonE[j]*RecMuonE[jk]-p1dotp2);
-	  if (MZmuon_test < 0.) MZmuon_test = -1.*sqrt(fabs(MZmuon_test));
-	  if (MZmuon_test > 0.) MZmuon_test = sqrt(MZmuon_test);
-	  if (MZmuon_test < 40. || MZmuon_test > 140.) continue;
-	  float dimuonpt = sqrt(pow((RecMuonPx[0]+RecMuonPx[1]),2) +pow((RecMuonPy[0]+RecMuonPy[1]),2));
-	  //if (dimuonpt < 40.) continue;
-	  //if (MZmuon_test < 20.) continue;
-	  float dimuonrapidity = 0.5*log((RecMuonE[0]+RecMuonE[1]+RecMuonPz[0]+RecMuonPz[1])/(RecMuonE[0]+RecMuonE[1]-RecMuonPz[0]-RecMuonPz[1]));
-	  float dimuonphi = atan2(RecMuonPy[0]+RecMuonPy[1],RecMuonPx[0]+RecMuonPx[1]);
-	  h_Z_rap_test->Fill(dimuonrapidity);
-	  if (dimuonrapidity > 0.){
-	    E_rap_p_test->Fill(RecMuonE[0]+RecMuonE[1]);
-	    Pz_rap_p_test->Fill(RecMuonPz[0]+RecMuonPz[1]);
-	    Pt_rap_p_test->Fill(dimuonpt);
-	    Phi_rap_p_test->Fill(dimuonphi);
-	  }
-	  if (dimuonrapidity < 0.){
-	    E_rap_m_test->Fill(RecMuonE[0]+RecMuonE[1]);
-	    Pz_rap_m_test->Fill(fabs(RecMuonPz[0]+RecMuonPz[1]));
-	    Pt_rap_m_test->Fill(dimuonpt);
-	    Phi_rap_m_test->Fill(dimuonphi);
-	  }
-	  // }
-	}
-      }
-    }
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+ 
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@ Z at the parton level @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+
+    float AFB_Fbin_Gen[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    float AFB_Bbin_Gen[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+    h_MZ->Fill(MZ);
+    h_MZ_test->Fill(MZ_test);
+	
+
+    gen_Qreco = MZ;
+    gen_QTreco = sqrt(pow((parton_px[0]+parton_px[1]),2)+pow((parton_py[0]+parton_py[1]),2));
+    if (parton_charge[0] == -1){ 
+      gen_P1preco = gen_sab*(parton_e[0]+parton_pz[0]);
+      gen_P1mreco = gen_sab*(parton_e[0]-parton_pz[0]);
+      gen_P2preco = gen_sab*(parton_e[1]+parton_pz[1]);
+      gen_P2mreco = gen_sab*(parton_e[1]-parton_pz[1]);
+    } 
+    if (parton_charge[0] == +1){ 
+      gen_P1preco = gen_sab*(parton_e[1]+parton_pz[1]);
+      gen_P1mreco = gen_sab*(parton_e[1]-parton_pz[1]);
+      gen_P2preco = gen_sab*(parton_e[0]+parton_pz[0]);
+      gen_P2mreco = gen_sab*(parton_e[0]-parton_pz[0]);
+    }    
+    gen_QZreco = parton_pz[0]+parton_pz[1];
+    gen_costhetaCSreco = (2/(gen_Qreco*sqrt(gen_Qreco*gen_Qreco+gen_QTreco*gen_QTreco)))*(gen_P1preco*gen_P2mreco-gen_P1mreco*gen_P2preco);
+    if (gen_QZreco < 0.) gen_costhetaCSreco = -gen_costhetaCSreco;
+    h_gen_costhetaCSreco->Fill(gen_costhetaCSreco);
+    if (fabs(parton_eta[0]) < 3. && fabs(parton_eta[1]) < 3.) h_gen_eta3_costhetaCSreco->Fill(gen_costhetaCSreco);
+    float gen_rap = 0.5*log((parton_e[0]+parton_e[1]+parton_pz[0]+parton_pz[1])/(parton_e[0]+parton_e[1]-parton_pz[0]-parton_pz[1]));
+    if (fabs(gen_rap) > 1.0) h_gen_costhetaCSreco_y_gt_1->Fill(gen_costhetaCSreco); 
+    if (fabs(gen_rap) < 1.0) h_gen_costhetaCSreco_y_lt_1->Fill(gen_costhetaCSreco); 
+    h_etadimuon_gen->Fill(gen_rap);
+
+
+	  
+    for (int jjj_k = 0; jjj_k<13; jjj_k++){//
+      if (MZ > xAxis_AFB[jjj_k] && MZ < xAxis_AFB[jjj_k+1]){
+	if (gen_costhetaCSreco >= 0){ 
+	  AFB_Fbin_Gen[jjj_k] = 1;
+	  AFB_FbinGEN[jjj_k]++;
+	}
+	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1){ 
+	  AFB_Bbin_Gen[jjj_k] = 1;
+	  AFB_BbinGEN[jjj_k]++;	      
+	}
+      }  	
+    }
+
+
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@	  
 
     int numberofrecmuons_0 = 0;
     int numberofrecmuons_1 = 0;
@@ -880,11 +758,11 @@ void tree1r()
 	    fabs(RecMuonEta[j]) <2.1 && fabs(RecMuonEta[jk]) <2.1 && //common3
 	    //	      ((hltmatchedmuon[j] == 1 && fabs(RecMuonEta[j]) <2.1) || (hltmatchedmuon[jk] == 1 && fabs(RecMuonEta[jk]) <2.1)) && 
 	    fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2) //common4
-	{ 
-	             index1[common] = j;
-	             index2[common] = jk;
-	             common++;
-	}
+	  { 
+	    index1[common] = j;
+	    index2[common] = jk;
+	    common++;
+	  }
       }
       
       //if (common > 1) cout<<"common   "<<common<<endl;
@@ -965,8 +843,6 @@ void tree1r()
     h_N_2->Fill(numberofrecmuons_2);
 	  
     //==================================================
-    //------------------------Muon ID--------------------------------------------
-	  
     int loose1 = 0;
     int loose2 = 0;
     int tight_hltalso1 = 0;
@@ -975,65 +851,161 @@ void tree1r()
     float MZmuon = 0;
     int ind1 = -99;
     int ind2 = -99;
-    for (int gg = 0;gg<common;++gg){
-      ind1 = index1[gg];
-      ind2 = index2[gg];
-      /*
-      if (common > 1){
-	cout<<gg<<"  "<<RecMuonPt[ind1]<<"   "<<RecMuonPt[ind2]<<endl;
-	cout<<"ind1   "<<ind1<<"   ind2    "<<ind2<<endl;
+
+    if (MZ > 15. && parton_pt[0] > 20. && parton_pt[1] > 20. && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1){
+
+
+      //------------------------Muon ID--------------------------------------------
+	  
+
+      for (int gg = 0;gg<common;++gg){
+	ind1 = index1[gg];
+	ind2 = index2[gg];
+	/*
+	  if (common > 1){
+	  cout<<gg<<"  "<<RecMuonPt[ind1]<<"   "<<RecMuonPt[ind2]<<endl;
+	  cout<<"ind1   "<<ind1<<"   ind2    "<<ind2<<endl;
+	  }
+	*/
+	if (RecMuontkmuon_pixelhits[ind1] >= 1 && RecMuonglmuon_trackerHits[ind1] > 10) loose1 = 1; 
+	if (RecMuontkmuon_pixelhits[ind2] >= 1 && RecMuonglmuon_trackerHits[ind2] > 10) loose2 = 1; 
+	if (RecMuonglmuon_normalizedChi2[ind1] < 10 && RecMuonglmuon_muonHits[ind1] >= 1) tight_hltalso1 = 1;
+	if (RecMuonglmuon_normalizedChi2[ind2] < 10 && RecMuonglmuon_muonHits[ind2] >= 1) tight_hltalso2 = 1;
       }
-      */
-      if (RecMuontkmuon_pixelhits[ind1] >= 1 && RecMuonglmuon_trackerHits[ind1] > 10) loose1 = 1; 
-      if (RecMuontkmuon_pixelhits[ind2] >= 1 && RecMuonglmuon_trackerHits[ind2] > 10) loose2 = 1; 
-      if (RecMuonglmuon_normalizedChi2[ind1] < 10 && RecMuonglmuon_muonHits[ind1] >= 1) tight_hltalso1 = 1;
-      if (RecMuonglmuon_normalizedChi2[ind2] < 10 && RecMuonglmuon_muonHits[ind2] >= 1) tight_hltalso2 = 1;
-    }
 
-    if (ind1 == -99 || ind2 == -99) continue;
+      //if (ind1 == -99 || ind2 == -99) continue;
 
-    if (((loose1 && tight_hltalso2) && (loose2 && tight_hltalso1))){//or replaced by and
-      float p1dotp2 = RecMuonPx[ind1]*RecMuonPx[ind2]+RecMuonPy[ind1]*RecMuonPy[ind2]+RecMuonPz[ind1]*RecMuonPz[ind2];
-      MZmuon = RecMuonM[ind1]+RecMuonM[ind2]+2*(RecMuonE[ind1]*RecMuonE[ind2]-p1dotp2);
-      if (MZmuon < 0.) MZmuon = -1.*sqrt(fabs(MZmuon));
-      if (MZmuon > 0.) MZmuon = sqrt(MZmuon);
-      h_muon_leading_PT->Fill(TMath::Max(RecMuonPt[ind1],RecMuonPt[ind2]));				  
-          // if (MZmuon > 20.){
-      if (MZmuon > 40. && MZmuon < 140.){
-	select = 1;
-	float dimuonpt = sqrt(pow((RecMuonPx[ind1]+RecMuonPx[ind2]),2) +pow((RecMuonPy[ind1]+RecMuonPy[ind2]),2));
-	float dimuonrapidity = 0.5*log((RecMuonE[ind1]+RecMuonE[ind2]+RecMuonPz[ind1]+RecMuonPz[ind2])/(RecMuonE[ind1]+RecMuonE[ind2]-RecMuonPz[ind1]-RecMuonPz[ind2]));
-	float dimuonphi = atan2(RecMuonPy[ind1]+RecMuonPy[ind2],RecMuonPx[ind1]+RecMuonPx[ind2]);
-	h_dimuonphi->Fill(dimuonphi);
-	h_muon_PT->Fill(dimuonpt);
-	h_muon_rapidity->Fill(dimuonrapidity);
-	if (fabs(RecMuonEta[ind1]) > 1.2 && fabs(RecMuonEta[ind2]) > 1.2) h_muon_rapidity_endcap->Fill(dimuonrapidity);
-	if (fabs(RecMuonEta[ind1]) < 1.2 && fabs(RecMuonEta[ind2]) < 1.2) h_muon_rapidity_barrel->Fill(dimuonrapidity);
-	if (fabs(RecMuonEta[ind1]) < 1.2 && fabs(RecMuonEta[ind2]) > 1.2) h_muon_rapidity_0inbarrel_1inendcap->Fill(dimuonrapidity);
-	if (fabs(RecMuonEta[ind1]) > 1.2 && fabs(RecMuonEta[ind2]) < 1.2) h_muon_rapidity_1inbarrel_0inendcap->Fill(dimuonrapidity);
-	h_MZmuon->Fill(MZmuon);
-	h_eta_mass->Fill(dimuonrapidity,MZmuon);
-	if (dimuonrapidity > 0.){
-	  h_muon_E_rap_p->Fill(RecMuonE[ind1]+RecMuonE[ind2]);
-	  h_muon_Pz_rap_p->Fill(RecMuonPz[ind1]+RecMuonPz[ind2]);
-	}
-	if (dimuonrapidity < 0.){ 
-	  h_muon_E_rap_m->Fill(RecMuonE[ind1]+RecMuonE[ind2]);
-	  h_muon_Pz_rap_m->Fill(fabs(RecMuonPz[ind1]+RecMuonPz[ind2]));
-	}
+      if (((loose1 && tight_hltalso2) && (loose2 && tight_hltalso1)) && ind1!=-99 && ind2!=-99){//or replaced by and
+	float p1dotp2 = RecMuonPx[ind1]*RecMuonPx[ind2]+RecMuonPy[ind1]*RecMuonPy[ind2]+RecMuonPz[ind1]*RecMuonPz[ind2];
+	MZmuon = RecMuonM[ind1]+RecMuonM[ind2]+2*(RecMuonE[ind1]*RecMuonE[ind2]-p1dotp2);
+	if (MZmuon < 0.) MZmuon = -1.*sqrt(fabs(MZmuon));
+	if (MZmuon > 0.) MZmuon = sqrt(MZmuon);
+	h_muon_leading_PT->Fill(TMath::Max(RecMuonPt[ind1],RecMuonPt[ind2]));				  
+	// if (MZmuon > 20.){
+	if (MZmuon > 15.){
+	  select = 1;
+	  float dimuonpt = sqrt(pow((RecMuonPx[ind1]+RecMuonPx[ind2]),2) +pow((RecMuonPy[ind1]+RecMuonPy[ind2]),2));
+	  float dimuonrapidity = 0.5*log((RecMuonE[ind1]+RecMuonE[ind2]+RecMuonPz[ind1]+RecMuonPz[ind2])/(RecMuonE[ind1]+RecMuonE[ind2]-RecMuonPz[ind1]-RecMuonPz[ind2]));
+	  float dimuonphi = atan2(RecMuonPy[ind1]+RecMuonPy[ind2],RecMuonPx[ind1]+RecMuonPx[ind2]);
+	  h_dimuonphi->Fill(dimuonphi);
+	  h_muon_PT->Fill(dimuonpt);
+	  h_muon_rapidity->Fill(dimuonrapidity);
+	  if (fabs(RecMuonEta[ind1]) > 1.2 && fabs(RecMuonEta[ind2]) > 1.2) h_muon_rapidity_endcap->Fill(dimuonrapidity);
+	  if (fabs(RecMuonEta[ind1]) < 1.2 && fabs(RecMuonEta[ind2]) < 1.2) h_muon_rapidity_barrel->Fill(dimuonrapidity);
+	  if (fabs(RecMuonEta[ind1]) < 1.2 && fabs(RecMuonEta[ind2]) > 1.2) h_muon_rapidity_0inbarrel_1inendcap->Fill(dimuonrapidity);
+	  if (fabs(RecMuonEta[ind1]) > 1.2 && fabs(RecMuonEta[ind2]) < 1.2) h_muon_rapidity_1inbarrel_0inendcap->Fill(dimuonrapidity);
+	  h_MZmuon->Fill(MZmuon);
+	  h_eta_mass->Fill(dimuonrapidity,MZmuon);
+	  if (dimuonrapidity > 0.){
+	    h_muon_E_rap_p->Fill(RecMuonE[ind1]+RecMuonE[ind2]);
+	    h_muon_Pz_rap_p->Fill(RecMuonPz[ind1]+RecMuonPz[ind2]);
+	  }
+	  if (dimuonrapidity < 0.){ 
+	    h_muon_E_rap_m->Fill(RecMuonE[ind1]+RecMuonE[ind2]);
+	    h_muon_Pz_rap_m->Fill(fabs(RecMuonPz[ind1]+RecMuonPz[ind2]));
+	  }
 	
-	h_vtx->Fill(nVertices);
-	h_eta_mu_0->Fill(RecMuonEta[ind1]);
-	h_eta_mu_1->Fill(RecMuonEta[ind2]);
-      }//mass window
-    } ///tight...loose
-    
+	  h_vtx->Fill(nVertices);
+	  h_eta_mu_0->Fill(RecMuonEta[ind1]);
+	  h_eta_mu_1->Fill(RecMuonEta[ind2]);
 
+
+
+	  p1dotp2__RECO = RecMuonPx[ind1]*RecMuonPx[ind2]+RecMuonPy[ind1]*RecMuonPy[ind2]+RecMuonPz[ind1]*RecMuonPz[ind2];
+	  MZ__RECO  = RecMuonM[ind1]+RecMuonM[ind2]+2*(RecMuonE[ind1]*RecMuonE[ind2]-p1dotp2__RECO);
+	  MZ__RECO = sqrt(MZ__RECO);
+
+	  h_MZ__RECO->Fill(MZ__RECO);
+	  Qreco__RECO = MZ__RECO;
+	  QTreco__RECO = sqrt(pow((RecMuonPx[ind1]+RecMuonPx[ind2]),2)+pow((RecMuonPy[ind1]+RecMuonPy[ind2]),2));
+	  if (RecMuonglmuon_charge[ind1] == -1){ 
+	    P1preco__RECO = sab__RECO*(RecMuonE[ind1]+RecMuonPz[ind1]);
+	    P1mreco__RECO = sab__RECO*(RecMuonE[ind1]-RecMuonPz[ind1]);
+	    P2preco__RECO = sab__RECO*(RecMuonE[ind2]+RecMuonPz[ind2]);
+	    P2mreco__RECO = sab__RECO*(RecMuonE[ind2]-RecMuonPz[ind2]);
+	  } 
+	  if (RecMuonglmuon_charge[ind1] == +1){ 
+	    P1preco__RECO = sab__RECO*(RecMuonE[ind2]+RecMuonPz[ind2]);
+	    P1mreco__RECO = sab__RECO*(RecMuonE[ind2]-RecMuonPz[ind2]);
+	    P2preco__RECO = sab__RECO*(RecMuonE[ind1]+RecMuonPz[ind1]);
+	    P2mreco__RECO = sab__RECO*(RecMuonE[ind1]-RecMuonPz[ind1]);
+	  }    
+	  QZreco__RECO = RecMuonPz[ind1]+RecMuonPz[ind2];   
+	  costhetaCSreco__RECO = (2/(Qreco__RECO*sqrt(Qreco__RECO*Qreco__RECO+QTreco__RECO*QTreco__RECO)))*(P1preco__RECO*P2mreco__RECO-P1mreco__RECO*P2preco__RECO);
+	  if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;
+	  h_costhetaCSreco__RECO->Fill(costhetaCSreco__RECO);   
+
+
+	}//mass window
+      } ///tight...loose
+
+
+
+
+
+
+	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	//-------------------For Unfolding----------------------------------------
+      
+      if (iev < nevent*r_test ){
+	if (gen_costhetaCSreco >= 0) numberofgenforward++;
+	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1) numberofgenbackward++;
+	if (gen_costhetaCSreco >= 0 && costhetaCSreco__RECO >= 0){
+	  numberofgenforward_recoforward++;
+	  if (select) h_MZ_F_vs_MZ_RECO_F->Fill(MZ,MZ__RECO);
+	  if (!select) h_MZ_F_vs_MZ_RECO_F->Fill(MZ,-1);
+	}
+	if (gen_costhetaCSreco >= 0 && costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1){ 
+	  numberofgenforward_recobackward++;
+	  if (select) h_MZ_F_vs_MZ_RECO_B->Fill(MZ,MZ__RECO);
+	  if (!select) h_MZ_F_vs_MZ_RECO_B->Fill(MZ,-1);
+	}
+	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1 && costhetaCSreco__RECO >= 0){ 
+	  numberofgenbackward_recoforward++;
+	  if (select) h_MZ_B_vs_MZ_RECO_F->Fill(MZ,MZ__RECO);
+	  if (!select) h_MZ_B_vs_MZ_RECO_F->Fill(MZ,-1);
+	}
+	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1 && costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1){
+	  numberofgenbackward_recobackward++;
+	  if (select) h_MZ_B_vs_MZ_RECO_B->Fill(MZ,MZ__RECO);
+	  if (!select) h_MZ_B_vs_MZ_RECO_B->Fill(MZ,-1);
+	}
+      }
+	
+      if (iev > nevent*r_test ){	
+	if (gen_costhetaCSreco >= 0) h_MZ_F->Fill(MZ);
+	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1) h_MZ_B->Fill(MZ);
+      }
+	
+      if (iev > nevent*r_test ){	
+	if (costhetaCSreco__RECO >= 0){ 
+	  if (MZ__RECO > 600){ 
+	    h_MZ__RECO_F->Fill(609.5);
+	  }else{
+	    h_MZ__RECO_F->Fill(MZ__RECO);
+	  }
+	  h_MZ__OBS_F->Fill(MZ__RECO);
+	}
+	if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1){ 
+	  if (MZ__RECO > 600){ 
+	    h_MZ__RECO_B->Fill(609.5);
+	  }else{
+	    h_MZ__RECO_B->Fill(MZ__RECO);
+	  }
+	  h_MZ__OBS_B->Fill(MZ__RECO);
+	}
+      }
+    }	
+    //------------------------------------------------------------------------
+
+
+
+
+	
 	  
 	  
     if (select == 0) continue;
-    if (MZmuon < 40.) continue;
-    if (MZmuon > 140.) continue;
+    if (MZmuon < 15.) continue;
 
     ++cntend;
 
@@ -1136,33 +1108,15 @@ void tree1r()
       }
     }
 
-    for (int jjj = 0; jjj<9; jjj++){
+    for (int jjj = 0; jjj<13; jjj++){
       if (MZmuon > xAxis_AFB[jjj] && MZmuon < xAxis_AFB[jjj+1]){
 	if (costhetaCSreco >= 0) AFB_Fbin[jjj]++;
 	if (costhetaCSreco < 0) AFB_Bbin[jjj]++;
       }  	
     }
 
-    for (int jjj = 0; jjj<5; jjj++){
-      if (MZmuon > xAxis_AFB5[jjj] && MZmuon < xAxis_AFB5[jjj+1]){
-	if (costhetaCSreco >= 0) AFB_Fbin5[jjj]++;
-	if (costhetaCSreco < 0) AFB_Bbin5[jjj]++;
-      }  	
-    } 
 
-    for (int jjj = 0; jjj<8; jjj++){
-      if (MZmuon > xAxis_AFB8[jjj] && MZmuon < xAxis_AFB8[jjj+1]){
-	if (costhetaCSreco >= 0) AFB_Fbin8[jjj]++;
-	if (costhetaCSreco < 0) AFB_Bbin8[jjj]++;
-      }  	
-    } 
-
-
-    //      if (MZmuon > 78 && MZmuon < 105){ 
-    if (MZmuon >= 70 && MZmuon < 110){ 
-      if (costhetaCSreco >= 0) AFB_Fbin2++;
-      if (costhetaCSreco < 0) AFB_Bbin2++;	
-    }
+    
     //      if (MZmuon > 105 && MZmuon < 140){ 
     if (MZmuon >= 110 && MZmuon < 140){
       if (costhetaCSreco >= 0) AFB_Fbin3++;
@@ -1172,7 +1126,7 @@ void tree1r()
 
 
 
-    for (int uu = 0; uu<9; uu++){
+    for (int uu = 0; uu<13; uu++){
       if (MZmuon > xAxis_AFB[uu] && MZmuon < xAxis_AFB[uu+1]){
 	if (costhetaCSreco >= 0) AFB_Freco[uu]++;
 	if (costhetaCSreco < 0) AFB_Breco[uu]++;
@@ -1185,6 +1139,57 @@ void tree1r()
       if (costhetaCSreco < 0) h_MZmuonbackward->Fill(MZmuon);
       }
     */
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+    float AFB_Fbin_Reco[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    float AFB_Bbin_Reco[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+
+    for (int jjj_k = 0; jjj_k<13; jjj_k++){
+      if (MZ__RECO > xAxis_AFB[jjj_k] && MZ__RECO < xAxis_AFB[jjj_k+1]){
+	if (costhetaCSreco__RECO >= 0){ 
+	  AFB_Fbin_Reco[jjj_k] = 1;
+	  AFB_FbinREC[jjj_k]++;
+	}
+	if (costhetaCSreco__RECO < 0){
+	  AFB_Bbin_Reco[jjj_k] = 1;
+	  AFB_BbinREC[jjj_k]++;    
+	}
+      }  	
+    }
+
+
+    /*
+      cout<<"MASS GEN:   "<<MZ<<"   MASS RECO:   "<<MZ__RECO<<endl;
+      cout<<"Q GEN:   "<<parton_charge[0]<<"    "<<parton_charge[1]<<endl;
+      cout<<"Q RECO:   "<<RecMuonglmuon_charge[0]<<"    "<<RecMuonglmuon_charge[1]<<endl;
+      cout<<"costheta GEN:    "<<gen_costhetaCSreco<<"   costheta RECO:    "<<costhetaCSreco__RECO<<endl;
+    */
+
+    float RijFF[20][20]={};
+    float RijFB[20][20]={};
+    float RijBF[20][20]={};
+    float RijBB[20][20]={};
+    for (int i=0;i<9;i++){
+      for (int j=0;j<9;j++){
+	if (AFB_Fbin_Gen[j] != 0){
+	  RijFF[i][j] = AFB_Fbin_Reco[i]*1./AFB_Fbin_Gen[j]*1.;
+	  h_FF->Fill(i*1.,j*1.,RijFF[i][j],1);
+	}
+	if (AFB_Fbin_Gen[j] != 0){
+	  RijFB[i][j] = AFB_Bbin_Reco[i]*1./AFB_Fbin_Gen[j]*1.;
+	  h_FB->Fill(i*1.,j*1.,RijFB[i][j],1);
+	}
+	if (AFB_Bbin_Gen[j] != 0){
+	  RijBF[i][j] = AFB_Fbin_Reco[i]*1./AFB_Bbin_Gen[j]*1.;
+	  h_BF->Fill(i*1.,j*1.,RijBF[i][j],1);
+	}
+	if (AFB_Bbin_Gen[j] != 0){
+	  RijBB[i][j] = AFB_Bbin_Reco[i]*1./AFB_Bbin_Gen[j]*1.;
+	  h_BB->Fill(i*1.,j*1.,RijBB[i][j],1);
+	}
+      }
+    }
 
 
     //##########
@@ -1277,19 +1282,19 @@ void tree1r()
   }// end of event loop
 
   /*
-  cout<<"-----------------------------------------------------------"<<endl;
-  cout<<"cnt0   "<<cnt0<<"    "<<100.*cnt0/(1.0*cnt0)<<endl;
-  cout<<"cnt1   "<<cnt1<<"    "<<100.*cnt1/(1.0*cnt1)<<endl;
-  cout<<"cnt2   "<<cnt2<<"    "<<100.*cnt2/(1.0*cnt1)<<endl;
-  cout<<"cnt3   "<<cnt3<<"    "<<100.*cnt3/(1.0*cnt1)<<endl;
-  cout<<"cnt4   "<<cnt4<<"    "<<100.*cnt4/(1.0*cnt1)<<endl;
-  cout<<"cnt5   "<<cnt5<<"    "<<100.*cnt5/(1.0*cnt1)<<endl;
-  cout<<"cnt6   "<<cnt6<<"    "<<100.*cnt6/(1.0*cnt1)<<endl;
-  cout<<"-----------------------------------------------------------"<<endl;
+    cout<<"-----------------------------------------------------------"<<endl;
+    cout<<"cnt0   "<<cnt0<<"    "<<100.*cnt0/(1.0*cnt0)<<endl;
+    cout<<"cnt1   "<<cnt1<<"    "<<100.*cnt1/(1.0*cnt1)<<endl;
+    cout<<"cnt2   "<<cnt2<<"    "<<100.*cnt2/(1.0*cnt1)<<endl;
+    cout<<"cnt3   "<<cnt3<<"    "<<100.*cnt3/(1.0*cnt1)<<endl;
+    cout<<"cnt4   "<<cnt4<<"    "<<100.*cnt4/(1.0*cnt1)<<endl;
+    cout<<"cnt5   "<<cnt5<<"    "<<100.*cnt5/(1.0*cnt1)<<endl;
+    cout<<"cnt6   "<<cnt6<<"    "<<100.*cnt6/(1.0*cnt1)<<endl;
+    cout<<"-----------------------------------------------------------"<<endl;
 
-  cout<<"tot eff = "<<(1.*cntend)/(1.*cnt0)<<endl;
-  cout<<"#Z+1jet events and tot eff(Vjets) = "<<vjets_count<<"  "<<(1.*vjets_count)/(1.*cnt0)<<endl;
-  cout<<"#Z+Njet events and tot eff(Vjets) = "<<vjets_count_all<<"  "<<(1.*vjets_count_all)/(1.*cnt0)<<endl;
+    cout<<"tot eff = "<<(1.*cntend)/(1.*cnt0)<<endl;
+    cout<<"#Z+1jet events and tot eff(Vjets) = "<<vjets_count<<"  "<<(1.*vjets_count)/(1.*cnt0)<<endl;
+    cout<<"#Z+Njet events and tot eff(Vjets) = "<<vjets_count_all<<"  "<<(1.*vjets_count_all)/(1.*cnt0)<<endl;
   */
 
   float massbinbin[3];
@@ -1309,250 +1314,6 @@ void tree1r()
   massbinerror[0] = sqrt((1-massbin[0]*massbin[0])/(AFB_Fbin1+AFB_Bbin1)); 
   massbinerror[1] = sqrt((1-massbin[1]*massbin[1])/(AFB_Fbin2+AFB_Bbin2));
   massbinerror[2] = sqrt((1-massbin[2]*massbin[2])/(AFB_Fbin3+AFB_Bbin3));
-  /*
-  cout<<"Bin 1:   "<< massbin[0]<<"   "<<massbinerror[0]<<"  NF+NB=N="<<AFB_Fbin1<<"+"<<AFB_Bbin1<<"="<<AFB_Fbin1+AFB_Bbin1<<endl;
-  cout<<"Bin 2:   "<<  massbin[1] <<"    "<<massbinerror[1]<<"  NF+NB=N="<<AFB_Fbin2<<"+"<<AFB_Bbin2<<"="<<AFB_Fbin2+AFB_Bbin2<<endl;
-  cout<<"Bin 3:   "<<  massbin[2]<<"    "<<massbinerror[2]<<"  NF+NB=N="<<AFB_Fbin3<<"+"<<AFB_Bbin3<<"="<<AFB_Fbin3+AFB_Bbin3<<endl;
-
-  cout<<"  "<<endl;
-  cout<<" Number of events in M=60-120 GeV:   "<<comparison_count<<endl; 
-  */
-  //___________________________________________________________
-
-  ofstream f_ff,f_fb,f_bf,f_bb;
-  f_ff.open("Rij_FF.txt");
-  f_fb.open("Rij_FB.txt");
-  f_bf.open("Rij_BF.txt");
-  f_bb.open("Rij_BB.txt");
-
-  int dim = 9;
-  TMatrixD Rij__ff(dim,dim);
-  TMatrixD Rij__fb(dim,dim);
-  TMatrixD Rij__bf(dim,dim);
-  TMatrixD Rij__bb(dim,dim);
-  TArrayI row(dim),col(dim);
-  int totdim = dim*dim;
-  TArrayD data__ff(totdim);
-  TArrayD data__fb(totdim);
-  TArrayD data__bf(totdim);
-  TArrayD data__bb(totdim);
-  for (int i= 0;i<dim;i++){
-      row[i] = i;
-      col[i] = i;
-      for (int j=0;j<dim;j++){
-	int k = dim*i+j;//9 is the number of rows
-	data__ff[k] = h_FF->GetBinContent(i+1,j+1);
-	data__fb[k] = h_FB->GetBinContent(i+1,j+1);
-	data__bf[k] = h_BF->GetBinContent(i+1,j+1);
-	data__bb[k] = h_BB->GetBinContent(i+1,j+1);
-	f_ff << i <<"  "<< j <<"  "<<data__ff[k]<<endl;
-	f_fb << i <<"  "<< j <<"  "<<data__fb[k]<<endl;
-	f_bf << i <<"  "<< j <<"  "<<data__bf[k]<<endl;
-	f_bb << i <<"  "<< j <<"  "<<data__bb[k]<<endl;
-      }
-  }
-  Rij__ff.SetMatrixArray(data__ff.GetArray());
-  Rij__fb.SetMatrixArray(data__fb.GetArray());
-  Rij__bf.SetMatrixArray(data__bf.GetArray());
-  Rij__bb.SetMatrixArray(data__bb.GetArray());
-
-  f_ff.close();
-  f_fb.close();
-  f_bf.close();
-  f_bb.close();
-
-  const double *pData__ff = Rij__ff.GetMatrixArray();
-  const double *pData__fb = Rij__fb.GetMatrixArray();
-  const double *pData__bf = Rij__bf.GetMatrixArray();
-  const double *pData__bb = Rij__bb.GetMatrixArray();
-  /*  
-  cout<<"FF"<<endl;
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      if (pData__ff[k]) cout<<i<<"  "<<j<<"  "<<pData__ff[k]<<endl;
-      
-    }
-  }
-  cout<<"FB"<<endl;
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      if (pData__fb[k]) cout<<i<<"  "<<j<<"  "<<pData__fb[k]<<endl;
-    }
-  }
-  cout<<"BF"<<endl;
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      if (pData__bf[k]) cout<<i<<"  "<<j<<"  "<<pData__bf[k]<<endl;
-    }
-  }
-  cout<<"BB"<<endl;
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      if (pData__bb[k]) cout<<i<<"  "<<j<<"  "<<pData__bb[k]<<endl;
-    }
-  }
-  */
-  TMatrixD Orig_Rij__ff(dim,dim);
-  TMatrixD Orig_Rij__fb(dim,dim);
-  TMatrixD Orig_Rij__bf(dim,dim);
-  TMatrixD Orig_Rij__bb(dim,dim);
-  Orig_Rij__ff = Rij__ff;
-  Orig_Rij__fb = Rij__fb;
-  Orig_Rij__bf = Rij__bf;
-  Orig_Rij__bb = Rij__bb;
-  TMatrixD Inv_Rij__ff(dim,dim);
-  TMatrixD Inv_Rij__fb(dim,dim);
-  TMatrixD Inv_Rij__bf(dim,dim);
-  TMatrixD Inv_Rij__bb(dim,dim);
-  Inv_Rij__ff = Rij__ff.Invert();
-  Inv_Rij__fb = Rij__fb.Invert();
-  Inv_Rij__bf = Rij__bf.Invert();
-  Inv_Rij__bb = Rij__bb.Invert();
-  TMatrixD test__ff(dim,dim);
-  TMatrixD test__fb(dim,dim);
-  TMatrixD test__bf(dim,dim);
-  TMatrixD test__bb(dim,dim);
-  //multiplication with inverse for test
-  test__ff = Inv_Rij__ff*Orig_Rij__ff;
-  test__fb = Inv_Rij__fb*Orig_Rij__fb;
-  test__bf = Inv_Rij__bf*Orig_Rij__bf;
-  test__bb = Inv_Rij__bb*Orig_Rij__bb;
-
-  const double *testData__ff = test__ff.GetMatrixArray();
-  const double *testData__fb = test__fb.GetMatrixArray();
-  const double *testData__bf = test__bf.GetMatrixArray();
-  const double *testData__bb = test__bb.GetMatrixArray();
-  
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      if (i == j) cout<<i<<"  "<<j<<"  "<<testData__ff[k]<<endl;
-      
-    }
-  }
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      if (i == j) cout<<i<<"  "<<j<<"  "<<testData__fb[k]<<endl;
-    }
-  }
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      if (i == j) cout<<i<<"  "<<j<<"  "<<testData__bf[k]<<endl;
-    }
-  }
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      if (i == j) cout<<i<<"  "<<j<<"  "<<testData__bb[k]<<endl;
-    }
-  }
-  
-
-  const double *invData__ff = Inv_Rij__ff.GetMatrixArray();
-  const double *invData__fb = Inv_Rij__fb.GetMatrixArray();
-  const double *invData__bf = Inv_Rij__bf.GetMatrixArray();
-  const double *invData__bb = Inv_Rij__bb.GetMatrixArray();
-
-  ofstream invf_ff,invf_fb,invf_bf,invf_bb;
-  invf_ff.open("InvRij_FF.txt");
-  invf_fb.open("InvRij_FB.txt");
-  invf_bf.open("InvRij_BF.txt");
-  invf_bb.open("InvRij_BB.txt");
-
-  for (int i= 0;i<dim;i++){
-    for (int j=0;j<dim;j++){
-      int k = dim*i+j;//9 is the number of rows
-      invf_ff << i <<"  "<< j <<"  "<< invData__ff[k] <<endl;
-      invf_fb << i <<"  "<< j <<"  "<< invData__fb[k] <<endl;
-      invf_bf << i <<"  "<< j <<"  "<< invData__bf[k] <<endl;
-      invf_bb << i <<"  "<< j <<"  "<< invData__bb[k] <<endl;      
-    }
-  }
-
-  invf_ff.close();
-  invf_fb.close();
-  invf_bf.close();
-  invf_bb.close();
-  //___________________________________________________________
-
-
-  ifstream matrixfile_ff, matrixfile_fb, matrixfile_bf, matrixfile_bb;
-  
-  matrixfile_ff.open("InvRij_FF.txt");
-  matrixfile_fb.open("InvRij_FB.txt");
-  matrixfile_bf.open("InvRij_BF.txt");
-  matrixfile_bb.open("InvRij_BB.txt");
-  
-  /*
-  matrixfile_ff.open("Rij_FF.txt");
-  matrixfile_fb.open("Rij_FB.txt");
-  matrixfile_bf.open("Rij_BF.txt");
-  matrixfile_bb.open("Rij_BB.txt");
-  */
-
-  int ff_counter = 0;
-  int fb_counter = 0;
-  int bf_counter = 0;
-  int bb_counter = 0;
-
-  int a_ff, b_ff;
-  float c_ff;
-  int a_fb, b_fb;
-  float c_fb;
-  int a_bf, b_bf;
-  float c_bf;
-  int a_bb, b_bb;
-  float c_bb;
-  
-  int FF_corr_in_row[1000],FF_corr_in_col[1000];
-  float FF_corr_in_value[1000];
-  int FB_corr_in_row[1000],FB_corr_in_col[1000];
-  float FB_corr_in_value[1000];
-  int BF_corr_in_row[1000],BF_corr_in_col[1000];
-  float BF_corr_in_value[1000];
-  int BB_corr_in_row[1000],BB_corr_in_col[1000];
-  float BB_corr_in_value[1000];
-  
-
-  while(1){
-    if (!matrixfile_ff.good()) break;
-    matrixfile_ff >> a_ff >> b_ff >> c_ff;
-    FF_corr_in_row[ff_counter] = a_ff;
-    FF_corr_in_col[ff_counter] = b_ff;
-    FF_corr_in_value[ff_counter] = c_ff;
-    ++ff_counter;
-  }
-  while(1){
-    if (!matrixfile_fb.good()) break;
-    matrixfile_fb >> a_fb >> b_fb >> c_fb;
-    FB_corr_in_row[fb_counter] = a_fb;
-    FB_corr_in_col[fb_counter] = b_fb;
-    FB_corr_in_value[fb_counter] = c_fb;    
-    ++fb_counter;  
-  }
-  while(1){
-    if (!matrixfile_bf.good()) break;
-    matrixfile_bf >> a_bf >> b_bf >> c_bf;
-    BF_corr_in_row[bf_counter] = a_bf;
-    BF_corr_in_col[bf_counter] = b_bf;
-    BF_corr_in_value[bf_counter] = c_bf;    
-    ++bf_counter;  
-  }
-  while(1){
-    if (!matrixfile_bb.good()) break;
-    matrixfile_bb >> a_bb >> b_bb >> c_bb;
-    BB_corr_in_row[bb_counter] = a_bb;
-    BB_corr_in_col[bb_counter] = b_bb;
-    BB_corr_in_value[bb_counter] = c_bb;    
-    ++bb_counter;  
-  }
-
 
 
   float afb_massbin_many[30] = {};
@@ -1561,68 +1322,22 @@ void tree1r()
   float afb_error_massbin_manyGEN[30] = {};
   float afb_massbin_manyREC[30] = {};
   float afb_error_massbin_manyREC[30] = {};
-  float afb_massbin_manyREC_CORR[30] = {};
-  float afb_error_massbin_manyREC_CORR[30] = {};
-  for (int jjj=0;jjj<9;jjj++){
+
+  for (int jjj=0;jjj<14;jjj++){
     afb_massbin_many[jjj] = (AFB_Fbin[jjj]-AFB_Bbin[jjj])/(AFB_Fbin[jjj]+AFB_Bbin[jjj]);
     afb_error_massbin_many[jjj] = sqrt((1-afb_massbin_many[jjj]*afb_massbin_many[jjj])/(AFB_Fbin[jjj]+AFB_Bbin[jjj])); 
+    cout<<"reco = "<<jjj<<"   "<<afb_massbin_many[jjj]<<endl;
 
     afb_massbin_manyGEN[jjj] = (AFB_FbinGEN[jjj]-AFB_BbinGEN[jjj])/(AFB_FbinGEN[jjj]+AFB_BbinGEN[jjj]);
     afb_error_massbin_manyGEN[jjj] = sqrt((1-afb_massbin_manyGEN[jjj]*afb_massbin_manyGEN[jjj])/(AFB_FbinGEN[jjj]+AFB_BbinGEN[jjj])); 
+
+    cout<<"gen = "<<jjj<<"   "<<afb_massbin_manyGEN[jjj]<<endl;
 
     afb_massbin_manyREC[jjj] = (AFB_FbinREC[jjj]-AFB_BbinREC[jjj])/(AFB_FbinREC[jjj]+AFB_BbinREC[jjj]);
     afb_error_massbin_manyREC[jjj] = sqrt((1-afb_massbin_manyREC[jjj]*afb_massbin_manyREC[jjj])/(AFB_FbinREC[jjj]+AFB_BbinREC[jjj])); 
   }
 
-  for (int i=0;i<9;i++){
-    for (int j=0;j<9;j++){
-      int k = dim*i+j;
-      AFB_FbinREC_CORR[i] += AFB_FbinREC[j]*FF_corr_in_value[k] + AFB_BbinREC[j]*FB_corr_in_value[k];
-      AFB_BbinREC_CORR[i] += AFB_BbinREC[j]*BB_corr_in_value[k] + AFB_FbinREC[j]*BF_corr_in_value[k];
-      cout <<"@@@-->   "<<i<<"  "<<j<<"  "<<k<<"  "<<AFB_FbinREC[j]<<" * "<<FF_corr_in_value[k]<<"  "<< AFB_BbinREC[j]<<" *  "<<FB_corr_in_value[k]<<"  "<<AFB_FbinREC_CORR[i]<<endl;
-    }
-    afb_massbin_manyREC_CORR[i] = (AFB_FbinREC_CORR[i]-AFB_BbinREC_CORR[i])/(AFB_FbinREC_CORR[i]+AFB_BbinREC_CORR[i]);
-    afb_error_massbin_manyREC_CORR[i] = sqrt((1-afb_massbin_manyREC_CORR[i]*afb_massbin_manyREC_CORR[i])/(AFB_FbinREC_CORR[i]+AFB_BbinREC_CORR[i])); 
-  }
 
-  float afb_massbin_5[6] = {};
-  float afb_error_massbin_5[6] = {};
-  for (int jjj=0;jjj<5;jjj++){
-    afb_massbin_5[jjj] = (AFB_Fbin5[jjj]-AFB_Bbin5[jjj])/(AFB_Fbin5[jjj]+AFB_Bbin5[jjj]);
-    afb_error_massbin_5[jjj] = sqrt((1-afb_massbin_5[jjj]*afb_massbin_5[jjj])/(AFB_Fbin5[jjj]+AFB_Bbin5[jjj])); 
-  }
-
-  float afb_massbin_8[9] = {};
-  float afb_massbin_8_CORR[9] = {};
-  float afb_error_massbin_8[9] = {};
-  float corr[9] = {0.135,0.176,0.338,0.192,0.140,0.176,0.202,0.230};
-  float afb_error_massbin_8_X[9] = {15,6,3,1.5,1,1.5,8.5,12.5};
-
-  for (int jjj=0;jjj<8;jjj++){
-    afb_massbin_8[jjj] = (AFB_Fbin8[jjj]-AFB_Bbin8[jjj])/(AFB_Fbin8[jjj]+AFB_Bbin8[jjj]);
-    afb_massbin_8_CORR[jjj] = afb_massbin_8[jjj]/corr[jjj];
-    afb_error_massbin_8[jjj] = sqrt((1-afb_massbin_8[jjj]*afb_massbin_8[jjj])/(AFB_Fbin8[jjj]+AFB_Bbin8[jjj])); 
-  }
-
-  /*
-
-  
-
-  float AFB[30];
-  for (int kk = 0; kk < 16; kk++){
-  if ((AFB_F[kk] + AFB_B[kk])!=0) AFB[kk] = (AFB_F[kk] - AFB_B[kk])/(AFB_F[kk] + AFB_B[kk]);
-  }
-
-  */
-
-  /*
-    TCanvas *c1 = new TCanvas();
-    TGraph *p_AFB = new TGraph(16,xAxis_AFB,AFB);
-    c1->cd();
-    p_AFB->SetMarkerStyle(26);
-    p_AFB->Draw("AP");
-    c1->SaveAs("afb.C");
-  */
 
   float AFBreco[30];
   for (int kk = 0; kk < 16; kk++){
@@ -1630,6 +1345,320 @@ void tree1r()
   }
 
  
+  h_MZ_F->SaveAs("MZ_F.C");
+  h_MZ__RECO_F->SaveAs("MZ_RECO_F.C");//
+
+  h_MZ_B->SaveAs("MZ_B.C");
+  h_MZ__RECO_B->SaveAs("MZ_RECO_B.C");
+
+  h_MZ_F_vs_MZ_RECO_F->SaveAs("MZ_F_vs_MZ_RECO_F.C");
+  h_MZ_F_vs_MZ_RECO_B->SaveAs("MZ_F_vs_MZ_RECO_B.C");
+  h_MZ_B_vs_MZ_RECO_F->SaveAs("MZ_B_vs_MZ_RECO_F.C");
+  h_MZ_B_vs_MZ_RECO_B->SaveAs("MZ_B_vs_MZ_RECO_B.C");
+
+  //@@@@@@@@@@@@@@@ UNFOLDING @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  if (!realdata){
+  
+    //######## FF ######################################################
+    TUnfold unfold_FF(h_MZ_F_vs_MZ_RECO_F,TUnfold::kHistMapOutputHoriz,TUnfold::kRegModeDerivative);
+    
+    unfold_FF.SetInput(h_MZ__RECO_F);
+    int nScan_FF = 50;
+    int iBest_FF;
+    TSpline *logTauX_FF,*logTauY_FF;
+    TGraph *lCurve_FF;
+    iBest_FF = unfold_FF.ScanLcurve(nScan_FF,2E-5,3E-5,&lCurve_FF,&logTauX_FF,&logTauY_FF);
+    cout<<"tau FF = "<<unfold_FF.GetTau()<<"   "<<unfold_FF.GetLcurveX()<<"   "<<unfold_FF.GetLcurveY()<<endl;
+    
+    int *binMap_FF = new int[15];
+    for (int i=1;i<=13;i++) binMap_FF[i] = i;
+    binMap_FF[0] = -1;
+    binMap_FF[14] = -1;
+    TH1D *x_FF = new TH1D("x_FF","Unfolded_FF",13,xAxis_AFB );
+    //TH1D *x_FF = new TH1D("x_FF","Unfolded_FF",13,15,140 );//600
+    unfold_FF.GetOutput(x_FF,binMap_FF);
+    TH2D *rhoij_FF=unfold_FF.GetRhoIJ("rhoij_FF","Correlation FF");
+    x_FF->SaveAs("x_FF.C");
+    rhoij_FF->SaveAs("rhoij_FF.C");
+    
+    double t_FF[1],x1_FF[1],y1_FF[1];
+    logTauX_FF->GetKnot(iBest_FF,t_FF[0],x1_FF[0]);
+    logTauY_FF->GetKnot(iBest_FF,t_FF[0],y1_FF[0]);
+    TGraph *bestLcurve_FF=new TGraph(1,x1_FF,y1_FF);
+    TGraph *bestLogTauX_FF=new TGraph(1,t_FF,x1_FF);
+    
+    
+    TCanvas *ccur_FF = new TCanvas();
+    ccur_FF->cd();
+    lCurve_FF->SetMarkerStyle(26);
+    lCurve_FF->Draw("AL");
+    bestLcurve_FF->SetMarkerColor(kRed);
+    bestLcurve_FF->Draw("*");
+    ccur_FF->SaveAs("lcurve_FF.C");
+    
+    TCanvas *ctest_FF = new TCanvas();
+    ctest_FF->cd();
+    h_MZ_F->Draw();
+    h_MZ__RECO_F->SetLineColor(4);
+    h_MZ__RECO_F->Draw("sames");
+    x_FF->SetLineColor(2);
+    x_FF->Draw("sames");
+    ctest_FF->SaveAs("unfolded_FF.C");//Note you need to change the range of x by hand in the file!!
+    //######## end of FF ######################################################
+    
+    //######## FB ######################################################
+    TUnfold unfold_FB(h_MZ_F_vs_MZ_RECO_B,TUnfold::kHistMapOutputHoriz,TUnfold::kRegModeDerivative);
+    
+    unfold_FB.SetInput(h_MZ__RECO_B);
+    int nScan_FB = 50;
+    int iBest_FB;
+    TSpline *logTauX_FB,*logTauY_FB;
+    TGraph *lCurve_FB;
+    iBest_FB = unfold_FB.ScanLcurve(nScan_FB,2E-5,3E-5,&lCurve_FB,&logTauX_FB,&logTauY_FB);
+    cout<<"tau FB = "<<unfold_FB.GetTau()<<"   "<<unfold_FB.GetLcurveX()<<"   "<<unfold_FB.GetLcurveY()<<endl;
+    
+    int *binMap_FB = new int[15];
+    for (int i=1;i<=13;i++) binMap_FB[i] = i;
+    binMap_FB[0] = -1;
+    binMap_FB[14] = -1;
+    TH1D *x_FB = new TH1D("x_FB","Unfolded_FB",13,xAxis_AFB);
+    unfold_FB.GetOutput(x_FB,binMap_FB);
+    TH2D *rhoij_FB=unfold_FB.GetRhoIJ("rhoij_FB","Correlation FB");
+    x_FB->SaveAs("x_FB.C");
+    rhoij_FB->SaveAs("rhoij_FB.C");
+    
+    double t_FB[1],x1_FB[1],y1_FB[1];
+    logTauX_FB->GetKnot(iBest_FB,t_FB[0],x1_FB[0]);
+    logTauY_FB->GetKnot(iBest_FB,t_FB[0],y1_FB[0]);
+    TGraph *bestLcurve_FB=new TGraph(1,x1_FB,y1_FB);
+    TGraph *bestLogTauX_FB=new TGraph(1,t_FB,x1_FB);
+    
+    TCanvas *ccur_FB = new TCanvas();
+    ccur_FB->cd();
+    lCurve_FB->SetMarkerStyle(26);
+    lCurve_FB->Draw("AL");
+    bestLcurve_FB->SetMarkerColor(kRed);
+    bestLcurve_FB->Draw("*");
+    ccur_FB->SaveAs("lcurve_FB.C");
+    
+    TCanvas *ctest_FB = new TCanvas();
+    ctest_FB->cd();
+    h_MZ_F->Draw();
+    h_MZ__RECO_B->SetLineColor(4);
+    h_MZ__RECO_B->Draw("sames");
+    x_FB->SetLineColor(2);
+    x_FB->Draw("sames");
+    ctest_FB->SaveAs("unfolded_FB.C");//Note you need to change the range of x by hand in the file!!
+    //######## end of FB ######################################################
+
+
+    
+    TH1D *x_FF_FB = new TH1D("x_FF_FB","Unfolded_FF_FB",13, xAxis_AFB);
+    TH1D *unfolded_to_true_F = new TH1D("unfolded_to_true_F","",13, xAxis_AFB);
+    TCanvas *c_NF_from_full_unfolding = new TCanvas();
+    c_NF_from_full_unfolding->Divide(1,2);
+    c_NF_from_full_unfolding->cd(1);
+    gPad->SetLogy();
+    h_MZ_F->Draw();
+    h_MZ__RECO_F->SetLineColor(4);
+    h_MZ__RECO_F->Draw("sames");
+    x_FB->Scale(ratio_FB);
+    x_FF->Scale(1./ratio_FF);//!!!!!!!!!!!!
+    x_FF_FB->Add(x_FF);
+    x_FF_FB->Add(x_FB);
+    x_FF_FB->SetLineColor(2);
+    x_FF_FB->SetMarkerColor(2);
+    x_FF_FB->SetMarkerStyle(8);
+    x_FF_FB->GetXaxis()->SetTitle("M_{ll} [GeV]");
+    x_FF_FB->Draw("sames");
+    c_NF_from_full_unfolding->cd(2);
+    unfolded_to_true_F->Add(x_FF_FB);
+    unfolded_to_true_F->Divide(h_MZ_F);
+    unfolded_to_true_F->Sumw2();
+    gPad->SetLogx();
+    unfolded_to_true_F->Draw("e1");    
+    unfolded_to_true_F->Fit("pol0");
+    unfolded_to_true_F->GetXaxis()->SetTitle("M_{ll} [GeV]");
+    unfolded_to_true_F->GetYaxis()->SetTitle("Unfolded/True");
+    c_NF_from_full_unfolding->SaveAs("c_NF_from_full_unfolding.C");
+
+
+    
+
+    //######## BB ######################################################
+    TUnfold unfold_BB(h_MZ_B_vs_MZ_RECO_B,TUnfold::kHistMapOutputHoriz,TUnfold::kRegModeDerivative);
+    
+    unfold_BB.SetInput(h_MZ__RECO_B);
+    int nScan_BB = 50;
+    int iBest_BB;
+    TSpline *logTauX_BB,*logTauY_BB;
+    TGraph *lCurve_BB;
+    iBest_BB = unfold_BB.ScanLcurve(nScan_BB,2E-5,3E-5,&lCurve_BB,&logTauX_BB,&logTauY_BB);
+    cout<<"tau BB = "<<unfold_BB.GetTau()<<"   "<<unfold_BB.GetLcurveX()<<"   "<<unfold_BB.GetLcurveY()<<endl;
+    
+    int *binMap_BB = new int[15];
+    for (int i=1;i<=13;i++) binMap_BB[i] = i;
+    binMap_BB[0] = -1;
+    binMap_BB[14] = -1;
+    TH1D *x_BB = new TH1D("x_BB","Unfolded_BB",13,xAxis_AFB);
+    unfold_BB.GetOutput(x_BB,binMap_BB);
+    TH2D *rhoij_BB=unfold_BB.GetRhoIJ("rhoij_BB","Correlation BB");
+    x_BB->SaveAs("x_BB.C");
+    rhoij_BB->SaveAs("rhoij_BB.C");
+
+    double t_BB[1],x1_BB[1],y1_BB[1];
+    logTauX_BB->GetKnot(iBest_BB,t_BB[0],x1_BB[0]);
+    logTauY_BB->GetKnot(iBest_BB,t_BB[0],y1_BB[0]);
+    TGraph *bestLcurve_BB=new TGraph(1,x1_BB,y1_BB);
+    TGraph *bestLogTauX_BB=new TGraph(1,t_BB,x1_BB);
+    
+    TCanvas *ccur_BB = new TCanvas();
+    ccur_BB->cd();
+    lCurve_BB->SetMarkerStyle(26);
+    lCurve_BB->Draw("AL");
+    bestLcurve_BB->SetMarkerColor(kRed);
+    bestLcurve_BB->Draw("*");
+    ccur_BB->SaveAs("lcurve_BB.C");
+    
+    TCanvas *ctest_BB = new TCanvas();
+    ctest_BB->cd();
+    h_MZ_B->Draw();
+    h_MZ__RECO_B->SetLineColor(4);
+    h_MZ__RECO_B->Draw("sames");
+    x_BB->SetLineColor(2);
+    x_BB->Draw("sames");
+    ctest_BB->SaveAs("unfolded_BB.C");//Note you need to change the range of x by hand in the file!!
+    //######## end of BB ######################################################
+    
+
+    //######## BF ######################################################
+    TUnfold unfold_BF(h_MZ_B_vs_MZ_RECO_F,TUnfold::kHistMapOutputHoriz,TUnfold::kRegModeDerivative);
+    
+    unfold_BF.SetInput(h_MZ__RECO_F);
+    int nScan_BF = 50;
+    int iBest_BF;
+    TSpline *logTauX_BF,*logTauY_BF;
+    TGraph *lCurve_BF;
+    iBest_BF = unfold_BF.ScanLcurve(nScan_BF,0.0,0.0,&lCurve_BF,&logTauX_BF,&logTauY_BF);
+    cout<<"tau BF = "<<unfold_BF.GetTau()<<"   "<<unfold_BF.GetLcurveX()<<"   "<<unfold_BF.GetLcurveY()<<endl;
+    
+    int *binMap_BF = new int[15];
+    for (int i=1;i<=13;i++) binMap_BF[i] = i;
+    binMap_BF[0] = -1;
+    binMap_BF[14] = -1;
+    TH1D *x_BF = new TH1D("x_BF","Unfolded_BF",13,xAxis_AFB);
+    unfold_BF.GetOutput(x_BF,binMap_BF);
+    TH2D *rhoij_BF=unfold_BF.GetRhoIJ("rhoij_BF","Correlation BF");
+    x_BF->SaveAs("x_BF.C");
+    rhoij_BF->SaveAs("rhoij_BF.C");
+    
+    double t_BF[1],x1_BF[1],y1_BF[1];
+    logTauX_BF->GetKnot(iBest_BF,t_BF[0],x1_BF[0]);
+    logTauY_BF->GetKnot(iBest_BF,t_BF[0],y1_BF[0]);
+    TGraph *bestLcurve_BF=new TGraph(1,x1_BF,y1_BF);
+    TGraph *bestLogTauX_BF=new TGraph(1,t_BF,x1_BF);
+    
+    TCanvas *ccur_BF = new TCanvas();
+    ccur_BF->cd();
+    lCurve_BF->SetMarkerStyle(26);
+    lCurve_BF->Draw("AL");
+    bestLcurve_BF->SetMarkerColor(kRed);
+    bestLcurve_BF->Draw("*");
+    ccur_BF->SaveAs("lcurve_BF.C");
+    
+    TCanvas *ctest_BF = new TCanvas();
+    ctest_BF->cd();
+    h_MZ_F->Draw();
+    h_MZ__RECO_B->SetLineColor(4);
+    h_MZ__RECO_B->Draw("sames");
+    x_BF->SetLineColor(2);
+    x_BF->Draw("sames");
+    ctest_BF->SaveAs("unfolded_BF.C");//Note you need to change the range of x by hand in the file!!
+    //######## end of BF ######################################################
+    TH1D *x_BB_BF = new TH1D("x_BB_BF","Unfolded_BB_BF",13, xAxis_AFB);
+    TH1D *unfolded_to_true_B = new TH1D("unfolded_to_true_B","",13, xAxis_AFB);
+    TCanvas *c_NB_from_full_unfolding = new TCanvas();
+    c_NB_from_full_unfolding->Divide(1,2);
+    c_NB_from_full_unfolding->cd(1);
+    gPad->SetLogy();
+    h_MZ_B->Draw();
+    h_MZ__RECO_B->SetLineColor(4);
+    h_MZ__RECO_B->Draw("sames");
+    x_BF->Scale(ratio_BF);
+    x_BB_BF->Add(x_BB);
+    x_BB_BF->Add(x_BF);
+    x_BB_BF->SetLineColor(2);
+    x_BB_BF->SetMarkerColor(2);
+    x_BB_BF->SetMarkerStyle(8);
+    x_BB_BF->GetXaxis()->SetTitle("M_{ll} [GeV]");
+    x_BB_BF->Draw("sames");
+    c_NB_from_full_unfolding->cd(2);
+    unfolded_to_true_B->Add(x_BB_BF);
+    unfolded_to_true_B->Divide(h_MZ_B);
+    unfolded_to_true_B->Sumw2();
+    gPad->SetLogx();
+    unfolded_to_true_B->Draw("e1");    
+    unfolded_to_true_B->Fit("pol0");
+    unfolded_to_true_B->GetXaxis()->SetTitle("M_{ll} [GeV]");
+    unfolded_to_true_B->GetYaxis()->SetTitle("Unfolded/True");
+    c_NB_from_full_unfolding->SaveAs("c_NB_from_full_unfolding.C");
+  
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+    TH1D *AFB_observed_numerator = new TH1D("AFB_observed_numerator","",13, xAxis_AFB);
+    TH1D *AFB_observed_denominator = new TH1D("AFB_observed_denominator","",13, xAxis_AFB);
+    TH1D *AFB_observed = new TH1D("AFB_observed","",13, xAxis_AFB);
+    TH1D *h_temp = new TH1D("h_temp","",13, xAxis_AFB);
+    TCanvas *c_AFB = new TCanvas();
+    c_AFB->cd();
+    AFB_observed_numerator->Add(h_MZ__OBS_F);
+    h_temp->Add(h_MZ__OBS_B);
+    h_temp->Scale(-1);
+    AFB_observed_numerator->Add(h_temp);
+    AFB_observed_denominator->Add(h_MZ__OBS_F);
+    AFB_observed_denominator->Add(h_MZ__OBS_B);
+    AFB_observed->Add(AFB_observed_numerator);
+    AFB_observed->Divide(AFB_observed_denominator);
+    AFB_observed->Draw();
+
+    TH1D *AFB_true_numerator = new TH1D("AFB_true_numerator","",13, xAxis_AFB);
+    TH1D *AFB_true_denominator = new TH1D("AFB_true_denominator","",13, xAxis_AFB);
+    TH1D *AFB_true = new TH1D("AFB_true","",13, xAxis_AFB);
+    TH1D *h_temp_t = new TH1D("h_temp_t","",13, xAxis_AFB);
+    c_AFB->cd();
+    AFB_true_numerator->Add(h_MZ_F);
+    h_temp_t->Add(h_MZ_B);
+    h_temp_t->Scale(-1);
+    AFB_true_numerator->Add(h_temp_t);
+    AFB_true_denominator->Add(h_MZ_F);
+    AFB_true_denominator->Add(h_MZ_B);
+    AFB_true->Add(AFB_true_numerator);
+    AFB_true->Divide(AFB_true_denominator);
+    AFB_true->SetLineColor(4);
+    AFB_true->Draw("sames");
+
+    TH1D *AFB_unfolded_numerator = new TH1D("AFB_unfolded_numerator","",13, xAxis_AFB);
+    TH1D *AFB_unfolded_denominator = new TH1D("AFB_unfolded_denominator","",13, xAxis_AFB);
+    TH1D *AFB_unfolded = new TH1D("AFB_unfolded","",13, xAxis_AFB);
+    TH1D *h_temp_unf = new TH1D("h_temp_unf","",13, xAxis_AFB);
+    c_AFB->cd();
+    AFB_unfolded_numerator->Add(unfolded_to_true_F);
+    h_temp_unf->Add(unfolded_to_true_B);
+    h_temp_unf->Scale(-1);
+    AFB_unfolded_numerator->Add(h_temp_unf);
+    AFB_unfolded_denominator->Add(unfolded_to_true_F);
+    AFB_unfolded_denominator->Add(unfolded_to_true_B);
+    AFB_unfolded->Add(AFB_unfolded_numerator);
+    AFB_unfolded->Divide(AFB_unfolded_denominator);
+    AFB_unfolded->SetLineColor(2);
+    AFB_unfolded->Draw("e1sames");
+
+    c_AFB->SaveAs("AFB_Unfolded.C");
+
+  }
+
+
   TCanvas *c1_ewk = new TCanvas();
   c1_ewk->cd();
   h_muon_PT->Draw();
@@ -1668,50 +1697,36 @@ void tree1r()
   
  
   TCanvas *cn_ewk = new TCanvas();
-  TGraph *p_manybins = new TGraphErrors(9, xAxis_AFB_TOPLOT,afb_massbin_many,0,afb_error_massbin_many);
+  TGraph *p_manybins = new TGraphErrors(13, xAxis_AFB_TOPLOT,afb_massbin_many,0,afb_error_massbin_many);
   p_manybins->SetMarkerStyle(26); 
   p_manybins->Draw("AP");
   cn_ewk->SaveAs("afbmanybins.C");
 
   TCanvas *cn_ewkGEN = new TCanvas();
-  TGraph *p_manybinsGEN = new TGraphErrors(9, xAxis_AFB_TOPLOT,afb_massbin_manyGEN,0,afb_error_massbin_manyGEN);
+  TGraph *p_manybinsGEN = new TGraphErrors(13, xAxis_AFB_TOPLOT,afb_massbin_manyGEN,0,afb_error_massbin_manyGEN);
   p_manybinsGEN->SetMarkerColor(4);
   p_manybinsGEN->SetMarkerStyle(26); 
   p_manybinsGEN->Draw("AP");
-  TGraph *p_manybinsREC = new TGraphErrors(9, xAxis_AFB_TOPLOT,afb_massbin_manyREC,0,afb_error_massbin_manyREC);
-  p_manybinsREC->SetMarkerStyle(24); 
-  p_manybinsREC->Draw("P");
-  TGraph *p_manybinsREC_CORR = new TGraph(9, xAxis_AFB_TOPLOT,afb_massbin_manyREC_CORR);
-  p_manybinsREC_CORR->SetMarkerColor(2);
-  p_manybinsREC_CORR->SetMarkerStyle(23); 
-  p_manybinsREC_CORR->Draw("P");
   cn_ewkGEN->SaveAs("afbmanybinsGEN.C");
 
 
 
-  TCanvas *cn5_ewk = new TCanvas();
-  TGraph *p_5bins = new TGraphErrors(5, xAxis_AFB5_TOPLOT,afb_massbin_5,0,afb_error_massbin_5);
-  p_5bins->SetMarkerStyle(26); 
-  p_5bins->Draw("AP");
-  cn5_ewk->SaveAs("afb5bins.C");
-
-  TCanvas *cn8_ewk = new TCanvas();
-  cn8_ewk->cd();
-  TGraph *p_8bins = new TGraphErrors(8, xAxis_AFB8_TOPLOT,afb_massbin_8,afb_error_massbin_8_X,afb_error_massbin_8);
-  p_8bins->SetMarkerStyle(26); 
-  p_8bins->Draw("AP");
-  /*
-    TGraph *p_8binsCorr = new TGraphErrors(8, xAxis_AFB8_TOPLOT,afb_massbin_8_CORR,afb_error_massbin_8_X,afb_error_massbin_8);
-    p_8binsCorr->SetMarkerColor(4);
-    p_8binsCorr->Draw("P");
-    cn8_ewk->SaveAs("afb8bins.C");
-  */
 
 
 
 
   theFile->Write();
   theFile->Close();
+  cout<<"numberofgenforward = numberofgenforward_recoforward + numberofgenforward_recobackward = ? "<<numberofgenforward<<" = "<<numberofgenforward_recoforward<<" + "<<numberofgenforward_recobackward<<" = "<< numberofgenforward_recoforward + numberofgenforward_recobackward << endl;
+ 
+  cout<<"numberofgenbackward = numberofgenbacward_recobackward + numberofgenbacward_recoforward = ? "<<numberofgenbackward<<" = "<<numberofgenbackward_recobackward<<" + "<<numberofgenbackward_recoforward<<" = "<< numberofgenbackward_recobackward + numberofgenbackward_recoforward << endl;
+
+
+  cout<<"  "<<endl;
+
+  cout<<"@@@@@@@@ ------->>>>>>>>>>>>   WARNING!!!!! DO NOT FORGET TO USE ROOT 5.27 FOR UNFOLDING!!!!!"<<endl;
+
+
 
 }//end void  
 
