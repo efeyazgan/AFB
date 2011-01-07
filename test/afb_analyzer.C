@@ -39,8 +39,7 @@ using namespace std;
 void tree1r()
 {
 
-  if (!TClass::GetDict("RooUnfold")) gSystem->Load("RooUnfold-1.0.2/libRooUnfold");
-    RooUnfoldResponse response (127, 0.5, 127.5);
+
 
 
 
@@ -102,13 +101,16 @@ void tree1r()
   */
 
   //mc
-  myTree.Add("/data2/efe/ntuples/386/DY_powheg_wo_HLT_filter.root");
+  //myTree.Add("/data2/efe/ntuples/386/DY_powheg_wo_HLT_filter.root");
   //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   //myTree.Add("/data2/efe/pythia.root");
   //myTree.Add("/data1/efe/ntuples/7TeV/zmmpowheg_qedfsr_off.root"); 
   //myTree.Add("/data1/efe/ntuples/7TeV/Aug5_muons_140182_141961.root"); 
   //myTree.Add("/data1/efe/ntuples/7TeV/powhegnew.root");
   //myTree.Add("/data1/efe/ntuples/7TeV/FSRONOFF/fsron_DYToMuMu_M_20_7TeV_powheg_pythia6_Spring10_START3X_V26_v1_WITHGEN.root");//old
+
+  myTree.Add("/data2/efe/ntuples/397/Run2010A_Dec22ReReco_v1.root");
+  
 
   TH1::AddDirectory(true);
 
@@ -168,7 +170,7 @@ void tree1r()
   myTree.SetBranchAddress("RecMuontkmuon_pixelhits",RecMuontkmuon_pixelhits);
   myTree.SetBranchAddress("RecMuonglmuon_charge",RecMuonglmuon_charge);
   myTree.SetBranchAddress("hltmatchedmuon",hltmatchedmuon);
-  myTree->Branch("hltmatched_Dimuon",hltmatched_Dimuon);
+  myTree.SetBranchAddress("hltmatched_Dimuon",hltmatched_Dimuon);
   //  myTree.SetBranchAddress("id_muon",id_muon);
   myTree.SetBranchAddress("techTrigger",techTrigger);
 
