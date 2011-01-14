@@ -28,16 +28,16 @@ using namespace std;
 void tree1r()
 {
   TChain myTree("demo/MuonTree");
-  myTree.Add("/data2/efe/ntuples/386/DY_powheg_wo_HLT_filter.root");
+  //myTree.Add("/data2/efe/ntuples/386/DY_powheg_wo_HLT_filter.root");
   ////myTree.Add("/data2/efe/ntuples/386/386_2_minbias_sept17_132440_135735.root");                                                                     
-  //myTree.Add("/data2/efe/ntuples/386/386_Run2010B_Nov4ReReco_v1_146428_149442.root");
-  //myTree.Add("/data2/efe/ntuples/386/386_2_Run2010A_Nov4ReReco_v1_136033_144114.root");  
+  myTree.Add("/data2/efe/ntuples/386/386_Run2010B_Nov4ReReco_v1_146428_149442.root");
+  myTree.Add("/data2/efe/ntuples/386/386_2_Run2010A_Nov4ReReco_v1_136033_144114.root");  
   TH1::AddDirectory(true);
   int event,run,lumi,bxnumber,realdata;
   int hlt_trigger_fired;
   int sort_index_for_mu_tree;
-  float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonM[50], RecMuonE[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50], RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50];
-  int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50];
+  float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonM[50], RecMuonE[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50], RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonIsoDY[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50];
+  int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50],hltmatched_Dimuon[50] ;
  
   //particle information
   int par_index, mom[50], daug[50];
@@ -81,6 +81,7 @@ void tree1r()
   myTree.SetBranchAddress("RecMuonIsoSumPt",RecMuonIsoSumPt);
   myTree.SetBranchAddress("RecMuonIsoRelative",RecMuonIsoRelative);
   myTree.SetBranchAddress("RecMuonIsoCalComb",RecMuonIsoCalComb);
+  myTree.SetBranchAddress("RecMuonIsoDY",RecMuonIsoDY);
   myTree.SetBranchAddress("RecMuonglmuon_dxy",RecMuonglmuon_dxy);
   myTree.SetBranchAddress("RecMuonglmuon_normalizedChi2",RecMuonglmuon_normalizedChi2);
   myTree.SetBranchAddress("RecMuonglmuon_trackerHits",RecMuonglmuon_trackerHits);
@@ -88,6 +89,7 @@ void tree1r()
   myTree.SetBranchAddress("RecMuontkmuon_pixelhits",RecMuontkmuon_pixelhits);
   myTree.SetBranchAddress("RecMuonglmuon_charge",RecMuonglmuon_charge);
   myTree.SetBranchAddress("hltmatchedmuon",hltmatchedmuon);
+  myTree.SetBranchAddress("hltmatched_Dimuon",hltmatchedmuon);
   //  myTree.SetBranchAddress("id_muon",id_muon);
   myTree.SetBranchAddress("techTrigger",techTrigger);
   myTree.SetBranchAddress("par_index", &par_index);
@@ -146,94 +148,107 @@ void tree1r()
 
   //
  
+  /*
   float xAxis_AFB[14] = {15,30,40,50,60,76,86,91,96,106,120,150,200,600};
   float xAxis_AFB_TOPLOT[13] = {22.5,35,45,55,68,81,88.5,93.5,101,113,135,175,400};
+  */
 
+  int nb = 11;
+  float xAxis_AFB[12] = {40,50,60,76,86,91,96,106,120,150,200,600};
+  float xAxis_AFB_TOPLOT[11] = {45,55,68,81,88.5,93.5,101,113,135,175,400};
+  
 
   TFile *theFile = new TFile("Muon_out.root","RECREATE");
   theFile->cd();
 
-  TH1F *h_MZ_F = new TH1F("h_MZ_F","M(Z)#rightarrow #mu#mu",13,xAxis_AFB  );
-  TH1F *h_MZmuon_F = new TH1F("h_MZmuon_F","M(Z)#rightarrow #mu#mu",13,xAxis_AFB );
-  TH1F *h_MZmuon_B = new TH1F("h_MZmuon_B","M(Z)#rightarrow #mu#mu",13,xAxis_AFB );
-  TH1F *h_MZobs_F = new TH1F("h_MZobs_F","M(Z)#rightarrow #mu#mu",13,xAxis_AFB );
-  h_MZobs_F->Sumw2();
-  TH1F *h_MZobs_B = new TH1F("h_MZobs_B","M(Z)#rightarrow #mu#mu",13,xAxis_AFB );
+  TH1F *h_MZ_F = new TH1F("h_MZ_F","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB  );
+  TH1F *h_MZmuon_F = new TH1F("h_MZmuon_F","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB );
+  TH1F *h_MZmuon_B = new TH1F("h_MZmuon_B","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB );
+  TH1F *h_MZobs_F = new TH1F("h_MZobs_F","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB );
+  //h_MZobs_F->Sumw2();
+  TH1F *h_MZobs_B = new TH1F("h_MZobs_B","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB );
   h_MZobs_B->Sumw2();
   TH1F *h_gen_costhetaCSreco = new TH1F("h_gen_costhetaCSreco","",24,-1.,1.);
   TH1F *h_gen_costhetaCSreco_Acc = new TH1F("h_gen_costhetaCSreco_Acc","",24,-1.,1.);
-  TH1F *hTrue_F = new TH1F("hTrue_F", "Test Truth F",13,xAxis_AFB );
-  TH1F *hTrue_B = new TH1F("hTrue_B", "Test Truth B",13,xAxis_AFB );
-  TH1F *hTrue_F_before_cuts = new TH1F("hTrue_F_before_cuts", "Test Truth F_before_cuts",13,xAxis_AFB );
-  TH1F *hTrue_B_before_cuts = new TH1F("hTrue_B_before_cuts", "Test Truth B_before_cuts",13,xAxis_AFB );
-  TH1F *h_Unfolded_F = new TH1F("h_Unfolded_F", "Unfolded_F", 13,xAxis_AFB );
-  TH1F *h_Unfolded_B = new TH1F("h_Unfolded_B", "Unfolded_B", 13,xAxis_AFB );
+  TH1F *hTrue_F = new TH1F("hTrue_F", "Test Truth F",nb,xAxis_AFB );
+  TH1F *hTrue_B = new TH1F("hTrue_B", "Test Truth B",nb,xAxis_AFB );
+  TH1F *hTrue_F_before_cuts = new TH1F("hTrue_F_before_cuts", "Test Truth F_before_cuts",nb,xAxis_AFB );
+  TH1F *hTrue_B_before_cuts = new TH1F("hTrue_B_before_cuts", "Test Truth B_before_cuts",nb,xAxis_AFB );
+  TH1F *h_Unfolded_F = new TH1F("h_Unfolded_F", "Unfolded_F", nb,xAxis_AFB );
+  TH1F *h_Unfolded_B = new TH1F("h_Unfolded_B", "Unfolded_B", nb,xAxis_AFB );
 
-  TH1F *h_Unfolded_over_Truth_F = new TH1F("h_Unfolded_over_Truth_F", "", 13,xAxis_AFB );
-  TH1F *h_Unfolded_over_Truth_B = new TH1F("h_Unfolded_over_Truth_B", "", 13,xAxis_AFB );
+  TH1F *h_Unfolded_over_Truth_F = new TH1F("h_Unfolded_over_Truth_F", "", nb,xAxis_AFB );
+  TH1F *h_Unfolded_over_Truth_B = new TH1F("h_Unfolded_over_Truth_B", "", nb,xAxis_AFB );
 
-  TH1F *h_AFB_Gen = new TH1F("h_AFB_Gen","h_AFB_Gen",13,xAxis_AFB );
+  TH1F *h_AFB_Gen = new TH1F("h_AFB_Gen","h_AFB_Gen",nb,xAxis_AFB );
   h_AFB_Gen->Sumw2();
-  TH1F *h_AFB_Gen_Tmp1 = new TH1F("h_AFB_Gen_Tmp1","h_AFB_Gen_Tmp1",13,xAxis_AFB );
-  TH1F *h_AFB_Gen_Tmp2 = new TH1F("h_AFB_Gen_Tmp2","h_AFB_Gen_Tmp2",13,xAxis_AFB );
-  TH1F *h_AFB_Gen_before_cuts = new TH1F("h_AFB_Gen_before_cuts","h_AFB_Gen_before_cuts",13,xAxis_AFB );
+  TH1F *h_AFB_Gen_Tmp1 = new TH1F("h_AFB_Gen_Tmp1","h_AFB_Gen_Tmp1",nb,xAxis_AFB );
+  TH1F *h_AFB_Gen_Tmp2 = new TH1F("h_AFB_Gen_Tmp2","h_AFB_Gen_Tmp2",nb,xAxis_AFB );
+  TH1F *h_AFB_Gen_before_cuts = new TH1F("h_AFB_Gen_before_cuts","h_AFB_Gen_before_cuts",nb,xAxis_AFB );
   h_AFB_Gen_before_cuts->Sumw2();
-  TH1F *h_AFB_Gen_Tmp1_before_cuts = new TH1F("h_AFB_Gen_Tmp1_before_cuts","h_AFB_Gen_Tmp1_before_cuts",13,xAxis_AFB );
-  TH1F *h_AFB_Gen_Tmp2_before_cuts = new TH1F("h_AFB_Gen_Tmp2_before_cuts","h_AFB_Gen_Tmp2_before_cuts",13,xAxis_AFB );
-  TH1F *h_AFB_Reco = new TH1F("h_AFB_Reco","h_AFB_Reco",13,xAxis_AFB );
-  TH1F *h_AFB_Reco_Tmp1 = new TH1F("h_AFB_Reco_Tmp1","h_AFB_Reco_Tmp1",13,xAxis_AFB );
-  TH1F *h_AFB_Reco_Tmp2 = new TH1F("h_AFB_Reco_Tmp2","h_AFB_Reco_Tmp2",13,xAxis_AFB );
-  TH1F *h_AFB_Obs = new TH1F("h_AFB_Obs","h_AFB_Obs",13,xAxis_AFB );
+  TH1F *h_AFB_Gen_Tmp1_before_cuts = new TH1F("h_AFB_Gen_Tmp1_before_cuts","h_AFB_Gen_Tmp1_before_cuts",nb,xAxis_AFB );
+  TH1F *h_AFB_Gen_Tmp2_before_cuts = new TH1F("h_AFB_Gen_Tmp2_before_cuts","h_AFB_Gen_Tmp2_before_cuts",nb,xAxis_AFB );
+  TH1F *h_AFB_Reco = new TH1F("h_AFB_Reco","h_AFB_Reco",nb,xAxis_AFB );
+  TH1F *h_AFB_Reco_Tmp1 = new TH1F("h_AFB_Reco_Tmp1","h_AFB_Reco_Tmp1",nb,xAxis_AFB );
+  TH1F *h_AFB_Reco_Tmp2 = new TH1F("h_AFB_Reco_Tmp2","h_AFB_Reco_Tmp2",nb,xAxis_AFB );
+  TH1F *h_AFB_Obs = new TH1F("h_AFB_Obs","h_AFB_Obs",nb,xAxis_AFB );
   h_AFB_Obs->Sumw2();
-  TH1F *h_AFB_Obs_Tmp1 = new TH1F("h_AFB_Obs_Tmp1","h_AFB_Obs_Tmp1",13,xAxis_AFB );
+  TH1F *h_AFB_Obs_Tmp1 = new TH1F("h_AFB_Obs_Tmp1","h_AFB_Obs_Tmp1",nb,xAxis_AFB );
   h_AFB_Obs_Tmp1->Sumw2();
-  TH1F *h_AFB_Obs_Tmp2 = new TH1F("h_AFB_Obs_Tmp2","h_AFB_Obs_Tmp2",13,xAxis_AFB );  
+  TH1F *h_AFB_Obs_Tmp2 = new TH1F("h_AFB_Obs_Tmp2","h_AFB_Obs_Tmp2",nb,xAxis_AFB );  
   h_AFB_Obs_Tmp2->Sumw2();
-  TH1F *h_AFB_Unfolded = new TH1F("h_AFB_Unfolded","h_AFB_Unfolded",13,xAxis_AFB );
+  TH1F *h_AFB_Unfolded = new TH1F("h_AFB_Unfolded","h_AFB_Unfolded",nb,xAxis_AFB );
   h_AFB_Unfolded->Sumw2();
-  TH1F *h_AFB_Unfolded_Tmp1 = new TH1F("h_AFB_Unfolded_Tmp1","h_AFB_Unfolded_Tmp1",13,xAxis_AFB );
+  TH1F *h_AFB_Unfolded_Tmp1 = new TH1F("h_AFB_Unfolded_Tmp1","h_AFB_Unfolded_Tmp1",nb,xAxis_AFB );
   h_AFB_Unfolded_Tmp1->Sumw2();
-  TH1F *h_AFB_Unfolded_Tmp2 = new TH1F("h_AFB_Unfolded_Tmp2","h_AFB_Unfolded_Tmp2",13,xAxis_AFB );
+  TH1F *h_AFB_Unfolded_Tmp2 = new TH1F("h_AFB_Unfolded_Tmp2","h_AFB_Unfolded_Tmp2",nb,xAxis_AFB );
   h_AFB_Unfolded_Tmp2->Sumw2();
-  TH1F *h_acc_corr = new TH1F("h_acc_corr","h_acc_corr",13,xAxis_AFB );
+  TH1F *h_acc_corr = new TH1F("h_acc_corr","h_acc_corr",nb,xAxis_AFB );
   h_acc_corr->Sumw2();
-  TH1F *h_acc_corr_F = new TH1F("h_acc_corr_F","h_acc_corr_F",13,xAxis_AFB );
+  TH1F *h_acc_corr_F = new TH1F("h_acc_corr_F","h_acc_corr_F",nb,xAxis_AFB );
   h_acc_corr_F->Sumw2();
-  TH1F *h_acc_corr_B = new TH1F("h_acc_corr_B","h_acc_corr_B",13,xAxis_AFB );
+  TH1F *h_acc_corr_B = new TH1F("h_acc_corr_B","h_acc_corr_B",nb,xAxis_AFB );
   h_acc_corr_B->Sumw2();
-  TH1F *h_AFB_Unfolded_and_Acceptance_Corrected = new TH1F("h_AFB_Unfolded_and_Acceptance_Corrected"," h_AFB_Unfolded_and_Acceptance_Corrected",13,xAxis_AFB );
+  TH1F *h_AFB_Unfolded_and_Acceptance_Corrected = new TH1F("h_AFB_Unfolded_and_Acceptance_Corrected"," h_AFB_Unfolded_and_Acceptance_Corrected",nb,xAxis_AFB );
   h_AFB_Unfolded_and_Acceptance_Corrected->Sumw2();
-  TH1F *h_Unfolded_and_AcceptanceCorrected_F = new TH1F("h_Unfolded_and_AcceptanceCorrected_F","h_Unfolded_and_AcceptanceCorrected_F",13,xAxis_AFB);
-  TH1F *h_Unfolded_and_AcceptanceCorrected_B = new TH1F("h_Unfolded_and_AcceptanceCorrected_B","h_Unfolded_and_AcceptanceCorrected_B",13,xAxis_AFB);
-  TH1F *h_Unfolded_and_AcceptanceCorrected_Total = new TH1F("h_Unfolded_and_AcceptanceCorrected_Total","h_Unfolded_and_AcceptanceCorrected_Total",13,xAxis_AFB);
-  TH1F *h_Unfolded_and_AcceptanceCorrected_Total_Tmp1 = new TH1F("h_Unfolded_and_AcceptanceCorrected_Total_Tmp1","h_Unfolded_and_AcceptanceCorrected_Total_Tmp1",13,xAxis_AFB);
-  TH1F *h_Unfolded_and_AcceptanceCorrected_Total_Tmp2 = new TH1F("h_Unfolded_and_AcceptanceCorrected_Total_Tmp2","h_Unfolded_and_AcceptanceCorrected_Total_Tmp2",13,xAxis_AFB);
+  TH1F *h_Unfolded_and_AcceptanceCorrected_F = new TH1F("h_Unfolded_and_AcceptanceCorrected_F","h_Unfolded_and_AcceptanceCorrected_F",nb,xAxis_AFB);
+  TH1F *h_Unfolded_and_AcceptanceCorrected_B = new TH1F("h_Unfolded_and_AcceptanceCorrected_B","h_Unfolded_and_AcceptanceCorrected_B",nb,xAxis_AFB);
+  TH1F *h_Unfolded_and_AcceptanceCorrected_Total = new TH1F("h_Unfolded_and_AcceptanceCorrected_Total","h_Unfolded_and_AcceptanceCorrected_Total",nb,xAxis_AFB);
+  TH1F *h_Unfolded_and_AcceptanceCorrected_Total_Tmp1 = new TH1F("h_Unfolded_and_AcceptanceCorrected_Total_Tmp1","h_Unfolded_and_AcceptanceCorrected_Total_Tmp1",nb,xAxis_AFB);
+  TH1F *h_Unfolded_and_AcceptanceCorrected_Total_Tmp2 = new TH1F("h_Unfolded_and_AcceptanceCorrected_Total_Tmp2","h_Unfolded_and_AcceptanceCorrected_Total_Tmp2",nb,xAxis_AFB);
 
 
-  TH2F *h_RFF = new TH2F("h_RFF","",13, xAxis_AFB, 13, xAxis_AFB);
-  TH2F *h_RFF_Normalized = new TH2F("h_RFF_Normalized","",13, xAxis_AFB, 13, xAxis_AFB);
+  TH2F *h_RFF = new TH2F("h_RFF","",nb, xAxis_AFB, nb, xAxis_AFB);
+  TH2F *h_RFF_Normalized = new TH2F("h_RFF_Normalized","",nb, xAxis_AFB, nb, xAxis_AFB);
+  h_RFF_Normalized->SetTitle("R_{ij}^{FF}");
   h_RFF_Normalized->GetXaxis()->SetTitle("Generated Mass [GeV]");
   h_RFF_Normalized->GetYaxis()->SetTitle("Reconstructed Mass [GeV]");
-  TH1F *h_NF_o = new TH1F("h_NF_o","",13, xAxis_AFB);
+  TH1F *h_NF_o = new TH1F("h_NF_o","",nb, xAxis_AFB);
 
-  TH2F *h_RBB = new TH2F("h_RBB","",13, xAxis_AFB, 13, xAxis_AFB);
-  TH2F *h_RBB_Normalized = new TH2F("h_RBB_Normalized","",13, xAxis_AFB, 13, xAxis_AFB);
+  TH2F *h_RBB = new TH2F("h_RBB","",nb, xAxis_AFB, nb, xAxis_AFB);
+  TH2F *h_RBB_Normalized = new TH2F("h_RBB_Normalized","",nb, xAxis_AFB, nb, xAxis_AFB);
+  h_RBB_Normalized->SetTitle("R_{ij}^{BB}");
   h_RBB_Normalized->GetXaxis()->SetTitle("Generated Mass [GeV]");
   h_RBB_Normalized->GetYaxis()->SetTitle("Reconstructed Mass [GeV]");
-  TH1F *h_NB_o = new TH1F("h_NB_o","",13, xAxis_AFB);
+  TH1F *h_NB_o = new TH1F("h_NB_o","",nb, xAxis_AFB);
 
-  TH2F *h_RFB = new TH2F("h_RFB","",13, xAxis_AFB, 13, xAxis_AFB);
-  TH2F *h_RFB_Normalized = new TH2F("h_RFB_Normalized","",13, xAxis_AFB, 13, xAxis_AFB);
+  TH2F *h_RFB = new TH2F("h_RFB","",nb, xAxis_AFB, nb, xAxis_AFB);
+  TH2F *h_RFB_Normalized = new TH2F("h_RFB_Normalized","",nb, xAxis_AFB, nb, xAxis_AFB);
+  h_RFB_Normalized->SetTitle("R_{ij}^{FB}");
   h_RFB_Normalized->GetXaxis()->SetTitle("Generated Mass [GeV]");
   h_RFB_Normalized->GetYaxis()->SetTitle("Reconstructed Mass [GeV]");
 
-  TH2F *h_RBF = new TH2F("h_RBF","",13, xAxis_AFB, 13, xAxis_AFB);
-  TH2F *h_RBF_Normalized = new TH2F("h_RBF_Normalized","",13, xAxis_AFB, 13, xAxis_AFB);
+  TH2F *h_RBF = new TH2F("h_RBF","",nb, xAxis_AFB, nb, xAxis_AFB);
+  TH2F *h_RBF_Normalized = new TH2F("h_RBF_Normalized","",nb, xAxis_AFB, nb, xAxis_AFB);
+  h_RBF_Normalized->SetTitle("R_{ij}^{BF}");
   h_RBF_Normalized->GetXaxis()->SetTitle("Generated Mass [GeV]");
   h_RBF_Normalized->GetYaxis()->SetTitle("Reconstructed Mass [GeV]");
 
   Int_t nevent = myTree.GetEntries();
   float r_test = 0.5;
+
+  int yield_VBTF = 0;
+
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);
@@ -271,7 +286,7 @@ void tree1r()
       ++parpar;
     }
 
-    if (!realdata && parpar!=2) continue;
+    //if (!realdata && parpar!=2) continue;
 
     float MZ = 0;
     float gen_sab = 1./sqrt(2.);
@@ -333,11 +348,9 @@ void tree1r()
         if ((RecMuonglmuon_charge[j]*RecMuonglmuon_charge[jk]) == -1 && //common1
             RecMuonPt[j] > ptcut && RecMuonPt[jk] > ptcut && //common2
             RecMuonIsoSumPt[j] < 3. && RecMuonIsoSumPt[jk] < 3. &&
-            //(RecMuonIsoCalComb[j] + RecMuonIsoSumPt[j])/RecMuonPt[j] < 0.15 && (RecMuonIsoCalComb[jk] + RecMuonIsoSumPt[jk])/RecMuonPt[jk] < 0.15 && ????
             fabs(RecMuonEta[j]) <2.1 && fabs(RecMuonEta[jk]) <2.1 && //common3
-            //        ((hltmatchedmuon[j] == 1 && fabs(RecMuonEta[j]) <2.1) || (hltmatchedmuon[jk] == 1 && fabs(RecMuonEta[jk]) <2.1)) && 
-            fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2) //common4
-          {
+	    (hltmatchedmuon[j] == 1 || hltmatchedmuon[jk] == 1) &&
+            fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2){
             index1[common] = j;
             index2[common] = jk;
             common++;
@@ -353,19 +366,18 @@ void tree1r()
     float MZmuon = 0;
     int ind1 = -99;
     int ind2 = -99;
-    //   if (MZ > 15. && parton_pt[0] > 20. && parton_pt[1] > 20. && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1){
+    //if (MZ > 40. && parton_pt[0] > 20. && parton_pt[1] > 20. && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1){
 
 
     //------------------------Muon ID--------------------------------------------
-
 
     for (int gg = 0;gg<common;++gg){
       ind1 = index1[gg];
       ind2 = index2[gg];
       if (RecMuontkmuon_pixelhits[ind1] >= 1 && RecMuonglmuon_trackerHits[ind1] > 10) loose1 = 1;
       if (RecMuontkmuon_pixelhits[ind2] >= 1 && RecMuonglmuon_trackerHits[ind2] > 10) loose2 = 1;
-      if (RecMuonglmuon_normalizedChi2[ind1] < 10 && RecMuonglmuon_muonHits[ind1] >= 1) tight_hltalso1 = 1;
-      if (RecMuonglmuon_normalizedChi2[ind2] < 10 && RecMuonglmuon_muonHits[ind2] >= 1) tight_hltalso2 = 1;
+      if (RecMuonglmuon_normalizedChi2[ind1] < 10 && RecMuonglmuon_muonHits[ind1] >= 1 && RecNumberOfUsedStations[ind1] > 1) tight_hltalso1 = 1;
+      if (RecMuonglmuon_normalizedChi2[ind2] < 10 && RecMuonglmuon_muonHits[ind2] >= 1 && RecNumberOfUsedStations[ind1] > 2) tight_hltalso2 = 1;
     }
     //if (ind1 == -99 || ind2 == -99) continue;
 
@@ -375,7 +387,8 @@ void tree1r()
       if (MZmuon < 0.) MZmuon = -1.*sqrt(fabs(MZmuon));
       if (MZmuon > 0.) MZmuon = sqrt(MZmuon);
       // if (MZmuon > 20.){
-      if (MZmuon > 15.){
+      if (MZmuon > 60. && MZmuon < 120.) ++yield_VBTF;
+      if (MZmuon > 40.){
 	select = 1;
 	p1dotp2__RECO = RecMuonPx[ind1]*RecMuonPx[ind2]+RecMuonPy[ind1]*RecMuonPy[ind2]+RecMuonPz[ind1]*RecMuonPz[ind2];
 	MZ__RECO  = RecMuonM[ind1]+RecMuonM[ind2]+2*(RecMuonE[ind1]*RecMuonE[ind2]-p1dotp2__RECO);
@@ -404,7 +417,7 @@ void tree1r()
 
 
 
-      //  }
+    // }
 
     
 
@@ -439,10 +452,12 @@ void tree1r()
 
  
     if (iev < nevent*r_test){ 
-      if (gen_costhetaCSreco >= 0) hTrue_F_before_cuts->Fill(MZ);
-      if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1) hTrue_B_before_cuts->Fill(MZ);
+      if (MZ > 40.){
+	if (gen_costhetaCSreco >= 0) hTrue_F_before_cuts->Fill(MZ);
+	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1) hTrue_B_before_cuts->Fill(MZ);
+      }
       if (select){
-	if (MZ > 15. && parton_pt[0] > 20. && parton_pt[1] > 20. && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1){
+	if (MZ > 40. && parton_pt[0] > 20. && parton_pt[1] > 20. && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1){
 	  h_gen_costhetaCSreco_Acc->Fill(gen_costhetaCSreco);
 	  if (gen_costhetaCSreco >= 0) hTrue_F->Fill(MZ);
 	  if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1) hTrue_B->Fill(MZ);	  
@@ -466,8 +481,8 @@ void tree1r()
   
   float forward[50] = {};
   float backward[50] = {};
-  for (int i=1;i<=13;i++){
-    for (int j=1;j<=13;j++){
+  for (int i=1;i<=nb;i++){
+    for (int j=1;j<=nb;j++){
       h_RFF_Normalized->SetBinContent(i,j,h_RFF->GetBinContent(i,j)/h_NF_o->GetBinContent(i));
       h_RBB_Normalized->SetBinContent(i,j,h_RBB->GetBinContent(i,j)/h_NB_o->GetBinContent(i));
       h_RFB_Normalized->SetBinContent(i,j,h_RFB->GetBinContent(i,j)/h_NB_o->GetBinContent(i));
@@ -485,6 +500,9 @@ void tree1r()
 
   h_Unfolded_over_Truth_B->Add(h_Unfolded_B);
   h_Unfolded_over_Truth_B->Divide(hTrue_B);
+
+  
+
 
   h_AFB_Gen_before_cuts->Add(hTrue_F_before_cuts);
   h_AFB_Gen_Tmp1_before_cuts->Add(hTrue_B_before_cuts);
@@ -552,7 +570,10 @@ void tree1r()
 
 
   cout<<"Mass Bin:         Forward corr   backward corr       Acceptance Corr factor"<<endl;    
-  for (int i=1;i<=13;i++) cout<<i<<"                 "<<hTrue_F->GetBinContent(i)<<" / "<<hTrue_F_before_cuts->GetBinContent(i)<<" = "<<h_acc_corr_F->GetBinContent(i)<<"  "<<hTrue_B->GetBinContent(i)<<" / "<<hTrue_B_before_cuts->GetBinContent(i)<<" = "<<h_acc_corr_B->GetBinContent(i)<<endl;
+  for (int i=1;i<=nb;i++) cout<<i<<"                 "<<hTrue_F->GetBinContent(i)<<" / "<<hTrue_F_before_cuts->GetBinContent(i)<<" = "<<h_acc_corr_F->GetBinContent(i)<<"  "<<hTrue_B->GetBinContent(i)<<" / "<<hTrue_B_before_cuts->GetBinContent(i)<<" = "<<h_acc_corr_B->GetBinContent(i)<<endl;
+
+
+  cout<<"Yield in 60-120 GeV:   "<<yield_VBTF<<endl;
 
   h_AFB_Obs->Add(h_MZobs_F);
   h_AFB_Obs_Tmp1->Add(h_MZobs_B);
@@ -565,8 +586,131 @@ void tree1r()
   h_MZobs_F->SaveAs("h_MZobs_F.C");
   h_MZobs_B->SaveAs("h_MZobs_B.C");
 
+  TCanvas *c1 = new TCanvas();
+  c1->Divide(2,2);
+  c1->cd(1);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  h_RFF_Normalized->Draw("colz");
+  c1->cd(2);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  h_RFB_Normalized->Draw("colz");
+  c1->cd(3);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  h_RBF_Normalized->Draw("colz");
+  c1->cd(4);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  h_RBB_Normalized->Draw("colz");
+  c1->SaveAs("unfolding_matrices_2D.C");
+
+  TCanvas *c2 = new TCanvas();
+  c2->Divide(2,2);
+  c2->cd(1);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  h_RFF_Normalized->Draw("lego");
+  c2->cd(2);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  h_RFB_Normalized->Draw("lego");
+  c2->cd(3);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  h_RBF_Normalized->Draw("lego");
+  c2->cd(4);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  h_RBB_Normalized->Draw("lego");
+  c2->SaveAs("unfolding_matrices_3D.C");
+
+  TCanvas *c3 = new TCanvas();
+  c3->Divide(2,1);
+  c3->cd(1);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  hTrue_F->Draw();
+  hTrue_F->SetTitle("Forward");
+  hTrue_F->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_MZmuon_F->SetLineColor(4);
+  h_MZmuon_F->Draw("sames");
+  h_Unfolded_F->SetLineColor(2);
+  h_Unfolded_F->SetMarkerColor(2);
+  h_Unfolded_F->SetMarkerStyle(8);
+  h_Unfolded_F->Draw("e1sames");
+  c3->cd(2);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  hTrue_B->Draw();
+  hTrue_B->SetTitle("Backward");
+  hTrue_B->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_MZmuon_B->SetLineColor(4);
+  h_MZmuon_B->Draw("sames");
+  h_Unfolded_B->SetLineColor(2);
+  h_Unfolded_B->SetMarkerColor(2);
+  h_Unfolded_B->SetMarkerStyle(8);
+  h_Unfolded_B->Draw("e1sames");  
+  c3->SaveAs("closure.C");
+
+  TCanvas *c4 = new TCanvas();
+  c4->Divide(2,1);
+  c4->cd(1);
+  gPad->SetLogx();
+  h_Unfolded_over_Truth_F->GetYaxis()->SetRangeUser(0.89,1.11);
+  h_Unfolded_over_Truth_F->SetTitle("Forward");
+  h_Unfolded_over_Truth_F->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_Unfolded_over_Truth_F->Draw();
+  c4->cd(2);
+  gPad->SetLogx();
+  h_Unfolded_over_Truth_B->GetYaxis()->SetRangeUser(0.89,1.11);
+  h_Unfolded_over_Truth_B->SetTitle("Backward");
+  h_Unfolded_over_Truth_B->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_Unfolded_over_Truth_B->Draw();
+  c4->SaveAs("closure_ratio.C");
+
+  TCanvas *c5 = new TCanvas();
+  c5->cd();
+  gPad->SetLogx();
+  h_AFB_Gen->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_AFB_Gen->Draw();
+  h_AFB_Reco->SetLineColor(4);
+  h_AFB_Reco->Draw("sames");
+  h_AFB_Unfolded->SetMarkerColor(2);
+  h_AFB_Unfolded->SetMarkerStyle(8);
+  h_AFB_Unfolded->SetLineColor(2);
+  h_AFB_Unfolded->Draw("e1sames");
+  c5->SaveAs("afb_closure_test.C");
+
+  TCanvas *c6 = new TCanvas();
+  gPad->SetLogx();
+  h_acc_corr_F->GetYaxis()->SetRangeUser(0,1);
+  h_acc_corr_F->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_acc_corr_F->GetYaxis()->SetTitle("Acc");
+  h_acc_corr_F->SetLineColor(2);
+  h_acc_corr_F->SetMarkerColor(2);
+  h_acc_corr_F->Draw("e1");
+  h_acc_corr_B->SetLineColor(4);
+  h_acc_corr_B->SetMarkerColor(4);
+  h_acc_corr_B->Draw("e1sames"); 
+  c6->SaveAs("acceptance.C");
+
+  TCanvas *c7 = new TCanvas();
+  gPad->SetLogx();
+  h_AFB_Gen_before_cuts->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_AFB_Gen_before_cuts->Draw();
+  h_AFB_Gen->SetLineColor(4);
+  h_AFB_Gen->Draw("sames");
+  c7->SaveAs("AFB_acceptance_effects.C");
+
+  
+
+
   theFile->Write();
   theFile->Close();
+
+
 
 }//end void  
 
