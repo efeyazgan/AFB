@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: AFB.cc,v 1.5 2010/11/19 16:21:10 efe Exp $
+// $Id: AFB.cc,v 1.6 2011/01/05 16:30:07 efe Exp $
 //
 //
 #include <memory>
@@ -203,7 +203,7 @@ private:
   int event, run,lumi,bxnumber,realdata;
   int hlt_trigger_fired;
   int sort_index_for_mu_tree;
-  float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonE[50], RecMuonM[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50],RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50],RecMuonVx[50],RecMuonVy[50],RecMuonVz[50];
+  float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonE[50], RecMuonM[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50],RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonIsoDY[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50],RecMuonVx[50],RecMuonVy[50],RecMuonVz[50];
   int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50],hltmatched_Dimuon[50];//,hltmatchedmuon2[50];
 
   float RecElec_Pt[50], RecElec_Px[50], RecElec_Py[50],RecElec_Pz[50],RecElec_eta[50],RecElec_phi[50],RecElec_GsfTrk_d0[50],RecElec_dr03TkSumPt[50],RecElec_dr03EcalRecHitSumEt[50],RecElec_dr03HcalTowerSumEt[50],RecElec_scSigmaIEtaIEta[50],RecElec_deltaPhiSuperClusterTrackAtVtx[50],RecElec_deltaEtaSuperClusterTrackAtVtx[50],RecElec_hadronicOverEm[50],RecElec_gsfTrack_numberOfLostHits[50];
@@ -542,6 +542,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
   float rec_iso_sumpt[50] = {};
   float rec_iso_relative[50] = {};
   float rec_iso_CalComb[50] = {};
+  float rec_iso_DY[50] = {};
   float glmuon_dxy[50] = {};
   float glmuon_dz[50] = {};
   float glmuon_normalizedChi2[50] = {};
@@ -572,6 +573,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     rec_iso_sumpt[gg] = 0;
     rec_iso_relative[gg] = 0;
     rec_iso_CalComb[gg] = 0;
+    rec_iso_DY[gg] = 0;
     glmuon_dxy[gg] = 0;
     glmuon_dz[gg] = 0;
     glmuon_normalizedChi2[gg] = 0;
@@ -617,6 +619,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       rec_iso_sumpt[reco_muon] = mu.isolationR03().sumPt;
       rec_iso_relative[reco_muon] = rec_iso_sumpt[reco_muon]/mu.pt();//OK
       rec_iso_CalComb[reco_muon] = mu.isolationR03().emEt + mu.isolationR03().hadEt;
+      rec_iso_DY[reco_muon] = (rec_iso_sumpt[reco_muon] + mu.isolationR03().hadEt)/mu.pt();
       /*   
       reco::Muon muon1 = highPtGlbMuons[i];//PROBLEM IS HERE!!!!!!!!!!!!!!!!!!!!!!!
       math::XYZTLorentzVector mu1(muon1.p4());
@@ -724,6 +727,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     RecNumberOfUsedStations[mm] = 0;
     RecMuonIsoRelative[mm] = 0;
     RecMuonIsoCalComb[mm] = 0;
+    RecMuonIsoDY[mm] = 0;
     RecMuonglmuon_dxy[mm] = 0;
     RecMuonglmuon_dz[mm] = 0;
     RecMuonglmuon_normalizedChi2[mm] = 0;
@@ -758,6 +762,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     RecNumberOfUsedStations[sort_index_for_mu_tree] = rec_n_used_sta[sort_reco_muon];
     RecMuonIsoRelative[sort_index_for_mu_tree] = rec_iso_relative[reco_muon];
     RecMuonIsoCalComb[sort_index_for_mu_tree] = rec_iso_CalComb[sort_reco_muon]; 
+    RecMuonIsoDY[sort_index_for_mu_tree] = rec_iso_DY[sort_reco_muon];
     RecMuonglmuon_dxy[sort_index_for_mu_tree] = glmuon_dxy[sort_reco_muon];
     RecMuonglmuon_dz[sort_index_for_mu_tree] = glmuon_dz[sort_reco_muon];
     RecMuonglmuon_normalizedChi2[sort_index_for_mu_tree] = glmuon_normalizedChi2[sort_reco_muon];
@@ -980,6 +985,7 @@ void AFB::beginJob()
   myTree->Branch("RecNumberOfUsedStations",RecNumberOfUsedStations,"RecNumberOfUsedStations[sort_index_for_mu_tree]/I");
   myTree->Branch("RecMuonIsoRelative",RecMuonIsoRelative,"RecMuonIsoRelative[sort_index_for_mu_tree]/F");
   myTree->Branch("RecMuonIsoCalComb",RecMuonIsoCalComb,"RecMuonIsoCalComb[sort_index_for_mu_tree]/F");
+  myTree->Branch("RecMuonIsoDY",RecMuonIsoDY,"RecMuonIsoDY[sort_index_for_mu_tree]/F");
   myTree->Branch("RecMuonglmuon_dxy",RecMuonglmuon_dxy,"RecMuonglmuon_dxy[sort_index_for_mu_tree]/F");
   myTree->Branch("RecMuonglmuon_dz",RecMuonglmuon_dz,"RecMuonglmuon_dz[sort_index_for_mu_tree]/F");
   myTree->Branch("RecMuonglmuon_normalizedChi2",RecMuonglmuon_normalizedChi2,"RecMuonglmuon_normalizedChi2[sort_index_for_mu_tree]/F");
