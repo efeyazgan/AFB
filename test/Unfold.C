@@ -165,11 +165,14 @@ void tree1r()
   TH1F *h_MZmuon_F = new TH1F("h_MZmuon_F","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB );
   TH1F *h_MZmuon_B = new TH1F("h_MZmuon_B","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB );
   TH1F *h_MZobs_F = new TH1F("h_MZobs_F","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB );
-  //h_MZobs_F->Sumw2();
+  h_MZobs_F->Sumw2();
   TH1F *h_MZobs_B = new TH1F("h_MZobs_B","M(Z)#rightarrow #mu#mu",nb,xAxis_AFB );
   h_MZobs_B->Sumw2();
   TH1F *h_gen_costhetaCSreco = new TH1F("h_gen_costhetaCSreco","",24,-1.,1.);
   TH1F *h_gen_costhetaCSreco_Acc = new TH1F("h_gen_costhetaCSreco_Acc","",24,-1.,1.);
+  TH1F *h_costhetaCSreco__RECO = new TH1F("h_costhetaCSreco__RECO","",24,-1.,1.);
+
+
   TH1F *hTrue_F = new TH1F("hTrue_F", "Test Truth F",nb,xAxis_AFB );
   TH1F *hTrue_B = new TH1F("hTrue_B", "Test Truth B",nb,xAxis_AFB );
   TH1F *hTrue_F_before_cuts = new TH1F("hTrue_F_before_cuts", "Test Truth F_before_cuts",nb,xAxis_AFB );
@@ -244,11 +247,29 @@ void tree1r()
   h_RBF_Normalized->GetXaxis()->SetTitle("Generated Mass [GeV]");
   h_RBF_Normalized->GetYaxis()->SetTitle("Reconstructed Mass [GeV]");
 
+  TH1F *h_abs_genlevel = new TH1F("h_abs_genlevel","",nb,xAxis_AFB);
+  TH1F *h_abs_genlevel_F = new TH1F("h_abs_genlevel_F","",nb,xAxis_AFB);
+  TH1F *h_abs_genlevel_B = new TH1F("h_abs_genlevel_B","",nb,xAxis_AFB);
+  
+  TH1F *h_cos_qq = new TH1F("h_cos_qq","",24,-1.,1.);
+
+  TH1F *h_AFB_abs_genlevel = new TH1F("h_AFB_abs_genlevel","",nb,xAxis_AFB);
+  TH1F *h_AFB_abs_genlevel_Tmp1 = new TH1F("h_AFB_abs_genlevel_Tmp1","",nb,xAxis_AFB); 
+  TH1F *h_AFB_abs_genlevel_Tmp2 = new TH1F("h_AFB_abs_genlevel_Tmp2","",nb,xAxis_AFB);
+
+  float rap_axis[6] = {0,0.5,1,1.5,2,2.5};
+  TH2F *hTrue_F_nondiluted = new TH2F("hTrue_F_nondiluted","",nb,xAxis_AFB,5,rap_axis);
+  TH2F *hTrue_B_nondiluted = new TH2F("hTrue_B_nondiluted","",nb,xAxis_AFB,5,rap_axis);
+  TH2F *hTrue_F_beforecuts_for_dilution = new TH2F("hTrue_F_beforecuts_for_dilution","",nb,xAxis_AFB,5,rap_axis);
+  TH2F *hTrue_B_beforecuts_for_dilution = new TH2F("hTrue_B_beforecuts_for_dilution","",nb,xAxis_AFB,5,rap_axis);
+  TH2F *h_w = new TH2F("h_w","",nb,xAxis_AFB,5,rap_axis);
+  TH1F *hTrue_F_beforecuts_for_dilution_1D_Y = new TH1F("hTrue_F_beforecuts_for_dilution_1D_Y","",5,rap_axis);
+  TH1F *hTrue_B_beforecuts_for_dilution_1D_Y = new TH1F("hTrue_B_beforecuts_for_dilution_1D_Y","",5,rap_axis);
+
   Int_t nevent = myTree.GetEntries();
   float r_test = 0.5;
 
   int yield_VBTF = 0;
-
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);
@@ -266,25 +287,113 @@ void tree1r()
     int parton_id[50] = {};
     int parton_charge[50] = {};
 
+    int qq = 0;
+    float quark_pt[50] = {};
+    float quark_eta[50] = {};
+    float quark_phi[50] = {};
+    float quark_px[50] = {};
+    float quark_py[50] = {};
+    float quark_pz[50] = {};
+    float quark_m[50] = {};
+    float quark_e[50] = {};
+    int quark_id[50] = {};
+    int quark_charge[50] = {};
+    float emitpart_e = -99.;
+    float emitpart_px = -99.;
+    float emitpart_py = -99.;
+    float emitpart_pz = -99.;
+    float emitpart_p = -99.;
+    float Z_e = -99.;
+    float Z_px = -99.;
+    float Z_py = -99.;
+    float Z_pz = -99.;
+    float Z_p = -99.;
 
+    int posid = -999;
+    int negid = -999;
+    int quark_pos_id = -999;
+    int quark_neg_id = -999;
     for (int ppo = 0;ppo<50;++ppo) parton_id[ppo] = 9999;
     for (int j = 0;j<par_index;++j){
       if (ParticleStatus[j] != 3) continue;
-      if (abs(ParticleId[j]) != 13) continue;
-      //if (fabs(ParticleEta[j]) > 2.1) continue;
-      //if (ParticlePt[j] < 20.) continue;
-      parton_pt[parpar] = ParticlePt[j];
-      parton_eta[parpar] = ParticleEta[j];
-      parton_phi[parpar] = ParticlePhi[j];
-      parton_id[parpar] = ParticleId[j];
-      parton_px[parpar] = ParticlePx[j];
-      parton_py[parpar] = ParticlePy[j];
-      parton_pz[parpar] = ParticlePz[j];
-      parton_m[parpar] = ParticleM[j];
-      parton_e[parpar] = ParticleE[j];
-      parton_charge[parpar] = -ParticleId[j]/abs(ParticleId[j]);//because mu- is = 13 not -13
-      ++parpar;
+//      cout<<j<<"  "<<ParticleId[j]<<"   "<<ParticleE[j]<<"  "<<sqrt(pow(ParticleE[j],2)-pow(ParticlePx[j],2)-pow(ParticlePy[j],2)-pow(ParticlePz[j],2))<<endl;
+      if (abs(ParticleId[j]) == 13){
+	parton_pt[parpar] = ParticlePt[j];
+	parton_eta[parpar] = ParticleEta[j];
+	parton_phi[parpar] = ParticlePhi[j];
+	parton_id[parpar] = ParticleId[j];
+	parton_px[parpar] = ParticlePx[j];
+	parton_py[parpar] = ParticlePy[j];
+	parton_pz[parpar] = ParticlePz[j];
+	parton_m[parpar] = ParticleM[j];
+	parton_e[parpar] = ParticleE[j];
+	parton_charge[parpar] = -ParticleId[j]/abs(ParticleId[j]);//because mu- is = 13 not -13
+        if (parton_charge[parpar] == -1) posid = parpar;
+        if (parton_charge[parpar] == +1) negid = parpar; 
+	++parpar;
+      }
+      if (fabs(ParticleId[j]) >= 1 && fabs(ParticleId[j]) < 5 && j >= 4 && j <= 5){
+	quark_pt[qq] = ParticlePt[j];
+	quark_eta[qq] = ParticleEta[j];
+	quark_phi[qq] = ParticlePhi[j];
+	quark_id[qq] = ParticleId[j];
+	quark_px[qq] = ParticlePx[j];
+	quark_py[qq] = ParticlePy[j];
+	quark_pz[qq] = ParticlePz[j];
+	quark_m[qq] = ParticleM[j];
+	quark_e[qq] = ParticleE[j];
+        quark_charge[qq] = ParticleId[j]/abs(ParticleId[j]);
+        if (quark_charge[qq] ==  1) quark_pos_id = qq;
+        if (quark_charge[qq] == -1) quark_neg_id = qq;
+	++qq;
+      }
+      if (ParticleId[j] == 23){
+        Z_e = ParticleE[j];
+        Z_px = ParticlePx[j];
+        Z_py = ParticlePy[j];
+        Z_pz = ParticlePz[j];
+        Z_p = sqrt(pow(Z_px,2)+pow(Z_py,2)+pow(Z_pz,2));
+      }
+      if (j == 7){
+        emitpart_e = ParticleE[j];
+        emitpart_px = ParticlePx[j];
+        emitpart_py = ParticlePy[j];
+        emitpart_pz = ParticlePz[j];
+        emitpart_p = sqrt(pow(emitpart_px,2)+pow(emitpart_py,2)+pow(emitpart_pz,2));
+      }
     }
+
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+ 
+    /*
+    if (qq == 2 && quark_charge[0]*quark_charge[1] == -1){
+      
+      float dilepton_angle = (parton_pz[0] + parton_pz[1])/sqrt(pow(parton_px[0]+parton_px[1],2)+pow(parton_py[0]+parton_py[1],2)+pow(parton_pz[0]+parton_pz[1],2));
+      float dipx = parton_px[0]+parton_px[1];
+      float dipy = parton_py[0]+parton_py[1];
+      float dipz = parton_pz[0]+parton_pz[1];
+   
+      //  cout<<dilepton_angle<<"  "<<Z_pz/Z_p<<endl;
+      float muonpos_angle = acos((Z_pz-parton_pz[posid])/sqrt(pow(Z_px-parton_px[posid],2)+pow(Z_py-parton_py[posid],2)+pow(Z_pz-parton_pz[posid],2)));
+      float muonneg_angle = acos((Z_pz-parton_pz[negid])/sqrt(pow(Z_px-parton_px[negid],2)+pow(Z_py-parton_py[negid],2)+pow(Z_pz-parton_pz[negid],2)));
+      float quarkpos_angle = acos((Z_pz-quark_pz[quark_pos_id]-emitpart_pz)/sqrt(pow(Z_px-quark_px[quark_pos_id]-emitpart_px,2)+pow(Z_py-quark_py[quark_pos_id]-emitpart_py,2)+pow(Z_pz-quark_pz[quark_pos_id]-emitpart_pz,2)));
+      float quarkneg_angle = acos((Z_pz-quark_pz[quark_neg_id]-emitpart_pz)/sqrt(pow(Z_px-quark_px[quark_neg_id]-emitpart_px,2)+pow(Z_py-quark_py[quark_neg_id]-emitpart_py,2)+pow(Z_pz-quark_pz[quark_neg_id]-emitpart_pz,2)));
+//        cout<<"E : "<<quark_e[0]+quark_e[1]-emitpart_e<<"    "<<sqrt( pow(quark_e[0]+quark_e[1]-emitpart_e,2) - ( pow(quark_px[0]+quark_px[1]-emitpart_px,2)+pow(quark_py[0]+quark_py[1]-emitpart_py,2)+pow(quark_pz[0]+quark_pz[1]-emitpart_pz,2) ))  <<   endl;
+        float MZ_test = sqrt( pow(quark_e[0]+quark_e[1]-emitpart_e,2) - ( pow(quark_px[0]+quark_px[1]-emitpart_px,2)+pow(quark_py[0]+quark_py[1]-emitpart_py,2)+pow(quark_pz[0]+quark_pz[1]-emitpart_pz,2) ));
+    	h_abs_genlevel->Fill(MZ_test);
+	float true_costheta = -99;
+	//	true_costheta = (parton_pz[negid]-quark_pz[quark_pos_id])/sqrt(pow(parton_px[negid]-quark_px[quark_pos_id],2)+pow(parton_py[negid]-quark_py[quark_pos_id],2)+pow(parton_pz[negid]-quark_pz[quark_pos_id],2));
+	
+	true_costheta = cos(muonpos_angle-quarkpos_angle);
+	h_cos_qq->Fill(true_costheta);       
+	if (true_costheta > 0) h_abs_genlevel_F->Fill(MZ_test);
+	if (true_costheta < 0 && true_costheta > -1.0) h_abs_genlevel_B->Fill(MZ_test);
+       
+    }
+    */
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 
     //if (!realdata && parpar!=2) continue;
 
@@ -335,10 +444,26 @@ void tree1r()
     }
     gen_QZreco = parton_pz[0]+parton_pz[1];
     gen_costhetaCSreco = (2/(gen_Qreco*sqrt(gen_Qreco*gen_Qreco+gen_QTreco*gen_QTreco)))*(gen_P1preco*gen_P2mreco-gen_P1mreco*gen_P2preco);
+    //@@@@@@@
+    float true_costheta = -99;
+    if (qq == 2 && quark_charge[0]*quark_charge[1] == -1){
+      float MZ_test = sqrt( pow(quark_e[0]+quark_e[1]-emitpart_e,2) - ( pow(quark_px[0]+quark_px[1]-emitpart_px,2)+pow(quark_py[0]+quark_py[1]-emitpart_py,2)+pow(quark_pz[0]+quark_pz[1]-emitpart_pz,2) ));
+      h_abs_genlevel->Fill(MZ_test);
+
+      true_costheta = (2/(gen_Qreco*sqrt(gen_Qreco*gen_Qreco+gen_QTreco*gen_QTreco)))*(gen_P1preco*gen_P2mreco-gen_P1mreco*gen_P2preco);
+      if (quark_pz[quark_pos_id] < 0) true_costheta = -true_costheta;
+      h_cos_qq->Fill(true_costheta);       
+      if (true_costheta > 0) h_abs_genlevel_F->Fill(MZ_test);
+      if (true_costheta < 0 && true_costheta > -1.0) h_abs_genlevel_B->Fill(MZ_test);
+    }
+    //@@@@@@@@@@
     if (gen_QZreco < 0.) gen_costhetaCSreco = -gen_costhetaCSreco;
     h_gen_costhetaCSreco->Fill(gen_costhetaCSreco);
     
-    
+    float dimuonrapidity = 0.5*log((parton_e[0]+parton_e[1]+parton_pz[0]+parton_pz[1])/(parton_e[0]+parton_e[1]-parton_pz[0]-parton_pz[1]));
+
+
+
     int common = 0;
     float ptcut = 20;
     int index1[10],index2[10];//if (RecMuonIsoSumPt[j]/RecMuonPt[j] > 0.15) continue;
@@ -377,7 +502,7 @@ void tree1r()
       if (RecMuontkmuon_pixelhits[ind1] >= 1 && RecMuonglmuon_trackerHits[ind1] > 10) loose1 = 1;
       if (RecMuontkmuon_pixelhits[ind2] >= 1 && RecMuonglmuon_trackerHits[ind2] > 10) loose2 = 1;
       if (RecMuonglmuon_normalizedChi2[ind1] < 10 && RecMuonglmuon_muonHits[ind1] >= 1 && RecNumberOfUsedStations[ind1] > 1) tight_hltalso1 = 1;
-      if (RecMuonglmuon_normalizedChi2[ind2] < 10 && RecMuonglmuon_muonHits[ind2] >= 1 && RecNumberOfUsedStations[ind1] > 2) tight_hltalso2 = 1;
+      if (RecMuonglmuon_normalizedChi2[ind2] < 10 && RecMuonglmuon_muonHits[ind2] >= 1 && RecNumberOfUsedStations[ind2] > 1) tight_hltalso2 = 1;
     }
     //if (ind1 == -99 || ind2 == -99) continue;
 
@@ -411,6 +536,7 @@ void tree1r()
 	costhetaCSreco__RECO = (2/(Qreco__RECO*sqrt(Qreco__RECO*Qreco__RECO+QTreco__RECO*QTreco__RECO)))*(P1preco__RECO*P2mreco__RECO-P1mreco__RECO*P2preco__RECO);
 	if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;
 
+        h_costhetaCSreco__RECO->Fill(costhetaCSreco__RECO);
 
       }//mass window
     } ///tight...loose
@@ -455,8 +581,20 @@ void tree1r()
       if (MZ > 40.){
 	if (gen_costhetaCSreco >= 0) hTrue_F_before_cuts->Fill(MZ);
 	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1) hTrue_B_before_cuts->Fill(MZ);
+	//for dilution corr
+	if (true_costheta >= 0) hTrue_F_nondiluted->Fill(MZ,fabs(dimuonrapidity));
+	if (true_costheta < 0 && true_costheta >= -1) hTrue_B_nondiluted->Fill(MZ,fabs(dimuonrapidity));
+	if (gen_costhetaCSreco >= 0){ 
+	  hTrue_F_beforecuts_for_dilution->Fill(MZ,fabs(dimuonrapidity));
+	  hTrue_F_beforecuts_for_dilution_1D_Y->Fill(fabs(dimuonrapidity));
+	}
+	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1){ 
+	  hTrue_B_beforecuts_for_dilution->Fill(MZ,fabs(dimuonrapidity));
+	  hTrue_B_beforecuts_for_dilution_1D_Y->Fill(fabs(dimuonrapidity));
+	}
+	//
       }
-      if (select){
+    if (select){
 	if (MZ > 40. && parton_pt[0] > 20. && parton_pt[1] > 20. && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1){
 	  h_gen_costhetaCSreco_Acc->Fill(gen_costhetaCSreco);
 	  if (gen_costhetaCSreco >= 0) hTrue_F->Fill(MZ);
@@ -465,7 +603,7 @@ void tree1r()
 	if (costhetaCSreco__RECO >= 0) h_MZmuon_F->Fill(MZmuon);
 	if (costhetaCSreco__RECO < 0  && costhetaCSreco__RECO >= -1) h_MZmuon_B->Fill(MZmuon);
       }
-    }
+  }
     
 
 
@@ -575,6 +713,10 @@ void tree1r()
 
   cout<<"Yield in 60-120 GeV:   "<<yield_VBTF<<endl;
 
+  h_MZobs_F->SaveAs("h_MZobs_F.C");
+  h_MZobs_B->SaveAs("h_MZobs_B.C");
+
+
   h_AFB_Obs->Add(h_MZobs_F);
   h_AFB_Obs_Tmp1->Add(h_MZobs_B);
   h_AFB_Obs_Tmp1->Scale(-1);
@@ -583,8 +725,38 @@ void tree1r()
   h_AFB_Obs_Tmp2->Add(h_MZobs_B);
   h_AFB_Obs->Divide(h_AFB_Obs_Tmp2);
 
-  h_MZobs_F->SaveAs("h_MZobs_F.C");
-  h_MZobs_B->SaveAs("h_MZobs_B.C");
+  h_AFB_Obs->SaveAs("Observed_AFB.C");
+
+//---
+  h_AFB_abs_genlevel->Add(h_abs_genlevel_F);
+  h_AFB_abs_genlevel_Tmp1->Add(h_abs_genlevel_B);
+  h_AFB_abs_genlevel_Tmp1->Scale(-1);
+  h_AFB_abs_genlevel->Add(h_AFB_abs_genlevel_Tmp1); 
+  h_AFB_abs_genlevel_Tmp2->Add(h_abs_genlevel_F);
+  h_AFB_abs_genlevel_Tmp2->Add(h_abs_genlevel_B);
+  h_AFB_abs_genlevel->Divide(h_AFB_abs_genlevel_Tmp2);
+//----
+
+  float w[20][20];
+  float w_av[20];
+  for (int i=1;i<=nb;i++){
+    w_av[i] = 0;
+    for (int j=1;j<=5;j++){
+      w[i][j] = hTrue_B_beforecuts_for_dilution->GetBinContent(i,j)*hTrue_F_nondiluted->GetBinContent(i,j)-hTrue_F_beforecuts_for_dilution->GetBinContent(i,j)*hTrue_B_nondiluted->GetBinContent(i,j);
+      w[i][j] /= (hTrue_F_beforecuts_for_dilution->GetBinContent(i,j)+hTrue_B_beforecuts_for_dilution->GetBinContent(i,j))*(hTrue_F_nondiluted->GetBinContent(i,j)-hTrue_B_nondiluted->GetBinContent(i,j));
+      h_w->SetBinContent(i,j,w[i][j]); 
+      w_av[i] += w[i][j];
+   }
+    w_av[i] /= 5.;
+    cout<<i<<"   "<<w_av[i]<<endl;
+
+  }
+
+  TCanvas *c0 = new TCanvas();
+  c0->cd();
+  h_costhetaCSreco__RECO->GetYaxis()->SetTitle("Number of events / 0.083");
+  h_costhetaCSreco__RECO->GetXaxis()->SetTitle("cos#theta_{CS}^{*}");  
+  h_costhetaCSreco__RECO->SaveAs("costheta.C");
 
   TCanvas *c1 = new TCanvas();
   c1->Divide(2,2);
