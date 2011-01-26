@@ -94,11 +94,11 @@ void tree1r()
 
   //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%3_8_6%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   //data
-  /*
-    myTree.Add("/data2/efe/ntuples/386/386_2_minbias_sept17_132440_135735.root");
-    myTree.Add("/data2/efe/ntuples/386/386_Run2010B_Nov4ReReco_v1_146428_149442.root");//
-    myTree.Add("/data2/efe/ntuples/386/386_2_Run2010A_Nov4ReReco_v1_136033_144114.root");
-  */
+  
+  //myTree.Add("/data2/efe/ntuples/386/386_2_minbias_sept17_132440_135735.root");
+   myTree.Add("/data2/efe/ntuples/386/386_Run2010B_Nov4ReReco_v1_146428_149442.root");//
+   myTree.Add("/data2/efe/ntuples/386/386_2_Run2010A_Nov4ReReco_v1_136033_144114.root");
+  
 
   //mc
   //myTree.Add("/data2/efe/ntuples/386/DY_powheg_wo_HLT_filter.root");
@@ -109,7 +109,7 @@ void tree1r()
   //myTree.Add("/data1/efe/ntuples/7TeV/powhegnew.root");
   //myTree.Add("/data1/efe/ntuples/7TeV/FSRONOFF/fsron_DYToMuMu_M_20_7TeV_powheg_pythia6_Spring10_START3X_V26_v1_WITHGEN.root");//old
 
-  myTree.Add("/data2/efe/ntuples/397/Run2010A_Dec22ReReco_v1.root");
+  //myTree.Add("/data2/efe/ntuples/397/Run2010A_Dec22ReReco_v1.root");
   
 
   TH1::AddDirectory(true);
@@ -117,7 +117,7 @@ void tree1r()
   int event,run,lumi,bxnumber,realdata;
   int hlt_trigger_fired;
   int sort_index_for_mu_tree;
-  float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonM[50], RecMuonE[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50], RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50]; 
+  float RecMuonPt[50], RecMuonEta[50], RecMuonPhi[50],RecMuonPx[50], RecMuonPy[50], RecMuonPz[50], RecMuonM[50], RecMuonE[50], RecMuonGlobalType[50], RecMuonTrackerType[50], RecMuonStandAloneType[50], RecMuonIsoSumPt[50], RecMuonIsoRelative[50], RecMuonIsoCalComb[50], RecMuonIsoDY[50], RecMuonglmuon_dxy[50], RecMuonglmuon_dz[50], RecMuonglmuon_normalizedChi2[50]; 
   int RecMuonglmuon_trackerHits[50],RecMuontkmuon_pixelhits[50],RecMuonglmuon_muonHits[50],RecNumberOfUsedStations[50],hltmatchedmuon[50],hltmatched_Dimuon[50];
 
   //particle information
@@ -457,6 +457,8 @@ void tree1r()
 
   TH1F *h_gen_eta = new TH1F("h_gen_eta","",100,-6,6);
 
+  TH1F *h_numberofpfjets = new TH1F("h_numberofpfjets","",10,-0.5,9.5);
+
   float jetscale = 0.1;
   float jetscale_jpt = 0.05;
   float jetetascale =  0.02;
@@ -558,7 +560,7 @@ void tree1r()
       ++parpar;
     }
 
-    if (!realdata && parpar!=2) continue;
+    //   if (!realdata && parpar!=2) continue;//!!!!!!!!!!!!!!!!!!!!!!!!!!!
     //   if (sort_index_for_mu_tree < 2) continue;//This effects GEN level too - be careful
 
 
@@ -756,11 +758,11 @@ void tree1r()
 	if ((RecMuonglmuon_charge[j]*RecMuonglmuon_charge[jk]) == -1 && //common1
 	    RecMuonPt[j] > ptcut && RecMuonPt[jk] > ptcut && //common2
 	    RecMuonIsoSumPt[j] < 3. && RecMuonIsoSumPt[jk] < 3. && 
-	    //(RecMuonIsoCalComb[j] + RecMuonIsoSumPt[j])/RecMuonPt[j] < 0.15 && (RecMuonIsoCalComb[jk] + RecMuonIsoSumPt[jk])/RecMuonPt[jk] < 0.15 && ????
+	    //RecMuonIsoDY[j] < 0.15 && RecMuonIsoDY[jk] < 0.15 && 
 	    fabs(RecMuonEta[j]) <2.1 && fabs(RecMuonEta[jk]) <2.1 && //common3
-	    //	      ((hltmatchedmuon[j] == 1 && fabs(RecMuonEta[j]) <2.1) || (hltmatchedmuon[jk] == 1 && fabs(RecMuonEta[jk]) <2.1)) && 
-	    fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2) //common4
-	  { 
+	    (hltmatchedmuon[j] == 1 || hltmatchedmuon[jk] == 1) &&
+	    fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2 
+	    ){ 
 	    index1[common] = j;
 	    index2[common] = jk;
 	    common++;
@@ -854,7 +856,7 @@ void tree1r()
     int ind1 = -99;
     int ind2 = -99;
 
-    if (MZ > 15. && parton_pt[0] > 20. && parton_pt[1] > 20. && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1){
+    //   if (!realdata && MZ > 15. && parton_pt[0] > 20. && parton_pt[1] > 20. && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1){
 
 
       //------------------------Muon ID--------------------------------------------
@@ -871,8 +873,8 @@ void tree1r()
 	*/
 	if (RecMuontkmuon_pixelhits[ind1] >= 1 && RecMuonglmuon_trackerHits[ind1] > 10) loose1 = 1; 
 	if (RecMuontkmuon_pixelhits[ind2] >= 1 && RecMuonglmuon_trackerHits[ind2] > 10) loose2 = 1; 
-	if (RecMuonglmuon_normalizedChi2[ind1] < 10 && RecMuonglmuon_muonHits[ind1] >= 1) tight_hltalso1 = 1;
-	if (RecMuonglmuon_normalizedChi2[ind2] < 10 && RecMuonglmuon_muonHits[ind2] >= 1) tight_hltalso2 = 1;
+	if (RecMuonglmuon_normalizedChi2[ind1] < 10 && RecMuonglmuon_muonHits[ind1] >= 1 && RecNumberOfUsedStations[ind1] > 1) tight_hltalso1 = 1;
+	if (RecMuonglmuon_normalizedChi2[ind2] < 10 && RecMuonglmuon_muonHits[ind2] >= 1 && RecNumberOfUsedStations[ind2] > 1) tight_hltalso2 = 1;
       }
 
       //if (ind1 == -99 || ind2 == -99) continue;
@@ -883,8 +885,8 @@ void tree1r()
 	if (MZmuon < 0.) MZmuon = -1.*sqrt(fabs(MZmuon));
 	if (MZmuon > 0.) MZmuon = sqrt(MZmuon);
 	h_muon_leading_PT->Fill(TMath::Max(RecMuonPt[ind1],RecMuonPt[ind2]));				  
-	// if (MZmuon > 20.){
-	if (MZmuon > 15.){
+	//	if (MZmuon > 15.){
+	if (MZmuon >60 && MZmuon < 120){
 	  select = 1;
 	  float dimuonpt = sqrt(pow((RecMuonPx[ind1]+RecMuonPx[ind2]),2) +pow((RecMuonPy[ind1]+RecMuonPy[ind2]),2));
 	  float dimuonrapidity = 0.5*log((RecMuonE[ind1]+RecMuonE[ind2]+RecMuonPz[ind1]+RecMuonPz[ind2])/(RecMuonE[ind1]+RecMuonE[ind2]-RecMuonPz[ind1]-RecMuonPz[ind2]));
@@ -911,8 +913,6 @@ void tree1r()
 	  h_eta_mu_0->Fill(RecMuonEta[ind1]);
 	  h_eta_mu_1->Fill(RecMuonEta[ind2]);
 
-
-
 	  p1dotp2__RECO = RecMuonPx[ind1]*RecMuonPx[ind2]+RecMuonPy[ind1]*RecMuonPy[ind2]+RecMuonPz[ind1]*RecMuonPz[ind2];
 	  MZ__RECO  = RecMuonM[ind1]+RecMuonM[ind2]+2*(RecMuonE[ind1]*RecMuonE[ind2]-p1dotp2__RECO);
 	  MZ__RECO = sqrt(MZ__RECO);
@@ -936,69 +936,9 @@ void tree1r()
 	  costhetaCSreco__RECO = (2/(Qreco__RECO*sqrt(Qreco__RECO*Qreco__RECO+QTreco__RECO*QTreco__RECO)))*(P1preco__RECO*P2mreco__RECO-P1mreco__RECO*P2preco__RECO);
 	  if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;
 	  h_costhetaCSreco__RECO->Fill(costhetaCSreco__RECO);   
-
-
 	}//mass window
       } ///tight...loose
 
-
-
-
-
-
-	//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	//-------------------For Unfolding----------------------------------------
-      
-      if (iev < nevent*r_test ){
-	if (gen_costhetaCSreco >= 0) numberofgenforward++;
-	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1) numberofgenbackward++;
-	if (gen_costhetaCSreco >= 0 && costhetaCSreco__RECO >= 0){
-	  numberofgenforward_recoforward++;
-	  if (select) h_MZ_F_vs_MZ_RECO_F->Fill(MZ,MZ__RECO);
-	  if (!select) h_MZ_F_vs_MZ_RECO_F->Fill(MZ,-1);
-	}
-	if (gen_costhetaCSreco >= 0 && costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1){ 
-	  numberofgenforward_recobackward++;
-	  if (select) h_MZ_F_vs_MZ_RECO_B->Fill(MZ,MZ__RECO);
-	  if (!select) h_MZ_F_vs_MZ_RECO_B->Fill(MZ,-1);
-	}
-	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1 && costhetaCSreco__RECO >= 0){ 
-	  numberofgenbackward_recoforward++;
-	  if (select) h_MZ_B_vs_MZ_RECO_F->Fill(MZ,MZ__RECO);
-	  if (!select) h_MZ_B_vs_MZ_RECO_F->Fill(MZ,-1);
-	}
-	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1 && costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1){
-	  numberofgenbackward_recobackward++;
-	  if (select) h_MZ_B_vs_MZ_RECO_B->Fill(MZ,MZ__RECO);
-	  if (!select) h_MZ_B_vs_MZ_RECO_B->Fill(MZ,-1);
-	}
-      }
-	
-      if (iev > nevent*r_test ){	
-	if (gen_costhetaCSreco >= 0) h_MZ_F->Fill(MZ);
-	if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1) h_MZ_B->Fill(MZ);
-      }
-	
-      if (iev > nevent*r_test ){	
-	if (costhetaCSreco__RECO >= 0){ 
-	  if (MZ__RECO > 600){ 
-	    h_MZ__RECO_F->Fill(609.5);
-	  }else{
-	    h_MZ__RECO_F->Fill(MZ__RECO);
-	  }
-	  h_MZ__OBS_F->Fill(MZ__RECO);
-	}
-	if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1){ 
-	  if (MZ__RECO > 600){ 
-	    h_MZ__RECO_B->Fill(609.5);
-	  }else{
-	    h_MZ__RECO_B->Fill(MZ__RECO);
-	  }
-	  h_MZ__OBS_B->Fill(MZ__RECO);
-	}
-      }
-    }	
-    //------------------------------------------------------------------------
 
 
 
@@ -1059,28 +999,6 @@ void tree1r()
     QZreco = RecMuonPz[0]+RecMuonPz[1];
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-    /*
-      if (parpar == 0) continue;
-      if (MZ<40.) continue;
-
-      costhetaCS = (2/(Q*sqrt(Q*Q+QT*QT)))*(P1p*P2m-P1m*P2p);
-      if (QZ < 0.) costhetaCS = -costhetaCS;
-      h_costhetaCS->Fill(costhetaCS);
-      if (MZ>40. && MZ<78.) h_costhetaCS40_78->Fill(costhetaCS);
-      if (MZ>78. && MZ<105.) h_costhetaCS78_105->Fill(costhetaCS);
-      if (MZ>105.) h_costhetaCS105->Fill(costhetaCS);
-    
-      for (int uu = 0; uu<16; uu++){
-      if (MZ > xAxis_AFB[uu] && MZ < xAxis_AFB[uu+1]){
-      if (costhetaCS > 0) AFB_F[uu]++;
-      }
-      if (MZ > xAxis_AFB[uu] && MZ < xAxis_AFB[uu+1]){
-      if (costhetaCS < 0) AFB_B[uu]++;
-      }
-      }
-    */
-
-    //     if (MZmuon < 78 || MZmuon > 105) continue;//!!!!!!!!
         
     costhetaCSreco = (2/(Qreco*sqrt(Qreco*Qreco+QTreco*QTreco)))*(P1preco*P2mreco-P1mreco*P2preco);
     if (QZreco < 0.) costhetaCSreco = -costhetaCSreco;
@@ -1125,9 +1043,6 @@ void tree1r()
       if (costhetaCSreco < 0) AFB_Bbin3++;	
     }     
 
-
-
-
     for (int uu = 0; uu<13; uu++){
       if (MZmuon > xAxis_AFB[uu] && MZmuon < xAxis_AFB[uu+1]){
 	if (costhetaCSreco >= 0) AFB_Freco[uu]++;
@@ -1135,12 +1050,6 @@ void tree1r()
       }
     }
       
-    /*
-      if (numberofrecmuons > 1){
-      if (costhetaCSreco > 0) h_MZmuonforward->Fill(MZmuon);
-      if (costhetaCSreco < 0) h_MZmuonbackward->Fill(MZmuon);
-      }
-    */
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
     float AFB_Fbin_Reco[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -1161,12 +1070,6 @@ void tree1r()
     }
 
 
-    /*
-      cout<<"MASS GEN:   "<<MZ<<"   MASS RECO:   "<<MZ__RECO<<endl;
-      cout<<"Q GEN:   "<<parton_charge[0]<<"    "<<parton_charge[1]<<endl;
-      cout<<"Q RECO:   "<<RecMuonglmuon_charge[0]<<"    "<<RecMuonglmuon_charge[1]<<endl;
-      cout<<"costheta GEN:    "<<gen_costhetaCSreco<<"   costheta RECO:    "<<costhetaCSreco__RECO<<endl;
-    */
 
     float RijFF[20][20]={};
     float RijFB[20][20]={};
@@ -1253,7 +1156,7 @@ void tree1r()
 	  float deltar = DeltaR(PFjetEta[pf],RecMuonEta[j],PFjetPhi[pf],RecMuonPhi[j]);
 	  if (deltar<0.5) markpfjet = 1; 
         }
-	if (markpfjet == 1) continue;
+	//	if (markpfjet == 1) continue;
         if (fabs(PFjetEta[pf]) > 2.5) continue;
 	if (PFCorrjetPt[pf] > 15.) ++numberofpfjets;
 	if (PFCorrjetPt[pf] > 15.){
@@ -1279,25 +1182,13 @@ void tree1r()
         if ((PFCorrjetPt[pf]*(1+jetetascale*fabs(PFjetEta[pf])+jetscale_jpt)) > 15.) ++numberofpfjets_combup;
         if ((PFCorrjetPt[pf]*(1-jetetascale*fabs(PFjetEta[pf])-jetscale_jpt)) > 15.) ++numberofpfjets_combdown;
       }
+      h_numberofpfjets->Fill(numberofpfjets);
     }
+
 
   }// end of event loop
 
-  /*
-    cout<<"-----------------------------------------------------------"<<endl;
-    cout<<"cnt0   "<<cnt0<<"    "<<100.*cnt0/(1.0*cnt0)<<endl;
-    cout<<"cnt1   "<<cnt1<<"    "<<100.*cnt1/(1.0*cnt1)<<endl;
-    cout<<"cnt2   "<<cnt2<<"    "<<100.*cnt2/(1.0*cnt1)<<endl;
-    cout<<"cnt3   "<<cnt3<<"    "<<100.*cnt3/(1.0*cnt1)<<endl;
-    cout<<"cnt4   "<<cnt4<<"    "<<100.*cnt4/(1.0*cnt1)<<endl;
-    cout<<"cnt5   "<<cnt5<<"    "<<100.*cnt5/(1.0*cnt1)<<endl;
-    cout<<"cnt6   "<<cnt6<<"    "<<100.*cnt6/(1.0*cnt1)<<endl;
-    cout<<"-----------------------------------------------------------"<<endl;
 
-    cout<<"tot eff = "<<(1.*cntend)/(1.*cnt0)<<endl;
-    cout<<"#Z+1jet events and tot eff(Vjets) = "<<vjets_count<<"  "<<(1.*vjets_count)/(1.*cnt0)<<endl;
-    cout<<"#Z+Njet events and tot eff(Vjets) = "<<vjets_count_all<<"  "<<(1.*vjets_count_all)/(1.*cnt0)<<endl;
-  */
 
   float massbinbin[3];
   float error[3];
@@ -1346,319 +1237,8 @@ void tree1r()
     if ((AFB_Freco[kk] + AFB_Breco[kk])!=0) AFBreco[kk] = (AFB_Freco[kk] - AFB_Breco[kk])/(AFB_Freco[kk] + AFB_Breco[kk]);
   }
 
- 
-  h_MZ_F->SaveAs("MZ_F.C");
-  h_MZ__RECO_F->SaveAs("MZ_RECO_F.C");//
-
-  h_MZ_B->SaveAs("MZ_B.C");
-  h_MZ__RECO_B->SaveAs("MZ_RECO_B.C");
-
-  h_MZ_F_vs_MZ_RECO_F->SaveAs("MZ_F_vs_MZ_RECO_F.C");
-  h_MZ_F_vs_MZ_RECO_B->SaveAs("MZ_F_vs_MZ_RECO_B.C");
-  h_MZ_B_vs_MZ_RECO_F->SaveAs("MZ_B_vs_MZ_RECO_F.C");
-  h_MZ_B_vs_MZ_RECO_B->SaveAs("MZ_B_vs_MZ_RECO_B.C");
-
-  //@@@@@@@@@@@@@@@ UNFOLDING @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  if (!realdata){
-  
-    //######## FF ######################################################
-    TUnfold unfold_FF(h_MZ_F_vs_MZ_RECO_F,TUnfold::kHistMapOutputHoriz,TUnfold::kRegModeDerivative);
-    
-    unfold_FF.SetInput(h_MZ__RECO_F);
-    int nScan_FF = 50;
-    int iBest_FF;
-    TSpline *logTauX_FF,*logTauY_FF;
-    TGraph *lCurve_FF;
-    iBest_FF = unfold_FF.ScanLcurve(nScan_FF,2E-5,3E-5,&lCurve_FF,&logTauX_FF,&logTauY_FF);
-    cout<<"tau FF = "<<unfold_FF.GetTau()<<"   "<<unfold_FF.GetLcurveX()<<"   "<<unfold_FF.GetLcurveY()<<endl;
-    
-    int *binMap_FF = new int[15];
-    for (int i=1;i<=13;i++) binMap_FF[i] = i;
-    binMap_FF[0] = -1;
-    binMap_FF[14] = -1;
-    TH1D *x_FF = new TH1D("x_FF","Unfolded_FF",13,xAxis_AFB );
-    //TH1D *x_FF = new TH1D("x_FF","Unfolded_FF",13,15,140 );//600
-    unfold_FF.GetOutput(x_FF,binMap_FF);
-    TH2D *rhoij_FF=unfold_FF.GetRhoIJ("rhoij_FF","Correlation FF");
-    x_FF->SaveAs("x_FF.C");
-    rhoij_FF->SaveAs("rhoij_FF.C");
-    
-    double t_FF[1],x1_FF[1],y1_FF[1];
-    logTauX_FF->GetKnot(iBest_FF,t_FF[0],x1_FF[0]);
-    logTauY_FF->GetKnot(iBest_FF,t_FF[0],y1_FF[0]);
-    TGraph *bestLcurve_FF=new TGraph(1,x1_FF,y1_FF);
-    TGraph *bestLogTauX_FF=new TGraph(1,t_FF,x1_FF);
-    
-    
-    TCanvas *ccur_FF = new TCanvas();
-    ccur_FF->cd();
-    lCurve_FF->SetMarkerStyle(26);
-    lCurve_FF->Draw("AL");
-    bestLcurve_FF->SetMarkerColor(kRed);
-    bestLcurve_FF->Draw("*");
-    ccur_FF->SaveAs("lcurve_FF.C");
-    
-    TCanvas *ctest_FF = new TCanvas();
-    ctest_FF->cd();
-    h_MZ_F->Draw();
-    h_MZ__RECO_F->SetLineColor(4);
-    h_MZ__RECO_F->Draw("sames");
-    x_FF->SetLineColor(2);
-    x_FF->Draw("sames");
-    ctest_FF->SaveAs("unfolded_FF.C");//Note you need to change the range of x by hand in the file!!
-    //######## end of FF ######################################################
-    
-    //######## FB ######################################################
-    TUnfold unfold_FB(h_MZ_F_vs_MZ_RECO_B,TUnfold::kHistMapOutputHoriz,TUnfold::kRegModeDerivative);
-    
-    unfold_FB.SetInput(h_MZ__RECO_B);
-    int nScan_FB = 50;
-    int iBest_FB;
-    TSpline *logTauX_FB,*logTauY_FB;
-    TGraph *lCurve_FB;
-    iBest_FB = unfold_FB.ScanLcurve(nScan_FB,2E-5,3E-5,&lCurve_FB,&logTauX_FB,&logTauY_FB);
-    cout<<"tau FB = "<<unfold_FB.GetTau()<<"   "<<unfold_FB.GetLcurveX()<<"   "<<unfold_FB.GetLcurveY()<<endl;
-    
-    int *binMap_FB = new int[15];
-    for (int i=1;i<=13;i++) binMap_FB[i] = i;
-    binMap_FB[0] = -1;
-    binMap_FB[14] = -1;
-    TH1D *x_FB = new TH1D("x_FB","Unfolded_FB",13,xAxis_AFB);
-    unfold_FB.GetOutput(x_FB,binMap_FB);
-    TH2D *rhoij_FB=unfold_FB.GetRhoIJ("rhoij_FB","Correlation FB");
-    x_FB->SaveAs("x_FB.C");
-    rhoij_FB->SaveAs("rhoij_FB.C");
-    
-    double t_FB[1],x1_FB[1],y1_FB[1];
-    logTauX_FB->GetKnot(iBest_FB,t_FB[0],x1_FB[0]);
-    logTauY_FB->GetKnot(iBest_FB,t_FB[0],y1_FB[0]);
-    TGraph *bestLcurve_FB=new TGraph(1,x1_FB,y1_FB);
-    TGraph *bestLogTauX_FB=new TGraph(1,t_FB,x1_FB);
-    
-    TCanvas *ccur_FB = new TCanvas();
-    ccur_FB->cd();
-    lCurve_FB->SetMarkerStyle(26);
-    lCurve_FB->Draw("AL");
-    bestLcurve_FB->SetMarkerColor(kRed);
-    bestLcurve_FB->Draw("*");
-    ccur_FB->SaveAs("lcurve_FB.C");
-    
-    TCanvas *ctest_FB = new TCanvas();
-    ctest_FB->cd();
-    h_MZ_F->Draw();
-    h_MZ__RECO_B->SetLineColor(4);
-    h_MZ__RECO_B->Draw("sames");
-    x_FB->SetLineColor(2);
-    x_FB->Draw("sames");
-    ctest_FB->SaveAs("unfolded_FB.C");//Note you need to change the range of x by hand in the file!!
-    //######## end of FB ######################################################
 
 
-    
-    TH1D *x_FF_FB = new TH1D("x_FF_FB","Unfolded_FF_FB",13, xAxis_AFB);
-    TH1D *unfolded_to_true_F = new TH1D("unfolded_to_true_F","",13, xAxis_AFB);
-    TCanvas *c_NF_from_full_unfolding = new TCanvas();
-    c_NF_from_full_unfolding->Divide(1,2);
-    c_NF_from_full_unfolding->cd(1);
-    gPad->SetLogy();
-    h_MZ_F->Draw();
-    h_MZ__RECO_F->SetLineColor(4);
-    h_MZ__RECO_F->Draw("sames");
-    x_FB->Scale(ratio_FB);
-    x_FF->Scale(1./ratio_FF);//!!!!!!!!!!!!
-    x_FF_FB->Add(x_FF);
-    x_FF_FB->Add(x_FB);
-    x_FF_FB->SetLineColor(2);
-    x_FF_FB->SetMarkerColor(2);
-    x_FF_FB->SetMarkerStyle(8);
-    x_FF_FB->GetXaxis()->SetTitle("M_{ll} [GeV]");
-    x_FF_FB->Draw("sames");
-    c_NF_from_full_unfolding->cd(2);
-    unfolded_to_true_F->Add(x_FF_FB);
-    unfolded_to_true_F->Divide(h_MZ_F);
-    unfolded_to_true_F->Sumw2();
-    gPad->SetLogx();
-    unfolded_to_true_F->Draw("e1");    
-    unfolded_to_true_F->Fit("pol0");
-    unfolded_to_true_F->GetXaxis()->SetTitle("M_{ll} [GeV]");
-    unfolded_to_true_F->GetYaxis()->SetTitle("Unfolded/True");
-    c_NF_from_full_unfolding->SaveAs("c_NF_from_full_unfolding.C");
-
-
-    
-
-    //######## BB ######################################################
-    TUnfold unfold_BB(h_MZ_B_vs_MZ_RECO_B,TUnfold::kHistMapOutputHoriz,TUnfold::kRegModeDerivative);
-    
-    unfold_BB.SetInput(h_MZ__RECO_B);
-    int nScan_BB = 50;
-    int iBest_BB;
-    TSpline *logTauX_BB,*logTauY_BB;
-    TGraph *lCurve_BB;
-    iBest_BB = unfold_BB.ScanLcurve(nScan_BB,2E-5,3E-5,&lCurve_BB,&logTauX_BB,&logTauY_BB);
-    cout<<"tau BB = "<<unfold_BB.GetTau()<<"   "<<unfold_BB.GetLcurveX()<<"   "<<unfold_BB.GetLcurveY()<<endl;
-    
-    int *binMap_BB = new int[15];
-    for (int i=1;i<=13;i++) binMap_BB[i] = i;
-    binMap_BB[0] = -1;
-    binMap_BB[14] = -1;
-    TH1D *x_BB = new TH1D("x_BB","Unfolded_BB",13,xAxis_AFB);
-    unfold_BB.GetOutput(x_BB,binMap_BB);
-    TH2D *rhoij_BB=unfold_BB.GetRhoIJ("rhoij_BB","Correlation BB");
-    x_BB->SaveAs("x_BB.C");
-    rhoij_BB->SaveAs("rhoij_BB.C");
-
-    double t_BB[1],x1_BB[1],y1_BB[1];
-    logTauX_BB->GetKnot(iBest_BB,t_BB[0],x1_BB[0]);
-    logTauY_BB->GetKnot(iBest_BB,t_BB[0],y1_BB[0]);
-    TGraph *bestLcurve_BB=new TGraph(1,x1_BB,y1_BB);
-    TGraph *bestLogTauX_BB=new TGraph(1,t_BB,x1_BB);
-    
-    TCanvas *ccur_BB = new TCanvas();
-    ccur_BB->cd();
-    lCurve_BB->SetMarkerStyle(26);
-    lCurve_BB->Draw("AL");
-    bestLcurve_BB->SetMarkerColor(kRed);
-    bestLcurve_BB->Draw("*");
-    ccur_BB->SaveAs("lcurve_BB.C");
-    
-    TCanvas *ctest_BB = new TCanvas();
-    ctest_BB->cd();
-    h_MZ_B->Draw();
-    h_MZ__RECO_B->SetLineColor(4);
-    h_MZ__RECO_B->Draw("sames");
-    x_BB->SetLineColor(2);
-    x_BB->Draw("sames");
-    ctest_BB->SaveAs("unfolded_BB.C");//Note you need to change the range of x by hand in the file!!
-    //######## end of BB ######################################################
-    
-
-    //######## BF ######################################################
-    TUnfold unfold_BF(h_MZ_B_vs_MZ_RECO_F,TUnfold::kHistMapOutputHoriz,TUnfold::kRegModeDerivative);
-    
-    unfold_BF.SetInput(h_MZ__RECO_F);
-    int nScan_BF = 50;
-    int iBest_BF;
-    TSpline *logTauX_BF,*logTauY_BF;
-    TGraph *lCurve_BF;
-    iBest_BF = unfold_BF.ScanLcurve(nScan_BF,0.0,0.0,&lCurve_BF,&logTauX_BF,&logTauY_BF);
-    cout<<"tau BF = "<<unfold_BF.GetTau()<<"   "<<unfold_BF.GetLcurveX()<<"   "<<unfold_BF.GetLcurveY()<<endl;
-    
-    int *binMap_BF = new int[15];
-    for (int i=1;i<=13;i++) binMap_BF[i] = i;
-    binMap_BF[0] = -1;
-    binMap_BF[14] = -1;
-    TH1D *x_BF = new TH1D("x_BF","Unfolded_BF",13,xAxis_AFB);
-    unfold_BF.GetOutput(x_BF,binMap_BF);
-    TH2D *rhoij_BF=unfold_BF.GetRhoIJ("rhoij_BF","Correlation BF");
-    x_BF->SaveAs("x_BF.C");
-    rhoij_BF->SaveAs("rhoij_BF.C");
-    
-    double t_BF[1],x1_BF[1],y1_BF[1];
-    logTauX_BF->GetKnot(iBest_BF,t_BF[0],x1_BF[0]);
-    logTauY_BF->GetKnot(iBest_BF,t_BF[0],y1_BF[0]);
-    TGraph *bestLcurve_BF=new TGraph(1,x1_BF,y1_BF);
-    TGraph *bestLogTauX_BF=new TGraph(1,t_BF,x1_BF);
-    
-    TCanvas *ccur_BF = new TCanvas();
-    ccur_BF->cd();
-    lCurve_BF->SetMarkerStyle(26);
-    lCurve_BF->Draw("AL");
-    bestLcurve_BF->SetMarkerColor(kRed);
-    bestLcurve_BF->Draw("*");
-    ccur_BF->SaveAs("lcurve_BF.C");
-    
-    TCanvas *ctest_BF = new TCanvas();
-    ctest_BF->cd();
-    h_MZ_F->Draw();
-    h_MZ__RECO_B->SetLineColor(4);
-    h_MZ__RECO_B->Draw("sames");
-    x_BF->SetLineColor(2);
-    x_BF->Draw("sames");
-    ctest_BF->SaveAs("unfolded_BF.C");//Note you need to change the range of x by hand in the file!!
-    //######## end of BF ######################################################
-    TH1D *x_BB_BF = new TH1D("x_BB_BF","Unfolded_BB_BF",13, xAxis_AFB);
-    TH1D *unfolded_to_true_B = new TH1D("unfolded_to_true_B","",13, xAxis_AFB);
-    TCanvas *c_NB_from_full_unfolding = new TCanvas();
-    c_NB_from_full_unfolding->Divide(1,2);
-    c_NB_from_full_unfolding->cd(1);
-    gPad->SetLogy();
-    h_MZ_B->Draw();
-    h_MZ__RECO_B->SetLineColor(4);
-    h_MZ__RECO_B->Draw("sames");
-    x_BF->Scale(ratio_BF);
-    x_BB_BF->Add(x_BB);
-    x_BB_BF->Add(x_BF);
-    x_BB_BF->SetLineColor(2);
-    x_BB_BF->SetMarkerColor(2);
-    x_BB_BF->SetMarkerStyle(8);
-    x_BB_BF->GetXaxis()->SetTitle("M_{ll} [GeV]");
-    x_BB_BF->Draw("sames");
-    c_NB_from_full_unfolding->cd(2);
-    unfolded_to_true_B->Add(x_BB_BF);
-    unfolded_to_true_B->Divide(h_MZ_B);
-    unfolded_to_true_B->Sumw2();
-    gPad->SetLogx();
-    unfolded_to_true_B->Draw("e1");    
-    unfolded_to_true_B->Fit("pol0");
-    unfolded_to_true_B->GetXaxis()->SetTitle("M_{ll} [GeV]");
-    unfolded_to_true_B->GetYaxis()->SetTitle("Unfolded/True");
-    c_NB_from_full_unfolding->SaveAs("c_NB_from_full_unfolding.C");
-  
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-    TH1D *AFB_observed_numerator = new TH1D("AFB_observed_numerator","",13, xAxis_AFB);
-    TH1D *AFB_observed_denominator = new TH1D("AFB_observed_denominator","",13, xAxis_AFB);
-    TH1D *AFB_observed = new TH1D("AFB_observed","",13, xAxis_AFB);
-    TH1D *h_temp = new TH1D("h_temp","",13, xAxis_AFB);
-    TCanvas *c_AFB = new TCanvas();
-    c_AFB->cd();
-    AFB_observed_numerator->Add(h_MZ__OBS_F);
-    h_temp->Add(h_MZ__OBS_B);
-    h_temp->Scale(-1);
-    AFB_observed_numerator->Add(h_temp);
-    AFB_observed_denominator->Add(h_MZ__OBS_F);
-    AFB_observed_denominator->Add(h_MZ__OBS_B);
-    AFB_observed->Add(AFB_observed_numerator);
-    AFB_observed->Divide(AFB_observed_denominator);
-    AFB_observed->Draw();
-
-    TH1D *AFB_true_numerator = new TH1D("AFB_true_numerator","",13, xAxis_AFB);
-    TH1D *AFB_true_denominator = new TH1D("AFB_true_denominator","",13, xAxis_AFB);
-    TH1D *AFB_true = new TH1D("AFB_true","",13, xAxis_AFB);
-    TH1D *h_temp_t = new TH1D("h_temp_t","",13, xAxis_AFB);
-    c_AFB->cd();
-    AFB_true_numerator->Add(h_MZ_F);
-    h_temp_t->Add(h_MZ_B);
-    h_temp_t->Scale(-1);
-    AFB_true_numerator->Add(h_temp_t);
-    AFB_true_denominator->Add(h_MZ_F);
-    AFB_true_denominator->Add(h_MZ_B);
-    AFB_true->Add(AFB_true_numerator);
-    AFB_true->Divide(AFB_true_denominator);
-    AFB_true->SetLineColor(4);
-    AFB_true->Draw("sames");
-
-    TH1D *AFB_unfolded_numerator = new TH1D("AFB_unfolded_numerator","",13, xAxis_AFB);
-    TH1D *AFB_unfolded_denominator = new TH1D("AFB_unfolded_denominator","",13, xAxis_AFB);
-    TH1D *AFB_unfolded = new TH1D("AFB_unfolded","",13, xAxis_AFB);
-    TH1D *h_temp_unf = new TH1D("h_temp_unf","",13, xAxis_AFB);
-    c_AFB->cd();
-    AFB_unfolded_numerator->Add(unfolded_to_true_F);
-    h_temp_unf->Add(unfolded_to_true_B);
-    h_temp_unf->Scale(-1);
-    AFB_unfolded_numerator->Add(h_temp_unf);
-    AFB_unfolded_denominator->Add(unfolded_to_true_F);
-    AFB_unfolded_denominator->Add(unfolded_to_true_B);
-    AFB_unfolded->Add(AFB_unfolded_numerator);
-    AFB_unfolded->Divide(AFB_unfolded_denominator);
-    AFB_unfolded->SetLineColor(2);
-    AFB_unfolded->Draw("e1sames");
-
-    c_AFB->SaveAs("AFB_Unfolded.C");
-
-  }
 
 
   TCanvas *c1_ewk = new TCanvas();
@@ -1724,9 +1304,7 @@ void tree1r()
   cout<<"numberofgenbackward = numberofgenbacward_recobackward + numberofgenbacward_recoforward = ? "<<numberofgenbackward<<" = "<<numberofgenbackward_recobackward<<" + "<<numberofgenbackward_recoforward<<" = "<< numberofgenbackward_recobackward + numberofgenbackward_recoforward << endl;
 
 
-  cout<<"  "<<endl;
 
-  cout<<"@@@@@@@@ ------->>>>>>>>>>>>   WARNING!!!!! DO NOT FORGET TO USE ROOT 5.27 FOR UNFOLDING!!!!!"<<endl;
 
 
 

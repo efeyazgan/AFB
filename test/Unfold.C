@@ -30,8 +30,8 @@ void tree1r()
   TChain myTree("demo/MuonTree");
   //myTree.Add("/data2/efe/ntuples/386/DY_powheg_wo_HLT_filter.root");
   ////myTree.Add("/data2/efe/ntuples/386/386_2_minbias_sept17_132440_135735.root");                                                                     
-  myTree.Add("/data2/efe/ntuples/386/386_Run2010B_Nov4ReReco_v1_146428_149442.root");
-  myTree.Add("/data2/efe/ntuples/386/386_2_Run2010A_Nov4ReReco_v1_136033_144114.root");  
+    myTree.Add("/data2/efe/ntuples/386/386_Run2010B_Nov4ReReco_v1_146428_149442.root");
+    myTree.Add("/data2/efe/ntuples/386/386_2_Run2010A_Nov4ReReco_v1_136033_144114.root");  
   TH1::AddDirectory(true);
   int event,run,lumi,bxnumber,realdata;
   int hlt_trigger_fired;
@@ -453,8 +453,10 @@ void tree1r()
       true_costheta = (2/(gen_Qreco*sqrt(gen_Qreco*gen_Qreco+gen_QTreco*gen_QTreco)))*(gen_P1preco*gen_P2mreco-gen_P1mreco*gen_P2preco);
       if (quark_pz[quark_pos_id] < 0) true_costheta = -true_costheta;
       h_cos_qq->Fill(true_costheta);       
-      if (true_costheta > 0) h_abs_genlevel_F->Fill(MZ_test);
-      if (true_costheta < 0 && true_costheta > -1.0) h_abs_genlevel_B->Fill(MZ_test);
+      if (MZ_test>40){
+      	if (true_costheta > 0) h_abs_genlevel_F->Fill(MZ_test);
+      	if (true_costheta < 0 && true_costheta > -1.0) h_abs_genlevel_B->Fill(MZ_test);
+      }
     }
     //@@@@@@@@@@
     if (gen_QZreco < 0.) gen_costhetaCSreco = -gen_costhetaCSreco;
@@ -726,7 +728,7 @@ void tree1r()
   h_AFB_Obs->Divide(h_AFB_Obs_Tmp2);
 
   h_AFB_Obs->SaveAs("Observed_AFB.C");
-
+  
 //---
   h_AFB_abs_genlevel->Add(h_abs_genlevel_F);
   h_AFB_abs_genlevel_Tmp1->Add(h_abs_genlevel_B);
@@ -735,20 +737,31 @@ void tree1r()
   h_AFB_abs_genlevel_Tmp2->Add(h_abs_genlevel_F);
   h_AFB_abs_genlevel_Tmp2->Add(h_abs_genlevel_B);
   h_AFB_abs_genlevel->Divide(h_AFB_abs_genlevel_Tmp2);
+  h_AFB_abs_genlevel->Draw("");
+  h_AFB_Gen_before_cuts->SetLineColor(4);
+  h_AFB_Gen_before_cuts->Draw("sames");
+  h_AFB_abs_genlevel->SaveAs("True_AFB.C");
+
+  for (int i=1;i<=nb;i++) cout<<"non-diluted/diluted    "<<i<<"  "<< h_AFB_abs_genlevel->GetBinContent(i)/h_AFB_Gen_before_cuts->GetBinContent(i)<<endl;
+
 //----
 
   float w[20][20];
   float w_av[20];
+  float total_for_av[20];
   for (int i=1;i<=nb;i++){
     w_av[i] = 0;
+    total_for_av[i] = 0;
     for (int j=1;j<=5;j++){
       w[i][j] = hTrue_B_beforecuts_for_dilution->GetBinContent(i,j)*hTrue_F_nondiluted->GetBinContent(i,j)-hTrue_F_beforecuts_for_dilution->GetBinContent(i,j)*hTrue_B_nondiluted->GetBinContent(i,j);
       w[i][j] /= (hTrue_F_beforecuts_for_dilution->GetBinContent(i,j)+hTrue_B_beforecuts_for_dilution->GetBinContent(i,j))*(hTrue_F_nondiluted->GetBinContent(i,j)-hTrue_B_nondiluted->GetBinContent(i,j));
       h_w->SetBinContent(i,j,w[i][j]); 
-      w_av[i] += w[i][j];
+      w_av[i] += (hTrue_F_nondiluted->GetBinContent(i,j)+hTrue_B_nondiluted->GetBinContent(i,j))*w[i][j];
+      total_for_av[i] += hTrue_F_nondiluted->GetBinContent(i,j)+hTrue_B_nondiluted->GetBinContent(i,j); 	
    }
-    w_av[i] /= 5.;
-    cout<<i<<"   "<<w_av[i]<<endl;
+//    w_av[i] /= 5.;
+    w_av[i] /= total_for_av[i];
+    cout<<"w["<<i<<"] = "<<w_av[i]<<";"<<endl;
 
   }
 
@@ -826,6 +839,7 @@ void tree1r()
   h_Unfolded_B->Draw("e1sames");  
   c3->SaveAs("closure.C");
 
+
   TCanvas *c4 = new TCanvas();
   c4->Divide(2,1);
   c4->cd(1);
@@ -876,8 +890,43 @@ void tree1r()
   h_AFB_Gen->Draw("sames");
   c7->SaveAs("AFB_acceptance_effects.C");
 
-  
+  TCanvas *c8 = new TCanvas();
+  c8->Divide(2,1);
+  c8->cd(1);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  hTrue_F_before_cuts->Draw();
+  hTrue_F_before_cuts->SetTitle("Forward");
+  hTrue_F_before_cuts->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_MZmuon_F->SetLineColor(4);
+  h_MZmuon_F->Draw("sames");
+h_Unfolded_and_AcceptanceCorrected_F->SetLineColor(2);
+h_Unfolded_and_AcceptanceCorrected_F->SetMarkerColor(2);
+h_Unfolded_and_AcceptanceCorrected_F->SetMarkerStyle(8);
+h_Unfolded_and_AcceptanceCorrected_F->Draw("e1sames");
+  c8->cd(2);
+  gPad->SetLogy();
+  gPad->SetLogx();
+  hTrue_B_before_cuts->Draw();
+  hTrue_B_before_cuts->SetTitle("Backward");
+  hTrue_B_before_cuts->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_MZmuon_B->SetLineColor(4);
+  h_MZmuon_B->Draw("sames");
+  h_Unfolded_and_AcceptanceCorrected_B->SetLineColor(2);
+  h_Unfolded_and_AcceptanceCorrected_B->SetMarkerColor(2);
+  h_Unfolded_and_AcceptanceCorrected_B->SetMarkerStyle(8);
+  h_Unfolded_and_AcceptanceCorrected_B->Draw("e1sames");  
+  c8->SaveAs("closure_unfolding_and_acc_correction.C");
 
+  TCanvas *c9 = new TCanvas();
+  gPad->SetLogx();
+  h_AFB_Gen_before_cuts->GetXaxis()->SetTitle("M_{ll} [GeV]");
+  h_AFB_Gen_before_cuts->Draw();
+  h_AFB_Unfolded_and_Acceptance_Corrected->SetLineColor(4);
+  h_AFB_Unfolded_and_Acceptance_Corrected->Draw("e1sames");
+  c9->SaveAs("Closure_AFB_unfolding_and_acceptance_corr.C");
+
+  
 
   theFile->Write();
   theFile->Close();

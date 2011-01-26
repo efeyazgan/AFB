@@ -1,8 +1,12 @@
 include Makefile.arch
 #----------------------------------------------------------------------------------
-TESTS           := afb_analyzer.C
+#TESTS           := afb_analyzer.C
+TESTS           := Unfold.C
+#TESTS           := afb_analyzer_unfolder.C 
 TESTO           := $(TESTS:.C=.o)
-TEST            := afb_analyzer
+#TEST            := afb_analyzer
+TEST            := Unfold
+#TEST            := afb_analyzer_unfolder
 
 OBJ             = $(TESTO)
 PROGRAMS        = $(TEST)
