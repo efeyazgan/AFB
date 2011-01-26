@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: AFB.cc,v 1.6 2011/01/05 16:30:07 efe Exp $
+// $Id: AFB.cc,v 1.7 2011/01/14 09:56:12 efe Exp $
 //
 //
 #include <memory>
@@ -423,7 +423,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       const trigger::Keys & k = triggerObj->filterKeys(ia);
       for (trigger::Keys::const_iterator ki = k.begin(); ki !=k.end(); ++ki ) {
 	//	if (name == L3FilterName_  ) { 
-	if ( (run <= 146111 && name == L3FilterName_) || (run >=147196 && run <148108 && name == L3FilterName2_) || ( run >=148108 && name == L3FilterName3_) ) { 
+	if ( (run <= 147195 && name == L3FilterName_) || (run >=147196 && run <148108 && name == L3FilterName2_) || ( run >=148108 && name == L3FilterName3_) ) { 
 	  cout<<name << "=?" << L3FilterName_<<"  "<<L3FilterName2_<<"   "<<L3FilterName3_<<endl;
 	  HLTMuMatched.push_back(toc[*ki].particle());
 	  nMuHLT++;     
