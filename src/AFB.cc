@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: AFB.cc,v 1.7 2011/01/14 09:56:12 efe Exp $
+// $Id: AFB.cc,v 1.8 2011/01/26 20:35:40 efe Exp $
 //
 //
 #include <memory>
@@ -210,9 +210,9 @@ private:
   int recelec_index,RecElec_Charge[50],RecElec_IsEB[50], RecElec_IsEE[50]; 
 
   //particle information
-  int par_index, mom[50], daug[50];
-  float ParticlePt[50], ParticleEta[50], ParticlePhi[50], ParticlePx[50], ParticlePy[50], ParticlePz[50], ParticleE[50], ParticleM[50];
-  int ParticleId[50], ParticleStatus[50], ParticleMother[50][10], ParticleDaughter[50][10];
+  int par_index, mom[500], daug[500];
+  float ParticlePt[500], ParticleEta[500], ParticlePhi[500], ParticlePx[500], ParticlePy[500], ParticlePz[500], ParticleE[500], ParticleM[500];
+  int ParticleId[500], ParticleStatus[500], ParticleMother[500][100], ParticleDaughter[500][100];
   int id_tmp[20];
   // int id_muon[20];
   int RecMuonglmuon_charge[50];
@@ -483,20 +483,20 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       const Candidate & p = (*genParticles)[i];
       int id = p.pdgId();
       int st = p.status();
-      if (st!=3) continue;
-      ParticlePt[par_index] = p.pt();
-      ParticleEta[par_index] = p.eta();
-      ParticlePhi[par_index] = p.phi();
-      ParticlePx[par_index] = p.px();
-      ParticlePy[par_index] = p.py();
-      ParticlePz[par_index] = p.pz();
-      ParticleE[par_index] =p.energy();
-      ParticleM[par_index] =p.mass();
-      ParticleId[par_index] = id;
-      ParticleStatus[par_index] = st;
+      if (st==3 || (st==1 && (abs(id)==13 || abs(id)==11))){
+      	ParticlePt[par_index] = p.pt();
+      	ParticleEta[par_index] = p.eta();
+      	ParticlePhi[par_index] = p.phi();
+      	ParticlePx[par_index] = p.px();
+      	ParticlePy[par_index] = p.py();
+      	ParticlePz[par_index] = p.pz();
+      	ParticleE[par_index] =p.energy();
+      	ParticleM[par_index] =p.mass();
+      	ParticleId[par_index] = id;
+      	ParticleStatus[par_index] = st;
+      }
       //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-      //cout<<i+1<<"  "<<st<<"  "<<id<<"   "<<endl;
+      /*
       mom[par_index] = p.numberOfMothers();
       for (uint d=0; d<p.numberOfMothers(); d++) {
         // cout << " mother id: " << p.mother(d)->pdgId() << "   ";
@@ -511,7 +511,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	  ParticleDaughter[par_index][d] = p.daughter(d)->pdgId();
 	}
       }
-      //     cout<<" "<<endl;
+      */
       //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
       ++par_index;
       //    cout<< p.pdgId() << "    "<< p.mass() << ",  "<< p.status() << endl;
