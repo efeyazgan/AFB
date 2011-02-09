@@ -494,6 +494,7 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       	ParticleM[par_index] =p.mass();
       	ParticleId[par_index] = id;
       	ParticleStatus[par_index] = st;
+        ++par_index;
       }
       //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
       /*
@@ -513,7 +514,6 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       }
       */
       //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-      ++par_index;
       //    cout<< p.pdgId() << "    "<< p.mass() << ",  "<< p.status() << endl;
       //    cout<<i<<"  "<<st<<"  "<<id<<"   "<<p.eta()<<"    "<<p.mass()<<endl;
     }   
