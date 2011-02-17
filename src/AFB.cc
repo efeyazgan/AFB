@@ -13,7 +13,7 @@ Implementation:
 //
 // Original Author:  Efe Yazgan
 //         Created:  Tue Feb  3 10:08:43 CET 2009
-// $Id: AFB.cc,v 1.8 2011/01/26 20:35:40 efe Exp $
+// $Id: AFB.cc,v 1.10 2011/02/09 15:27:17 efe Exp $
 //
 //
 #include <memory>
@@ -599,8 +599,8 @@ AFB::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       glmuon_dxy[reco_muon] = glmuon->dxy(beamSpotHandle->position());//OK
       glmuon_dz[reco_muon] = glmuon->dz(beamSpotHandle->position());//probably OK but not used anyway. 
       glmuon_normalizedChi2[reco_muon] = glmuon->normalizedChi2();//OK
-      glmuon_trackerHits[reco_muon] = tkmuon->hitPattern().numberOfValidTrackerHits();//OK
-      tkmuon_pixelhits[reco_muon] = tkmuon->hitPattern().numberOfValidPixelHits();//OK 
+      glmuon_trackerHits[reco_muon] = glmuon->hitPattern().numberOfValidTrackerHits();//OK
+      tkmuon_pixelhits[reco_muon] = glmuon->hitPattern().numberOfValidPixelHits();//OK 
       glmuon_muonHits[reco_muon] = glmuon->hitPattern().numberOfValidMuonHits();//OK
       glmuon_charge[reco_muon] = glmuon->charge();
       rec_eta_muon[reco_muon] = mu.eta();
