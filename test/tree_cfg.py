@@ -46,7 +46,7 @@ process.load('Configuration/StandardSequences/GeometryIdeal_cff')
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 #process.GlobalTag.globaltag = 'GR10_P_V6::All' 
 #process.GlobalTag.globaltag = 'GR_R_36X_V12B::All'
-process.GlobalTag.globaltag = 'GR10_P_V10::All'
+process.GlobalTag.globaltag = 'GR10_P_V11::All'
 
 process.load("RecoMuon.MuonIsolationProducers.muIsolation_cff")
 process.load("Configuration/StandardSequences/RawToDigi_Data_cff")
