@@ -34,18 +34,6 @@ using std::endl;
 
 const Double_t cutdummy= -99999.0;
 
-//==============================================================================
-// Gaussian smearing, systematic translation, and variable inefficiency
-//==============================================================================
-
-Double_t smear (Double_t xt)
-{
-  Double_t xeff= 0.3 + (1.0-0.3)/20*(xt+10.0);  // efficiency
-  Double_t x= gRandom->Rndm();
-  if (x>xeff) return cutdummy;
-  Double_t xsmear= gRandom->Gaus(-2.5,0.2);     // bias and smear
-  return xt+xsmear;
-}
 
 void RooUnfoldDeriveFSR()
 {
@@ -279,7 +267,10 @@ void RooUnfoldDeriveFSR()
 
   TH1D *hMeasCos_M_Y[30][5];
   TH1D *hNoFsrTruthCos_M_Y[30][5];
-  char name_h[100];
+  TH1D *hdummy_m2[30][5];
+  TH1D *hdummy_t2[30][5];
+  char name_h[100],name_1[100],name_2[100];
+  RooUnfoldResponse* resp_2[nb][nb_Y];
   for (int i=0;i<nb;i++){
     for (int j=0;j<nb_Y;j++){
       sprintf(name_h,"hMeasCos_M_%i_Y_%i_",i,j);
@@ -288,6 +279,13 @@ void RooUnfoldDeriveFSR()
       sprintf(name_h,"hNoFsrTruthCos_M_%i_Y_%i",i,j);
       hNoFsrTruthCos_M_Y[i][j] = new TH1D(name_h,name_h,nbcos,-1.,1.);
       hNoFsrTruthCos_M_Y[i][j]->Sumw2();
+
+      sprintf(name_1,"dummy_m2_M_%i_Y_%i",i,j);
+      hdummy_m2[i][j] = new TH1D(name_1,name_1,nbcos,-1.,1.);
+      sprintf(name_1,"dummy_t2_M_%i_Y_%i",i,j);
+      hdummy_t2[i][j] = new TH1D(name_1,name_1,nbcos,-1.,1.);
+      sprintf(name_2,"respCos2_M_%i_Y_%i",i,j);
+      resp_2[i][j] = new RooUnfoldResponse(hdummy_m2[i][j],hdummy_t2[i][j],name_2,name_2);
     }
   }
 
@@ -566,6 +564,8 @@ void RooUnfoldDeriveFSR()
 	    if (MZ > xAxis_AFB[i] && MZ < xAxis_AFB[i+1]){
 	      if (fabs(dimuonrapidity) >= Y_bin_limits[j] && fabs(dimuonrapidity) < Y_bin_limits[j+1]){ 
 		hNoFsrTruthCos_M_Y[i][j]->Fill(gen_costhetaCSreco);
+		if (select) resp_2[i][j]->Fill(costhetaCSreco__RECO,gen_costhetaCSreco);
+		if (!select) resp_2[i][j]->Miss(gen_costhetaCSreco);
 	      }
 	    }
 	  }
@@ -593,6 +593,8 @@ void RooUnfoldDeriveFSR()
       file_cov->WriteTObject(hMeasCos_M_Y[i][j],name_h);
       sprintf(name_h,"truth_no_fsr_%i_%i",i,j);
       file_cov->WriteTObject(hNoFsrTruthCos_M_Y[i][j],name_h);
+      sprintf(name_h,"response2_%i_%i",i,j);
+      file_cov->WriteTObject(resp_2[i][j],name_h);
     }
   }
   //  file_cov->Write();
