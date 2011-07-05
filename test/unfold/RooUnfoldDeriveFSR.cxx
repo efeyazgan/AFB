@@ -1,14 +1,4 @@
-//=====================================================================-*-C++-*-
-// File and Version Information:
-//      $Id: RooUnfoldExample.cxx 248 2010-10-04 22:18:19Z T.J.Adye $
-//
-// Description:
-//      Simple example usage of the RooUnfold package using toy MC.
-//
-// Authors: Tim Adye <T.J.Adye@rl.ac.uk> and Fergus Wilson <fwilson@slac.stanford.edu>
-//          Applied to CMS AFB analysis by Efe Yazgan <efe.yazgan@cern.ch>
-//
-//==============================================================================
+
 
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include <iostream>
