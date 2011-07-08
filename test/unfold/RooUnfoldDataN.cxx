@@ -67,7 +67,7 @@ void RooUnfoldExample()
   gSystem->Load("libRooUnfold");
 #endif
 
-  TFile *file_cov = new TFile("Data_Histograms.root","RECREATE");
+  TFile *file_cov = new TFile("Data_output.root","RECREATE");
   file_cov->cd(); 
 
  
@@ -255,7 +255,6 @@ void RooUnfoldExample()
   myTree.SetBranchAddress("vtxisFake",vtxisFake);
 
 
-  float r_test = 0.5;
   int nb = 12;
   int nbcos = 8;
   float xAxis_AFB[nb+1]; 
@@ -416,7 +415,7 @@ void RooUnfoldExample()
 
 
 
-      if (iev > nevent*r_test && select){
+      if (select){
 	for (int j=0;j<nb_Y;j++){
 	  for (int i=0;i<nb;i++){
 	    if (MZmuon > xAxis_AFB[i] && MZmuon < xAxis_AFB[i+1]){
