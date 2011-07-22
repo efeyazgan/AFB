@@ -289,7 +289,7 @@ void RooUnfoldDeriveDILUTION()
     xAxis_AFB[11] = 600;
   */
   
-  float eta_end_limit = 2.5;
+  float eta_end_limit = 2.1;
   cout<<"@@@@@@@@@@@@@@@ ====== >>>>>  ETA END LIMIT = "<<eta_end_limit<<"PLEASE CHECK THE DILUTION FILE!!!"<<endl;
 
   int nb_Y = 4;
@@ -303,6 +303,7 @@ void RooUnfoldDeriveDILUTION()
 
   TH1D *hTrueCos_M_Y[30][5];
   TH1D *hNoFsrCos_M_Y[30][5];
+  TH1D *hTrueCos_MASS_M_Y[30][5];
   TH1D *hdummy_m[30][5];
   TH1D *hdummy_t[30][5];
   char name_h[100],name_1[100],name_2[100];
@@ -321,6 +322,8 @@ void RooUnfoldDeriveDILUTION()
       sprintf(name_2,"respCos_M_%i_Y_%i",i,j);
       resp[i][j] = new RooUnfoldResponse(hdummy_m[i][j],hdummy_t[i][j],name_2,name_2);
 
+      sprintf(name_h,"TrueMass_%i_%i",i,j);
+      hTrueCos_MASS_M_Y[i][j] = new TH1D(name_h,name_h,100,xAxis_AFB[i],xAxis_AFB[i+1]);
     }
   }
 
@@ -329,7 +332,7 @@ void RooUnfoldDeriveDILUTION()
   
 
   Int_t nevent = myTree.GetEntries();
-  //nevent = 2000000;
+  //nevent = 1000000;
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);
@@ -667,6 +670,7 @@ void RooUnfoldDeriveDILUTION()
 	      //  if (fabs(dimuonrapidity) >= Y_bin_limits[j] && fabs(dimuonrapidity) < Y_bin_limits[j+1]){ 
 	      if (fabs(rapidity) >= Y_bin_limits[j] && fabs(rapidity) < Y_bin_limits[j+1]){ 
 		hTrueCos_M_Y[i][j]->Fill(true_costheta);
+		hTrueCos_MASS_M_Y[i][j]->Fill(MZ_test);
 		//if (select) resp[i][j]->Fill(costhetaCSreco__RECO,true_costheta);
 		if (gen_select) resp[i][j]->Fill(gen_costhetaCSreco,true_costheta);//!!!!!!!!!
 		//if (!select) resp[i][j]->Miss(true_costheta);
@@ -703,7 +707,10 @@ void RooUnfoldDeriveDILUTION()
       file_cov->WriteTObject(resp[i][j],name_h);
 
       sprintf(name_h,"np_fsr_cos_%i_%i",i,j);
-      file_cov->WriteTObject(hNoFsrCos_M_Y[i][j],name_h);     
+      file_cov->WriteTObject(hNoFsrCos_M_Y[i][j],name_h);
+
+      sprintf(name_h,"TrueMass_%i_%i",i,j);
+      file_cov->WriteTObject(hTrueCos_MASS_M_Y[i][j],name_h);
     }
   }
   //  file_cov->Write();

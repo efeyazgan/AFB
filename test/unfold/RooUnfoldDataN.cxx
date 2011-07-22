@@ -303,19 +303,29 @@ void RooUnfoldExample()
  
   char name_h[100];
   TH1D *hMeasCos_M_Y[30][5];
+
+  TH1D *hDataMeasCos_MASS_M_Y[30][5];
+
   for (int i=0;i<nb;i++){
     for (int j=0;j<nb_Y;j++){
       sprintf(name_h,"hMeasCos_M_%i_Y_%i_",i,j);
       hMeasCos_M_Y[i][j] = new TH1D(name_h,name_h,nbcos,-1.,1.);
       hMeasCos_M_Y[i][j]->Sumw2();
+
+      sprintf(name_h,"MeasuredMass_%i_%i",i,j);
+      hDataMeasCos_MASS_M_Y[i][j] = new TH1D(name_h,name_h,100,xAxis_AFB[i],xAxis_AFB[i+1]);
     }
   }  
 
   TH1D *hMass = new TH1D("hMass","hMass",nb,xAxis_AFB);
   hMass->Sumw2();
 
+
+  
+
+
   Int_t nevent = myTree.GetEntries();
-  //nevent = 2000000;
+  //nevent = 200000;
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);
@@ -433,6 +443,7 @@ void RooUnfoldExample()
 	    if (MZmuon > xAxis_AFB[i] && MZmuon < xAxis_AFB[i+1]){
 	      if (fabs(Ymuon) > Y_bin_limits[j] && fabs(Ymuon) < Y_bin_limits[j+1]){ 
 		hMeasCos_M_Y[i][j]->Fill(costhetaCSreco__RECO);
+		hDataMeasCos_MASS_M_Y[i][j]->Fill(MZmuon);
 	      }
 	    }
 	  }
@@ -496,6 +507,9 @@ void RooUnfoldExample()
     for (int j=0;j<nb_Y;j++){
       sprintf(name_h,"DATA_meas_%i_%i",i,j);
       file_cov->WriteTObject(hMeasCos_M_Y[i][j],name_h);
+
+      sprintf(name_h,"MeasuredMass_%i_%i",i,j);
+      file_cov->WriteTObject(hDataMeasCos_MASS_M_Y[i][j],name_h);
     }
   }
   file_cov->Write();

@@ -17,6 +17,8 @@ using std::endl;
 
 #include "TRandom.h"
 #include "TH1.h"
+#include "TGraph.h"
+#include "TGraphErrors.h"
 #include "TH1D.h"
 #include "TH2D.h"
 #include "TH1F.h"
@@ -71,7 +73,6 @@ void RooUnfoldExample()
   gSystem->Load("libRooUnfold");
 #endif
 
-  int electron = 1;
 
   char name_h[100];
   int nb = 12;
@@ -113,19 +114,24 @@ void RooUnfoldExample()
   TH1D *hDataMeasCos_M_Y[30][5];
   TH1D *hNoFsrTruthCos_M_Y[30][5];
   TH1D *hTrueCos_M_Y[30][5];
+  TH1D *hTrueCos_MASS_M_Y[30][5];
+  TH1D *hDataMeasCos_MASS_M_Y[30][5];
+
   TH1D *AFB1_err_M_Y[30][5];
   TH1D *AFB2_err_M_Y[30][5];
   TF1 *fitfunc[30][5];
   TH1D *AFB[nb_Y];
 
-  //TFile input_fsr_file("RootFilesForUnfolding/MUON_MC_Meas_NoFsr.root","read");
-  TFile input_fsr_file("RootFilesForUnfolding/Electron_MCpowheg_Meas_NoFsr_eta25_res.root","read");
-  //TFile input_dilution_file("RootFilesForUnfolding/MUON_MC_NoFsr_NoDilution.root","read");
-  TFile input_dilution_file("RootFilesForUnfolding/ELECTRON_MC_NoFsr_NoDilution.root","read");
-  //  TFile input_resp_file("Response_and_Historgrams.root","read");
-  TFile input_resp_file("RootFilesForUnfolding/Data_Histograms.root","read");
-  //TFile input_data_file("RootFilesForUnfolding/Data_output_NEW.root","read");
-  TFile input_data_file("RootFilesForUnfolding/ZeeDataMayPrompt_ESoutput_eta25.root","read");
+  
+
+  TFile input_fsr_file("RootFilesForUnfolding/MUON_MC_Meas_NoFsr.root","read");
+  //TFile input_fsr_file("RootFilesForUnfolding/Electron_MCpowheg_Meas_NoFsr_eta25_res.root","read");
+  TFile input_dilution_file("RootFilesForUnfolding/MUON_MC_NoFsr_NoDilution.root","read");
+  //TFile input_dilution_file("RootFilesForUnfolding/ELECTRON_MC_NoFsr_NoDilution.root","read");
+  TFile input_resp_file("Response_and_Historgrams.root","read");
+  //TFile input_resp_file("RootFilesForUnfolding/Data_Histograms.root","read");
+  TFile input_data_file("RootFilesForUnfolding/Data_output_NEW.root","read");
+  //TFile input_data_file("RootFilesForUnfolding/ZeeDataMayPrompt_ESoutput_eta25.root","read");
   for (int i=0;i<nb;i++){
 
     for (int j=0;j<nb_Y;j++){
@@ -140,11 +146,19 @@ void RooUnfoldExample()
       input_fsr_file.GetObject(name_h,hNoFsrTruthCos_M_Y[i][j]);
 
 
-      sprintf(name_h,"meas_%i_%i",i,j);
-      input_resp_file.GetObject(name_h,hMeasCos_M_Y[i][j]);
+      //sprintf(name_h,"meas_%i_%i",i,j);
+      //      input_resp_file.GetObject(name_h,hMeasCos_M_Y[i][j]);
+      sprintf(name_h,"MC_meas_%i_%i",i,j);
+      input_fsr_file.GetObject(name_h,hMeasCos_M_Y[i][j]);
 
       sprintf(name_h,"DATA_meas_%i_%i",i,j);
       input_data_file.GetObject(name_h,hDataMeasCos_M_Y[i][j]);
+
+      sprintf(name_h,"TrueMass_%i_%i",i,j);
+      input_dilution_file.GetObject(name_h,hTrueCos_MASS_M_Y[i][j]);
+
+      sprintf(name_h,"MeasuredMass_%i_%i",i,j);
+      input_data_file.GetObject(name_h,hDataMeasCos_MASS_M_Y[i][j]);
 
       sprintf(name_h,"AFB1_err_M_Y_%i_%i",i,j);
       AFB1_err_M_Y[i][j] = new TH1D(name_h,name_h,nbcos,-1.,1.);
@@ -177,8 +191,9 @@ void RooUnfoldExample()
   TH1D *h_Unfold_Y2[nb_Y]; 
   TH1D *h_Meas_Y2[nb_Y]; 
   TH1D *h_True_Y2[nb_Y]; 
+  TH1D *h_mc[nb_Y];
   int bin_min,bin_mid,bin_mid_for_backward,bin_max;
-  float NF_unfold, NB_unfold, NF_meas, NB_meas, NF_true, NB_true, afb, binw;
+  float NF_unfold, NB_unfold, NF_meas, NB_meas, NF_true, NB_true, afb, binw, afb_mc, NF_mc, NB_mc;
   TAxis *axis = hDataMeasCos_M_Y[0][0]->GetXaxis();
   bin_mid = axis->FindBin(0.);
   bin_mid_for_backward = bin_mid - 1;
@@ -303,6 +318,9 @@ void RooUnfoldExample()
     sprintf(name_outhisto2,"h_True_Y2_%i",j+1);
     h_True_Y2[j] = new TH1D(name_outhisto2,name_outhisto2,nb, xAxis_AFB);
 
+    sprintf(name_outhisto2,"h_mc_%i",j+1);
+    h_mc[j] = new TH1D(name_outhisto2,name_outhisto2,nb, xAxis_AFB);
+
     for (int i=0;i<nb;i++){
       /*
       for (int l=0;l<nbcos;l++){
@@ -318,6 +336,10 @@ void RooUnfoldExample()
       h_Meas_Y2[j]->SetBinContent(i+1,afb);
       h_Meas_Y2[j]->SetBinError(i+1,sqrt((1-afb*afb)/(binw*(NF_meas+NB_meas))));
 
+      NF_mc = hMeasCos_M_Y[i][j]->Integral(bin_mid,bin_max);
+      NB_mc = hMeasCos_M_Y[i][j]->Integral(bin_min,bin_mid_for_backward);
+      afb_mc = (NF_mc-NB_mc)/(NF_mc+NB_mc);
+      h_mc[j]->SetBinContent(i+1,afb_mc);
 
       h_Unfold_Y2[j]->SetBinContent(i+1,(NF_unfold-NB_unfold)/(NF_unfold+NB_unfold));
       h_Unfold_Y2[j]->SetBinError(i+1,error2[i][j]);
@@ -356,6 +378,85 @@ void RooUnfoldExample()
   TH1D *h_Unfold_Y[nb_Y]; 
   TH1D *h_Meas_Y[nb_Y]; 
   TH1D *h_True_Y[nb_Y]; 
+  float AFB0[nb];
+  float AFB1[nb];
+  float AFB2[nb];
+  float AFB3[nb];
+  float AFB_Err0[nb];
+  float AFB_Err1[nb];
+  float AFB_Err2[nb];
+  float AFB_Err3[nb];
+  float AFB_x0[nb];
+  float AFB_x1[nb];
+  float AFB_x2[nb];
+  float AFB_x3[nb];
+
+  float d_AFB0[nb];
+  float d_AFB1[nb];
+  float d_AFB2[nb];
+  float d_AFB3[nb];
+  float d_AFB_Err0[nb];
+  float d_AFB_Err1[nb];
+  float d_AFB_Err2[nb];
+  float d_AFB_Err3[nb];
+  float d_AFB_x0[nb];
+  float d_AFB_x1[nb];
+  float d_AFB_x2[nb];
+  float d_AFB_x3[nb];
+
+  for (int j=0;j<nb_Y;j++){
+    for (int i=0;i<nb;i++){
+      if (j == 0){ 
+	AFB0[i] = fitfunc[i][j]->GetParameter(1);
+	AFB_Err0[i] = error[i][j];
+	AFB_x0[i] = hTrueCos_MASS_M_Y[i][j]->GetMean();
+	
+	d_AFB0[i] = h_Meas_Y2[j]->GetBinContent(i+1);
+	d_AFB_Err0[i] = h_Meas_Y2[j]->GetBinError(i+1);
+	d_AFB_x0[i] = hDataMeasCos_MASS_M_Y[i][j]->GetMean();
+      }
+      if (j == 1){ 
+	AFB1[i] = fitfunc[i][j]->GetParameter(1);
+	AFB_Err1[i] = error[i][j];
+	AFB_x1[i] = hTrueCos_MASS_M_Y[i][j]->GetMean();
+
+	d_AFB1[i] = h_Meas_Y2[j]->GetBinContent(i+1);
+	d_AFB_Err1[i] = h_Meas_Y2[j]->GetBinError(i+1);
+	d_AFB_x1[i] = hDataMeasCos_MASS_M_Y[i][j]->GetMean();
+      }
+      if (j == 2){ 
+	AFB2[i] = fitfunc[i][j]->GetParameter(1);
+	AFB_Err2[i] = error[i][j];
+	AFB_x2[i] = hTrueCos_MASS_M_Y[i][j]->GetMean();
+
+	d_AFB2[i] = h_Meas_Y2[j]->GetBinContent(i+1);
+	d_AFB_Err2[i] = h_Meas_Y2[j]->GetBinError(i+1);
+	d_AFB_x2[i] = hDataMeasCos_MASS_M_Y[i][j]->GetMean();
+      }
+      if (j == 3){ 
+	AFB3[i] = fitfunc[i][j]->GetParameter(1);
+	AFB_Err3[i] = error[i][j];
+	AFB_x3[i] = hTrueCos_MASS_M_Y[i][j]->GetMean();
+
+	d_AFB3[i] = h_Meas_Y2[j]->GetBinContent(i+1);
+	d_AFB_Err3[i] = h_Meas_Y2[j]->GetBinError(i+1);
+	d_AFB_x3[i] = hDataMeasCos_MASS_M_Y[i][j]->GetMean();
+      }
+    }
+  }
+
+  TGraph *gr[nb_Y];
+  gr[0] = new TGraphErrors(nb,AFB_x0,AFB0,0,AFB_Err0);
+  gr[1] = new TGraphErrors(nb,AFB_x1,AFB1,0,AFB_Err1);
+  gr[2] = new TGraphErrors(nb,AFB_x2,AFB2,0,AFB_Err2);
+  gr[3] = new TGraphErrors(nb,AFB_x3,AFB3,0,AFB_Err3);
+
+  TGraph *d_gr[nb_Y];
+  d_gr[0] = new TGraphErrors(nb,d_AFB_x0,d_AFB0,0,d_AFB_Err0);
+  d_gr[1] = new TGraphErrors(nb,d_AFB_x1,d_AFB1,0,d_AFB_Err1);
+  d_gr[2] = new TGraphErrors(nb,d_AFB_x2,d_AFB2,0,d_AFB_Err2);
+  d_gr[3] = new TGraphErrors(nb,d_AFB_x3,d_AFB3,0,d_AFB_Err3);
+
   for (int j=0;j<nb_Y;j++){
     c_AFB->cd(j+1);
     gPad->SetLogx();
@@ -365,7 +466,7 @@ void RooUnfoldExample()
     sprintf(name_title,"|Y|=%.2f-%.2f",Y_bin_limits[j],Y_bin_limits[j+1]);
     h_Meas_Y[j] = new TH1D(name_outhisto,name_title,nb, xAxis_AFB);
     sprintf(name_outhisto,"h_True_Y%i",j+1);
-    h_True_Y[j] = new TH1D(name_outhisto,name_outhisto,nb, xAxis_AFB);
+    h_True_Y[j] = new TH1D(name_outhisto,name_title,nb, xAxis_AFB);
     sprintf(name_h,"AFB_%i",j);
     AFB[j] = new TH1D(name_outhisto,name_title,nb,xAxis_AFB);
 
@@ -375,7 +476,7 @@ void RooUnfoldExample()
       AFB[j]->SetBinContent(i+1,fitfunc[i][j]->GetParameter(1));
       AFB[j]->SetBinError(i+1,error[i][j]);
       
-
+ 
 
       NF_unfold = hRecoCos[i][j]->Integral(bin_mid,bin_max);
       NB_unfold = hRecoCos[i][j]->Integral(bin_min,bin_mid_for_backward);
@@ -406,32 +507,48 @@ void RooUnfoldExample()
 
 
 
-
-
-
-    h_Meas_Y[j]->SetLineColor(4);
-    h_Meas_Y[j]->SetMarkerStyle(8);
-    h_Meas_Y[j]->SetMarkerColor(4);
-    //    h_Meas_Y[j]->SetFillColor(4);
-    h_Meas_Y[j]->GetYaxis()->SetRangeUser(-1,1);
-    if (!electron) h_Meas_Y[j]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
-    if (electron) h_Meas_Y[j]->GetXaxis()->SetTitle("M(e^{+}e^{-}) [GeV]");    	
-    h_Meas_Y[j]->GetYaxis()->SetTitle("A_{FB}");
-    h_Meas_Y[j]->GetYaxis()->SetTitleOffset(1.0);
-    h_Meas_Y[j]->Draw("");
+    
     h_True_Y[j]->SetLineColor(2);
     h_True_Y[j]->SetLineWidth(2);
+    h_True_Y[j]->GetYaxis()->SetRangeUser(-1,1);
+    h_True_Y[j]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+    h_True_Y[j]->GetYaxis()->SetTitle("A_{FB}");
+    h_True_Y[j]->GetYaxis()->SetTitleOffset(1.0);
     //    h_True_Y[j]->SetFillColor(2);
-    h_True_Y[j]->Draw("sames");
-    h_Unfold_Y[j]->SetMarkerStyle(8);
+    h_True_Y[j]->Draw("");
+
+   	
+
+    //h_Meas_Y[j]->Draw("");
+    
+    h_mc[j]->SetLineWidth(2);
+    h_mc[j]->SetLineStyle(2);
+    h_mc[j]->Draw("sames");
+
+    
+    d_gr[j]->SetMarkerStyle(22);
+    d_gr[j]->SetLineColor(4);
+    d_gr[j]->SetLineWidth(2);
+    d_gr[j]->SetMarkerColor(4);
+    d_gr[j]->Draw("Psames");
+
+
+
+    //h_Unfold_Y[j]->SetMarkerStyle(8);
     //h_Unfold_Y[j]->Draw("e1sames");    
     
+    /*
     AFB[j]->SetLineWidth(2);
     AFB[j]->SetMarkerStyle(4);
 
     AFB[j]->Draw("e1sames");
+    */
      
-     
+    
+    gr[j]->SetLineWidth(2);
+    gr[j]->SetMarkerStyle(8);
+    gr[j]->Draw("Psames");
+
   }
   
   c_AFB->SaveAs("AFB_NonDiluted_Level.C");
