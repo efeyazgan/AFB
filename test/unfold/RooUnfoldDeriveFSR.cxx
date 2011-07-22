@@ -53,6 +53,7 @@ void RooUnfoldDeriveFSR()
   TChain myTree("analyzeBasicPat/MuonTree");
   //myTree.Add("/data2/efe/ntuples/keng/DoubleMu_May10ReReco.root");
   
+  /*
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_1.root");
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_2.root");
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_3.root");
@@ -66,6 +67,9 @@ void RooUnfoldDeriveFSR()
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_11.root");
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_12.root");
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_13.root");
+  */
+
+  myTree.Add("/data1/efe/ntuples/keng/mc/DYToMuMu_M-20_Summer11-PU_S4.root");
 
   TH1::AddDirectory(true);
   int event; 
@@ -225,8 +229,10 @@ void RooUnfoldDeriveFSR()
   myTree.SetBranchAddress("vtxisFake",vtxisFake);
 
 
-  float r_test = 0.5;
-  int nb = 12;
+  float r_test = 1.;
+  cout<<"r_TESTTTTTT = 1"<<endl;
+  cout<<"USING ALL EVENTS FOR THE MEASURED!!!!!!"<<endl;
+  int nb = 13;
   int nbcos = 8;
   float xAxis_AFB[nb+1]; 
   xAxis_AFB[0] = 40;
@@ -242,6 +248,7 @@ void RooUnfoldDeriveFSR()
   xAxis_AFB[10] = 150;
   xAxis_AFB[11] = 200;
   xAxis_AFB[12] = 600;
+  xAxis_AFB[13] = 1500;
   /*
     xAxis_AFB[0] = 40;
     xAxis_AFB[1] = 50;
@@ -271,6 +278,8 @@ void RooUnfoldDeriveFSR()
   TH1D *hdummy_t2[30][5];
   char name_h[100],name_1[100],name_2[100];
   RooUnfoldResponse* resp_2[nb][nb_Y];
+  TH1D *hMeasCos_M_Y_fsr_up[30][5];
+  TH1D *hMeasCos_M_Y_fsr_down[30][5];
   for (int i=0;i<nb;i++){
     for (int j=0;j<nb_Y;j++){
       sprintf(name_h,"hMeasCos_M_%i_Y_%i_",i,j);
@@ -286,15 +295,23 @@ void RooUnfoldDeriveFSR()
       hdummy_t2[i][j] = new TH1D(name_1,name_1,nbcos,-1.,1.);
       sprintf(name_2,"respCos2_M_%i_Y_%i",i,j);
       resp_2[i][j] = new RooUnfoldResponse(hdummy_m2[i][j],hdummy_t2[i][j],name_2,name_2);
+
+      sprintf(name_h,"hMeasCos_fsr_up_M_%i_Y_%i_",i,j);
+      hMeasCos_M_Y_fsr_up[i][j] = new TH1D(name_h,name_h,nbcos,-1.,1.);
+      sprintf(name_h,"hMeasCos__fsr_down_M_%i_Y_%i_",i,j);
+      hMeasCos_M_Y_fsr_down[i][j] = new TH1D(name_h,name_h,nbcos,-1.,1.);
     }
   }
 
   TH1D* h_MZ_st3 = new TH1D("h_MZ_st3","",nb, xAxis_AFB);
   TH1D* h_MZ_st1 = new TH1D("h_MZ_st1","",nb, xAxis_AFB);
-  
+  TH1D* h_MZ_st1_minus_st3 = new TH1D("h_MZ_st1_minus_st3","",100,-20, 10);  
+
+  TH1D *hMass = new TH1D("hMass","hMass",nb,xAxis_AFB);
+
 
   Int_t nevent = myTree.GetEntries();
-  //nevent = 10000;
+  //nevent = 100000;
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);
@@ -430,6 +447,11 @@ void RooUnfoldDeriveFSR()
 
     h_MZ_st3->Fill(MZ);
     h_MZ_st1->Fill(MZ_st1);
+    float delta_fsr = MZ_st1-MZ;
+    h_MZ_st1_minus_st3->Fill(delta_fsr);
+    
+    int tag_event = 0;
+    if (delta_fsr < -1) tag_event = 1;
 
     if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1) gen_select = 1;
 
@@ -471,6 +493,9 @@ void RooUnfoldDeriveFSR()
     gen_QZreco_st1 = parton_pz_st1[0]+parton_pz_st1[1];
     gen_costhetaCSreco_st1 = (2/(gen_Qreco_st1*sqrt(gen_Qreco_st1*gen_Qreco_st1+gen_QTreco_st1*gen_QTreco_st1)))*(gen_P1preco_st1*gen_P2mreco_st1-gen_P1mreco_st1*gen_P2preco_st1);
     if (gen_QZreco_st1 < 0.) gen_costhetaCSreco_st1 = -gen_costhetaCSreco_st1;
+
+
+
     //eof fsr@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
     dimuonrapidity = 0.5*log((parton_e[0]+parton_e[1]+parton_pz[0]+parton_pz[1])/(parton_e[0]+parton_e[1]-parton_pz[0]-parton_pz[1]));
     
@@ -533,6 +558,7 @@ void RooUnfoldDeriveFSR()
       Ymuon = 0.5*log((RecMuonE[ind1]+RecMuonE[ind2]+RecMuonPz[ind1]+RecMuonPz[ind2])/(RecMuonE[ind1]+RecMuonE[ind2]-RecMuonPz[ind1]-RecMuonPz[ind2]));
       qT = sqrt(pow(RecMuonPx[ind1] + RecMuonPx[ind2],2)+pow(RecMuonPy[ind1] + RecMuonPy[ind2],2));
       if (MZmuon > 40.){   
+	hMass->Fill(MZmuon);
 	select = 1;
 	p1dotp2__RECO = RecMuonPx[ind1]*RecMuonPx[ind2]+RecMuonPy[ind1]*RecMuonPy[ind2]+RecMuonPz[ind1]*RecMuonPz[ind2];
 	MZ__RECO  = RecMuonM[ind1]+RecMuonM[ind2]+2*(RecMuonE[ind1]*RecMuonE[ind2]-p1dotp2__RECO);
@@ -553,12 +579,12 @@ void RooUnfoldDeriveFSR()
 	}
 	QZreco__RECO = RecMuonPz[ind1]+RecMuonPz[ind2];
 	costhetaCSreco__RECO = (2/(Qreco__RECO*sqrt(Qreco__RECO*Qreco__RECO+QTreco__RECO*QTreco__RECO)))*(P1preco__RECO*P2mreco__RECO-P1mreco__RECO*P2preco__RECO);
-	if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;
+	if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;       	
       }//mass cut
     }
 
     if (!realdata){
-      if (iev < nevent*r_test){
+      if (iev < nevent*r_test && gen_select){//!!!!!!
  	for (int j=0;j<nb_Y;j++){
 	  for (int i=0;i<nb;i++){
 	    if (MZ > xAxis_AFB[i] && MZ < xAxis_AFB[i+1]){
@@ -572,14 +598,27 @@ void RooUnfoldDeriveFSR()
 	}       
       }
 
-      if (iev > nevent*r_test && select){
-	for (int j=0;j<nb_Y;j++){
+//      if (iev > nevent*r_test && select){
+       if (select){
+       	for (int j=0;j<nb_Y;j++){
 	  for (int i=0;i<nb;i++){
 	    if (MZmuon > xAxis_AFB[i] && MZmuon < xAxis_AFB[i+1]){
 	      if (fabs(Ymuon) > Y_bin_limits[j] && fabs(Ymuon) < Y_bin_limits[j+1]){ 
 		hMeasCos_M_Y[i][j]->Fill(costhetaCSreco__RECO);
 	      }
 	    }
+	    //---FSR systematics----
+	    float MZmuon_fsr_up = MZmuon;
+	    float MZmuon_fsr_down = MZmuon;
+	    if (tag_event) MZmuon_fsr_up = 1.05*MZmuon;
+	    if (tag_event) MZmuon_fsr_down = 0.95*MZmuon;
+	    if (MZmuon_fsr_up > xAxis_AFB[i] && MZmuon_fsr_up < xAxis_AFB[i+1]){
+	      if (fabs(Ymuon) > Y_bin_limits[j] && fabs(Ymuon) < Y_bin_limits[j+1]) hMeasCos_M_Y_fsr_up[i][j]->Fill(costhetaCSreco__RECO);
+	    }
+	    if (MZmuon_fsr_down > xAxis_AFB[i] && MZmuon_fsr_down < xAxis_AFB[i+1]){
+	      if (fabs(Ymuon) > Y_bin_limits[j] && fabs(Ymuon) < Y_bin_limits[j+1]) hMeasCos_M_Y_fsr_down[i][j]->Fill(costhetaCSreco__RECO);
+	    }	    
+	    //----------------------
 	  }
 	}
       }
@@ -595,9 +634,20 @@ void RooUnfoldDeriveFSR()
       file_cov->WriteTObject(hNoFsrTruthCos_M_Y[i][j],name_h);
       sprintf(name_h,"response2_%i_%i",i,j);
       file_cov->WriteTObject(resp_2[i][j],name_h);
+
+      sprintf(name_h,"MC_meas_fsr_up_%i_%i",i,j);
+      file_cov->WriteTObject(hMeasCos_M_Y_fsr_up[i][j],name_h);
+      sprintf(name_h,"MC_meas_fsr_down_%i_%i",i,j);
+      file_cov->WriteTObject(hMeasCos_M_Y_fsr_down[i][j],name_h);
     }
   }
   //  file_cov->Write();
+
+  h_MZ_st1_minus_st3->SaveAs("fsr_check.C");
+
+  TCanvas *del = new TCanvas();
+  hMass->Draw();
+  del->SaveAs("hMass_MC.C");
 
 }
 

@@ -78,8 +78,15 @@ void RooUnfoldExample()
   //myTree.Add("/tmp/efe/DY_MuMu_UPDATED_powheg_wo_HLT_filter.root");
  
   TChain myTree("analyzeBasicPat/MuonTree");
+/*
   myTree.Add("/data2/efe/ntuples/keng/DoubleMu_May10ReReco_v2.root");
   myTree.Add("/data2/efe/ntuples/keng/DoubleMu_Run2011A_June24.root");
+*/
+
+  myTree.Add("/data1/efe/ntuples/keng/data/DoubleMu_May10ReReco_MuPhysR2.root");
+  myTree.Add("/data1/efe/ntuples/keng/data/DoubleMu_Run2011A_July06_MuPhys.root");	
+
+
   ///MC///
   /*
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_1.root");
@@ -255,7 +262,7 @@ void RooUnfoldExample()
   myTree.SetBranchAddress("vtxisFake",vtxisFake);
 
 
-  int nb = 12;
+  int nb = 13;
   int nbcos = 8;
   float xAxis_AFB[nb+1]; 
   xAxis_AFB[0] = 40;
@@ -271,6 +278,7 @@ void RooUnfoldExample()
   xAxis_AFB[10] = 150;
   xAxis_AFB[11] = 200;
   xAxis_AFB[12] = 600;
+  xAxis_AFB[13] = 1500;
   /*
     xAxis_AFB[0] = 40;
     xAxis_AFB[1] = 50;
@@ -302,6 +310,9 @@ void RooUnfoldExample()
       hMeasCos_M_Y[i][j]->Sumw2();
     }
   }  
+
+  TH1D *hMass = new TH1D("hMass","hMass",nb,xAxis_AFB);
+  hMass->Sumw2();
 
   Int_t nevent = myTree.GetEntries();
   //nevent = 2000000;
@@ -387,6 +398,7 @@ void RooUnfoldExample()
       Ymuon = 0.5*log((RecMuonE[ind1]+RecMuonE[ind2]+RecMuonPz[ind1]+RecMuonPz[ind2])/(RecMuonE[ind1]+RecMuonE[ind2]-RecMuonPz[ind1]-RecMuonPz[ind2]));
       qT = sqrt(pow(RecMuonPx[ind1] + RecMuonPx[ind2],2)+pow(RecMuonPy[ind1] + RecMuonPy[ind2],2));
       if (MZmuon > 40.){   
+	hMass->Fill(MZmuon);
 	select = 1;
 	p1dotp2__RECO = RecMuonPx[ind1]*RecMuonPx[ind2]+RecMuonPy[ind1]*RecMuonPy[ind2]+RecMuonPz[ind1]*RecMuonPz[ind2];
 	MZ__RECO  = RecMuonM[ind1]+RecMuonM[ind2]+2*(RecMuonE[ind1]*RecMuonE[ind2]-p1dotp2__RECO);
@@ -459,7 +471,7 @@ void RooUnfoldExample()
   bin_mid_for_backward = bin_mid - 1;
   cout<<"middle bin = "<<bin_mid<<endl;
   bin_min = axis->FindBin(-1.);
-  bin_max = axis->FindBin(1.);
+  bin_max = axis->FindBin(1.) - 1;
   binw = axis->GetBinWidth(bin_mid);
   for (int j=0;j<nb_Y;j++){
     c_AFB->cd(j+1);
@@ -487,6 +499,12 @@ void RooUnfoldExample()
     }
   }
   file_cov->Write();
+
+
+  TCanvas *del = new TCanvas();
+  hMass->Draw();
+  del->SaveAs("hMass_data.C");
+
 
 }
 

@@ -78,7 +78,7 @@ void RooUnfoldDeriveDILUTION()
  
   TChain myTree("analyzeBasicPat/MuonTree");
   //myTree.Add("/data2/efe/ntuples/keng/DoubleMu_May10ReReco.root");
-  
+  /*
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_1.root");
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_2.root");
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_3.root");
@@ -92,6 +92,9 @@ void RooUnfoldDeriveDILUTION()
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_11.root");
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_12.root");
   myTree.Add("/data2/efe/ntuples/keng/DYToMuMu_winter10_v3_13.root");
+  */
+  myTree.Add("/data1/efe/ntuples/keng/mc/DYToMuMu_M-20_Summer11-PU_S4.root");
+
 
   TH1::AddDirectory(true);
   int event; 
@@ -251,8 +254,9 @@ void RooUnfoldDeriveDILUTION()
   myTree.SetBranchAddress("vtxisFake",vtxisFake);
 
 
-  float r_test = 0.5;
-  int nb = 12;
+  float r_test = 1.;
+  cout<<"RRRRRRR TESTTTTTTTT ======== 1"<<endl;
+  int nb = 13;
   int nbcos = 8;
   float xAxis_AFB[nb+1]; 
   xAxis_AFB[0] = 40;
@@ -268,6 +272,8 @@ void RooUnfoldDeriveDILUTION()
   xAxis_AFB[10] = 150;
   xAxis_AFB[11] = 200;
   xAxis_AFB[12] = 600;
+  xAxis_AFB[13] = 1500;
+
   /*
     xAxis_AFB[0] = 40;
     xAxis_AFB[1] = 50;
@@ -282,13 +288,17 @@ void RooUnfoldDeriveDILUTION()
     xAxis_AFB[10] = 200;
     xAxis_AFB[11] = 600;
   */
+  
+  float eta_end_limit = 2.5;
+  cout<<"@@@@@@@@@@@@@@@ ====== >>>>>  ETA END LIMIT = "<<eta_end_limit<<"PLEASE CHECK THE DILUTION FILE!!!"<<endl;
+
   int nb_Y = 4;
   float Y_bin_limits[nb_Y+1]; 
   Y_bin_limits[0] = 0.0;
   Y_bin_limits[1] = 1.0;
   Y_bin_limits[2] = 1.25;
   Y_bin_limits[3] = 1.5;
-  Y_bin_limits[4] = 2.1;
+  Y_bin_limits[4] = eta_end_limit;
  
 
   TH1D *hTrueCos_M_Y[30][5];
@@ -513,7 +523,7 @@ void RooUnfoldDeriveDILUTION()
     h_MZ_st3->Fill(MZ);
     h_MZ_st1->Fill(MZ_st1);
 
-    if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1) gen_select = 1;
+    if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < eta_end_limit && fabs(parton_eta[1]) < eta_end_limit) gen_select = 1;
 
     gen_Qreco = MZ;
     gen_QTreco = sqrt(pow((parton_px[0]+parton_px[1]),2)+pow((parton_py[0]+parton_py[1]),2));
@@ -581,7 +591,7 @@ void RooUnfoldDeriveDILUTION()
 	    RecMuonIsoSumPt[j] < 3. && RecMuonIsoSumPt[jk] < 3. &&
 	    //            RecMuonIsoDY[j] < 0.15 && RecMuonIsoDY[jk] < 0.15 &&
 	    //(RecMuonIsoSumPt[j] + RecMuonIsoHad[j])/RecMuonPt[j] < 0.15 && (RecMuonIsoSumPt[jk] + RecMuonIsoHad[jk])/RecMuonPt[jk] < 0.15 &&//!!!!!!!!!
-            fabs(RecMuonEta[j]) <2.1 && fabs(RecMuonEta[jk]) <2.1 && //common3
+            fabs(RecMuonEta[j]) <eta_end_limit && fabs(RecMuonEta[jk]) <eta_end_limit && //common3
 	    //	    (hltmatchedmuon[j] == 1 || hltmatchedmuon[jk] == 1) &&//!!!!!!!!!!!!!!!!!!!!
             fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2){
 	  if (cosine < -0.025){
@@ -691,6 +701,9 @@ void RooUnfoldDeriveDILUTION()
       file_cov->WriteTObject(hTrueCos_M_Y[i][j],name_h);
       sprintf(name_h,"response_%i_%i",i,j);
       file_cov->WriteTObject(resp[i][j],name_h);
+
+      sprintf(name_h,"np_fsr_cos_%i_%i",i,j);
+      file_cov->WriteTObject(hNoFsrCos_M_Y[i][j],name_h);     
     }
   }
   //  file_cov->Write();
