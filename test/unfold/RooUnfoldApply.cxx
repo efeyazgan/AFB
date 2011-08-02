@@ -94,7 +94,6 @@ void RooUnfoldExample()
   //  xAxis_AFB[13] = 1500;
 
 
-  //  xAxis_AFB[13] = 1500;
   int nb_Y = 4;
   float Y_bin_limits[nb_Y+1];
   Y_bin_limits[0] = 0.0;
@@ -105,6 +104,39 @@ void RooUnfoldExample()
   int k_reg_cos = 2;
   //int k_iter = 11;
 
+//backgrounds
+
+  float qcd[13][4]={{16.4216,4.05207,2.77247,2.34594},{26.9621,6.65299,4.55205,3.85173},{26.5097,6.54136,4.47567,3.7871},{23.0641,5.67731,2.12899,1.41933},{15.8125,3.8923,1.45961,0.973075},{7.10051,1.74782,0.655431,0.436954},{3.17257,0.780939,0.292852,0.195235},{12.4385,3.06178,1.14817,0.765445},{10.0213,2.46678,0.925041,0.616694},{15.0571,0,0.579119,0.579119},{8.05228,0,0.309703,0.309703},{4.45166,0,0.171218,0.171218},{0.130931,0,0.00503582,0.00503582}};
+
+  float tautau[13][4]={{103.876,25.1362,22.4155,27.9751},{228.152,55.2086,49.2331,61.4439},{171.045,41.3897,36.9099,46.0643},{73.8442,16.0914,14.2545,13.1524},{14.0598,3.06379,2.71404,2.50419},{1.92271,0.418979,0.371151,0.342453},{0.660933,0.144024,0.127583,0.117718},{3.36475,0.733214,0.649514,0.599293},{2.10297,0.458259,0.405946,0.374558},{2.18571,0.227678,0.364285,0.182143},{1.69216,0.176267,0.282027,0.141014},{0.705068,0.0734446,0.117511,0.0587557},{0,0,0,0}};
+
+  float toptop[13][4]={{38.2361,4.67005,3.989,3.01608},{50.5058,6.16865,5.26906,3.98392},{57.6394,7.03993,6.01328,4.54662},{52.662,5.25799,5.58661,2.79331},{44.0823,4.40135,4.67643,2.33822},{30.7688,3.07208,3.26409,1.63204},{10.6508,1.06341,1.12988,0.564938},{47.0408,4.69674,4.99029,2.49514},{53.5496,5.34661,5.68077,2.84038},{86.2121,9.66435,7.05651,3.22145},{71.6922,8.03667,5.86804,2.67889},{51.1223,5.73079,4.18439,1.91026},{0.302499,0.03391,0.0247597,0.0113033}};
+
+  float ww[13][4]={{5.84007,1.35411,1.30305,1.26711},{8.30349,1.92529,1.85269,1.8016},{10.0363,2.32707,2.23932,2.17757},{10.902,2.20348,1.70164,1.62858},{8.62191,1.74263,1.34575,1.28796},{4.64336,0.9385,0.724758,0.693639},{2.33207,0.47135,0.364,0.348371},{8.544,1.72688,1.33359,1.27633},{9.35425,1.89065,1.46006,1.39736},{15.8081,2.15901,1.59069,1.1768},{13.1097,1.79048,1.31917,0.975927},{11.0024,1.50267,1.10711,0.81905},{0.155215,0.0211988,0.0156185,0.0115547}};
+
+  float wz[13][4]={{1.17269,0.249245,0.216125,0.226791},{1.90447,0.40478,0.350992,0.368313},{3.00032,0.637694,0.552955,0.580244},{6.21211,1.27837,1.00929,1.06885},{23.1674,4.76756,3.76404,3.98616},{68.879,14.1744,11.1909,11.8512},{10.9567,2.25474,1.78014,1.88519},{7.06016,1.45289,1.14707,1.21476},{2.06818,0.425605,0.33602,0.355849},{2.46756,0.290086,0.206854,0.130967},{1.82052,0.21402,0.152613,0.0966251},{1.55846,0.183212,0.130645,0.082716},{0.0185531,0.0021811,0.0015553,0.000984714}};
+
+  float zz[13][4]={{0.848943,0.199223,0.165931,0.170423},{1.20682,0.283207,0.235881,0.242266},{1.84297,0.432493,0.36022,0.369971},{4.01273,0.837597,0.692345,0.719818},{17.445,3.64138,3.00991,3.12935},{55.8711,11.6622,9.63984,10.0224},{9.16219,1.91247,1.58082,1.64354},{6.12134,1.27774,1.05616,1.09807},{1.85281,0.386745,0.319678,0.332363},{1.74343,0.273718,0.212117,0.197589},{1.00509,0.157799,0.122286,0.11391},{0.868227,0.136312,0.105634,0.0983991},{0.0235363,0.0036952,0.00286358,0.00266745}};
+
+  float wjet[13][4]={{2.77898,1.38949,0.277898,0.555795},{2.77898,1.38949,0.277898,0.555795},{3.53688,1.76844,0.353688,0.707375},{3.28424,1.05096,0.656849,0.919588},{1.76844,0.5659,0.353688,0.495163},{1.5158,0.485057,0.303161,0.424425},{0.252634,0.0808429,0.0505268,0.0707375},{2.27371,0.727586,0.454741,0.636638},{2.27371,0.727586,0.454741,0.636638},{3.69477,0.284213,0.568427,0},{1.10843,0.085264,0.170528,0},{1.10843,0.085264,0.170528,0},{0,0,0,0}};
+  
+  float comb[13][4]={{169.174,37.0504,31.14,35.5572},{319.814,72.033,61.7717,72.2475},{273.611,60.1367,50.905,58.2332},{173.981,32.3971,26.0302,21.7019},{124.957,22.0749,17.3235,14.7141},{170.701,32.499,26.1493,25.4031},{37.1879,6.70778,5.3258,4.82573},{86.8433,13.6768,10.7795,8.08568},{81.2228,11.7022,9.58226,6.55384},{127.169,12.8991,10.578,5.48807},{98.4804,10.4605,8.22437,4.31607},{70.8165,7.71169,5.98704,3.1404},{0.630734,0.0609851,0.0498329,0.031546}};
+
+
+  // for low mass <70 GeV. Apply this ratio to each cs bin (8 bins)
+  float r_low[8]={0.0371685,0.0864997,0.167557,0.202718,0.204737,0.1687,0.091154,0.0414658};
+  // for mass (70-120) GeV. Apply this ratio to each cs bin (8 bins)
+  float r_zregion[8]={0.0841875,0.130379,0.133009,0.154781,0.15606,0.126065,0.127694,0.0878249};
+  // for high mass >120 GeV. Apply this ratio to each cs bin (8 bins)
+  float r_high[8]={0.138623,0.155147,0.115194,0.103376,0.102691,0.115563,0.136031,0.133374};
+
+  float backg_lumi_scale = 1.13/1.091;
+
+
+//eobackgrounds
+
+
+
   RooUnfoldResponse* resp[nb][nb_Y];
   RooUnfoldResponse* resp_2[nb][nb_Y];
   RooUnfoldSvd* unfold_fsr[nb][nb_Y];
@@ -112,6 +144,7 @@ void RooUnfoldExample()
 
   TH1D *hMeasCos_M_Y[30][5];
   TH1D *hDataMeasCos_M_Y[30][5];
+  TH1D *hDataMeasCos_M_Y_central[30][5];
   TH1D *hNoFsrTruthCos_M_Y[30][5];
   TH1D *hTrueCos_M_Y[30][5];
   TH1D *hTrueCos_MASS_M_Y[30][5];
@@ -125,13 +158,10 @@ void RooUnfoldExample()
   
 
   TFile input_fsr_file("RootFilesForUnfolding/MUON_MC_Meas_NoFsr.root","read");
-  //TFile input_fsr_file("RootFilesForUnfolding/Electron_MCpowheg_Meas_NoFsr_eta25_res.root","read");
   TFile input_dilution_file("RootFilesForUnfolding/MUON_MC_NoFsr_NoDilution.root","read");
-  //TFile input_dilution_file("RootFilesForUnfolding/ELECTRON_MC_NoFsr_NoDilution.root","read");
-  TFile input_resp_file("Response_and_Historgrams.root","read");
+  //TFile input_resp_file("Response_and_Historgrams.root","read");
   //TFile input_resp_file("RootFilesForUnfolding/Data_Histograms.root","read");
   TFile input_data_file("RootFilesForUnfolding/Data_output_NEW.root","read");
-  //TFile input_data_file("RootFilesForUnfolding/ZeeDataMayPrompt_ESoutput_eta25.root","read");
   for (int i=0;i<nb;i++){
 
     for (int j=0;j<nb_Y;j++){
@@ -154,6 +184,10 @@ void RooUnfoldExample()
       sprintf(name_h,"DATA_meas_%i_%i",i,j);
       input_data_file.GetObject(name_h,hDataMeasCos_M_Y[i][j]);
 
+
+      sprintf(name_h,"DATA_meas_central_%i_%i",i,j);
+      hDataMeasCos_M_Y_central[i][j] = new TH1D(name_h,name_h,nbcos,-1.,1.);
+
       sprintf(name_h,"TrueMass_%i_%i",i,j);
       input_dilution_file.GetObject(name_h,hTrueCos_MASS_M_Y[i][j]);
 
@@ -172,12 +206,22 @@ void RooUnfoldExample()
 
     } 
   }
- 
 
   for (int i=0;i<nb;i++){
     for (int j=0;j<nb_Y;j++){
-      hNoFsrTruthCos_M_Y[i][j]->Scale(hDataMeasCos_M_Y[i][j]->Integral()*1./hNoFsrTruthCos_M_Y[i][j]->Integral()*1.);
-      unfold_fsr[i][j] = new RooUnfoldSvd(resp_2[i][j], hDataMeasCos_M_Y[i][j], k_reg_cos);
+      for (int k=0;k<nbcos;k++){
+	float central_value = hDataMeasCos_M_Y[i][j]->GetBinContent(k+1);
+	if (i < 3) hDataMeasCos_M_Y_central[i][j]->SetBinContent(k+1,central_value - comb[i][j]*r_low[i]*backg_lumi_scale);
+	if (i >= 3 && i < 9) hDataMeasCos_M_Y_central[i][j]->SetBinContent(k+1,central_value - comb[i][j]*r_zregion[i]*backg_lumi_scale);
+	if (i >= 9) hDataMeasCos_M_Y_central[i][j]->SetBinContent(k+1,central_value - comb[i][j]*r_high[i]*backg_lumi_scale);
+      }
+    }
+  }
+
+  for (int i=0;i<nb;i++){
+    for (int j=0;j<nb_Y;j++){
+      hNoFsrTruthCos_M_Y[i][j]->Scale(hDataMeasCos_M_Y_central[i][j]->Integral()*1./hNoFsrTruthCos_M_Y[i][j]->Integral()*1.);
+      unfold_fsr[i][j] = new RooUnfoldSvd(resp_2[i][j], hDataMeasCos_M_Y_central[i][j], k_reg_cos);
     }
   }
 
@@ -284,7 +328,7 @@ void RooUnfoldExample()
       c_rap[j]->cd(i+1);
       hRecoCos2[i][j]->SetMarkerStyle(8);
       scale2[i][j] = hNoFsrTruthCos_M_Y[i][j]->Integral()*1./hRecoCos2[i][j]->Integral()*1.;
-      scale[i][j] = hDataMeasCos_M_Y[i][j]->Integral()*1./hRecoCos[i][j]->Integral()*1.;//!!!
+      scale[i][j] = hDataMeasCos_M_Y_central[i][j]->Integral()*1./hRecoCos[i][j]->Integral()*1.;//!!!
       hRecoCos2[i][j]->Scale(scale2[i][j]);
       hRecoCos2[i][j]->Draw();
       hRecoCos[i][j]->SetMarkerStyle(8);
@@ -292,8 +336,8 @@ void RooUnfoldExample()
       hRecoCos[i][j]->Scale(scale[i][j]);
       hRecoCos[i][j]->Fit(fitfunc[i][j],"MQ","",-1.,-1.);
       hRecoCos[i][j]->Draw("sames");
-      hDataMeasCos_M_Y[i][j]->SetMarkerColor(2);
-      hDataMeasCos_M_Y[i][j]->Draw("e1SAMES");//!!!!
+      hDataMeasCos_M_Y_central[i][j]->SetMarkerColor(2);
+      hDataMeasCos_M_Y_central[i][j]->Draw("e1SAMES");//!!!!
       //     hMeasCos_M_Y[i][j]->Draw("SAMES");//!!!!
       hNoFsrTruthCos_M_Y[i][j]->Draw("SAMES");
       hTrueCos_M_Y[i][j]->SetLineColor(4);
@@ -330,8 +374,8 @@ void RooUnfoldExample()
       NF_unfold = hRecoCos2[i][j]->Integral(bin_mid,bin_max);
       NB_unfold = hRecoCos2[i][j]->Integral(bin_min,bin_mid_for_backward);
       
-      NF_meas = hDataMeasCos_M_Y[i][j]->Integral(bin_mid,bin_max);//!!!!
-      NB_meas = hDataMeasCos_M_Y[i][j]->Integral(bin_min,bin_mid_for_backward);//!!!!
+      NF_meas = hDataMeasCos_M_Y_central[i][j]->Integral(bin_mid,bin_max);//!!!!
+      NB_meas = hDataMeasCos_M_Y_central[i][j]->Integral(bin_min,bin_mid_for_backward);//!!!!
       afb = (NF_meas-NB_meas)/(NF_meas+NB_meas);
       h_Meas_Y2[j]->SetBinContent(i+1,afb);
       h_Meas_Y2[j]->SetBinError(i+1,sqrt((1-afb*afb)/(binw*(NF_meas+NB_meas))));
