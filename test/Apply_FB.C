@@ -44,16 +44,14 @@ void tree1r()
   TFile input_sin2412_file("RootFiles/sin2thetaW2412_MUON_MC_Meas_NoFsr.root","read");
   TFile input_sin2212_file("RootFiles/sin2thetaW2212_MUON_MC_Meas_NoFsr.root","read");
   TFile input_Align_Bowing_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Curl_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Curl200mu_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Elliptical_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Radial_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Sagitta_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Skew_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Telescope_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_CurlV2TF_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Twist_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Zexpansion_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
+  TFile input_Align_Elliptical_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Elliptical.root");
+  TFile input_Align_Radial_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Radial.root");
+  TFile input_Align_Sagitta_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Sagitta.root");
+  TFile input_Align_Skew_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Skew.root");
+  TFile input_Align_Telescope_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Telescope.root");
+  TFile input_Align_CurlV2TF_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_CurlV2TF.root");
+  TFile input_Align_Twist_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Twist.root");
+  TFile input_Align_Zexpansion_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Zexpansion.root");
   TFile input_Align_Ideal_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Ideal.root");
   TFile input_Align_Startup_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Startup.root");
 
@@ -249,42 +247,7 @@ void tree1r()
     input_Align_Bowing_file.GetObject(name_h,Align_Bowing_Inv_Response_NoFsr_Backward[j]);
     //eo Align_Bowing
 
-    //Align_Curl
-    sprintf(name_h,"Align_Curl_MC_meas_Forward_%i",j);
-    input_Align_Curl_file.GetObject(name_h,Align_Curl_hMeasCos_M_Y_Forward[j]);
-    sprintf(name_h,"Align_Curl_MC_meas_Backward_%i",j);
-    input_Align_Curl_file.GetObject(name_h,Align_Curl_hMeasCos_M_Y_Backward[j]);
-
-
-    sprintf(name_h,"Align_Curl_inv_response_undetector_forward_%i",j);
-    input_Align_Curl_file.GetObject(name_h,Align_Curl_Inv_Response_UnDetector_Forward[j]);
-    sprintf(name_h,"Align_Curl_inv_response_undetector_backward_%i",j);
-    input_Align_Curl_file.GetObject(name_h,Align_Curl_Inv_Response_UnDetector_Backward[j]);
-
-    sprintf(name_h,"Align_Curl_inv_response_nofsr_forward_%i",j);
-    input_Align_Curl_file.GetObject(name_h,Align_Curl_Inv_Response_NoFsr_Forward[j]);
-    sprintf(name_h,"Align_Curl_inv_response_nofsr_backward_%i",j);
-    input_Align_Curl_file.GetObject(name_h,Align_Curl_Inv_Response_NoFsr_Backward[j]);
-    //eo Align_Curl
-
-    //Align_Curl200mu
-    sprintf(name_h,"Align_Curl200mu_MC_meas_Forward_%i",j);
-    input_Align_Curl200mu_file.GetObject(name_h,Align_Curl200mu_hMeasCos_M_Y_Forward[j]);
-    sprintf(name_h,"Align_Curl200mu_MC_meas_Backward_%i",j);
-    input_Align_Curl200mu_file.GetObject(name_h,Align_Curl200mu_hMeasCos_M_Y_Backward[j]);
-
-
-    sprintf(name_h,"Align_Curl200mu_inv_response_undetector_forward_%i",j);
-    input_Align_Curl200mu_file.GetObject(name_h,Align_Curl200mu_Inv_Response_UnDetector_Forward[j]);
-    sprintf(name_h,"Align_Curl200mu_inv_response_undetector_backward_%i",j);
-    input_Align_Curl200mu_file.GetObject(name_h,Align_Curl200mu_Inv_Response_UnDetector_Backward[j]);
-
-    sprintf(name_h,"Align_Curl200mu_inv_response_nofsr_forward_%i",j);
-    input_Align_Curl200mu_file.GetObject(name_h,Align_Curl200mu_Inv_Response_NoFsr_Forward[j]);
-    sprintf(name_h,"Align_Curl200mu_inv_response_nofsr_backward_%i",j);
-    input_Align_Curl200mu_file.GetObject(name_h,Align_Curl200mu_Inv_Response_NoFsr_Backward[j]);
-    //eo Align_Curl200mu
-
+ 
     //Align_Elliptical
     sprintf(name_h,"Align_Elliptical_MC_meas_Forward_%i",j);
     input_Align_Elliptical_file.GetObject(name_h,Align_Elliptical_hMeasCos_M_Y_Forward[j]);
@@ -432,6 +395,7 @@ void tree1r()
     //Align_Ideal
     sprintf(name_h,"Align_Ideal_MC_meas_Forward_%i",j);
     input_Align_Ideal_file.GetObject(name_h,Align_Ideal_hMeasCos_M_Y_Forward[j]);
+    //   for (int jjj = 0;jjj<nb;jjj++) cout<<j<<"  "<<jjj<<"   "<<Align_Ideal_hMeasCos_M_Y_Forward[j]->GetBinContent(jjj+1)<<endl;
     sprintf(name_h,"Align_Ideal_MC_meas_Backward_%i",j);
     input_Align_Ideal_file.GetObject(name_h,Align_Ideal_hMeasCos_M_Y_Backward[j]);
 
@@ -450,6 +414,7 @@ void tree1r()
     //Align_Startup
     sprintf(name_h,"Align_Startup_MC_meas_Forward_%i",j);
     input_Align_Startup_file.GetObject(name_h,Align_Startup_hMeasCos_M_Y_Forward[j]);
+
     sprintf(name_h,"Align_Startup_MC_meas_Backward_%i",j);
     input_Align_Startup_file.GetObject(name_h,Align_Startup_hMeasCos_M_Y_Backward[j]);
 
@@ -463,6 +428,7 @@ void tree1r()
     input_Align_Startup_file.GetObject(name_h,Align_Startup_Inv_Response_NoFsr_Forward[j]);
     sprintf(name_h,"Align_Startup_inv_response_nofsr_backward_%i",j);
     input_Align_Startup_file.GetObject(name_h,Align_Startup_Inv_Response_NoFsr_Backward[j]);
+
     //eo Align_Startup
 
 
@@ -504,10 +470,6 @@ void tree1r()
     //Raw
     sprintf(name_h,"MC_Raw_Align_Bowing_m_Ideal_AFB_%i",j);
     h_MC_Raw_Align_Bowing_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
-    sprintf(name_h,"MC_Raw_Align_Curl_m_Ideal_AFB_%i",j);
-    h_MC_Raw_Align_Curl_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);  
-    sprintf(name_h,"MC_Raw_Align_Curl200mu_m_Ideal_AFB_%i",j);
-    h_MC_Raw_Align_Curl200mu_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);   
     sprintf(name_h,"MC_Raw_Align_Elliptical_m_Ideal_AFB_%i",j);
     h_MC_Raw_Align_Elliptical_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);    
     sprintf(name_h,"MC_Raw_Align_Radial_m_Ideal_AFB_%i",j);
@@ -529,10 +491,6 @@ void tree1r()
     //Unfolded Bare Lepton
     sprintf(name_h,"MC_Unfolded_UnDet_Align_Bowing_m_Ideal_AFB_%i",j);
     h_MC_Unfolded_UnDet_Align_Bowing_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
-    sprintf(name_h,"MC_Unfolded_UnDet_Align_Curl_m_Ideal_AFB_%i",j);
-    h_MC_Unfolded_UnDet_Align_Curl_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
-    sprintf(name_h,"MC_Unfolded_UnDet_Align_Curl200mu_m_Ideal_AFB_%i",j);
-    h_MC_Unfolded_UnDet_Align_Curl200mu_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"MC_Unfolded_UnDet_Align_Elliptical_m_Ideal_AFB_%i",j);
     h_MC_Unfolded_UnDet_Align_Elliptical_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"MC_Unfolded_UnDet_Align_Radial_m_Ideal_AFB_%i",j);
@@ -555,10 +513,6 @@ void tree1r()
     //Unfolded Born Level
     sprintf(name_h,"MC_Unfolded_NoFsr_Align_Bowing_m_Ideal_AFB_%i",j);
     h_MC_Unfolded_NoFsr_Align_Bowing_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
-    sprintf(name_h,"MC_Unfolded_NoFsr_Align_Curl_m_Ideal_AFB_%i",j);
-    h_MC_Unfolded_NoFsr_Align_Curl_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
-    sprintf(name_h,"MC_Unfolded_NoFsr_Align_Curl200mu_m_Ideal_AFB_%i",j);
-    h_MC_Unfolded_NoFsr_Align_Curl200mu_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"MC_Unfolded_NoFsr_Align_Elliptical_m_Ideal_AFB_%i",j);
     h_MC_Unfolded_NoFsr_Align_Elliptical_m_Ideal_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"MC_Unfolded_NoFsr_Align_Radial_m_Ideal_AFB_%i",j);
@@ -660,8 +614,6 @@ void tree1r()
   double MC_Raw_Align_Ideal_AFB[nb];   
   double MC_Raw_Align_Startup_AFB[nb];   
   double MC_Raw_Align_Bowing_AFB[nb];   
-  double MC_Raw_Align_Curl_AFB[nb];   
-  double MC_Raw_Align_Curl200mu_AFB[nb];   
   double MC_Raw_Align_Elliptical_AFB[nb];   
   double MC_Raw_Align_Radial_AFB[nb];   
   double MC_Raw_Align_Sagitta_AFB[nb];   
@@ -674,8 +626,6 @@ void tree1r()
   double MC_UnDet_Align_Ideal_AFB[nb];   
   double MC_UnDet_Align_Startup_AFB[nb];   
   double MC_UnDet_Align_Bowing_AFB[nb];   
-  double MC_UnDet_Align_Curl_AFB[nb];   
-  double MC_UnDet_Align_Curl200mu_AFB[nb];   
   double MC_UnDet_Align_Elliptical_AFB[nb];   
   double MC_UnDet_Align_Radial_AFB[nb];   
   double MC_UnDet_Align_Sagitta_AFB[nb];   
@@ -688,8 +638,6 @@ void tree1r()
   double MC_UnDet_Align_Ideal_Forward[nb_Y][nb];   
   double MC_UnDet_Align_Startup_Forward[nb_Y][nb];   
   double MC_UnDet_Align_Bowing_Forward[nb_Y][nb];   
-  double MC_UnDet_Align_Curl_Forward[nb_Y][nb];   
-  double MC_UnDet_Align_Curl200mu_Forward[nb_Y][nb];   
   double MC_UnDet_Align_Elliptical_Forward[nb_Y][nb];   
   double MC_UnDet_Align_Radial_Forward[nb_Y][nb];   
   double MC_UnDet_Align_Sagitta_Forward[nb_Y][nb];   
@@ -702,8 +650,6 @@ void tree1r()
   double MC_UnDet_Align_Ideal_Backward[nb_Y][nb];   
   double MC_UnDet_Align_Startup_Backward[nb_Y][nb];   
   double MC_UnDet_Align_Bowing_Backward[nb_Y][nb];   
-  double MC_UnDet_Align_Curl_Backward[nb_Y][nb];   
-  double MC_UnDet_Align_Curl200mu_Backward[nb_Y][nb];   
   double MC_UnDet_Align_Elliptical_Backward[nb_Y][nb];   
   double MC_UnDet_Align_Radial_Backward[nb_Y][nb];   
   double MC_UnDet_Align_Sagitta_Backward[nb_Y][nb];   
@@ -715,9 +661,7 @@ void tree1r()
 
   double MC_NoFsr_Align_Ideal_AFB[nb];   
   double MC_NoFsr_Align_Startup_AFB[nb];   
-  double MC_NoFsr_Align_Bowing_AFB[nb];   
-  double MC_NoFsr_Align_Curl_AFB[nb];   
-  double MC_NoFsr_Align_Curl200mu_AFB[nb];   
+  double MC_NoFsr_Align_Bowing_AFB[nb];    
   double MC_NoFsr_Align_Elliptical_AFB[nb];   
   double MC_NoFsr_Align_Radial_AFB[nb];   
   double MC_NoFsr_Align_Sagitta_AFB[nb];   
@@ -730,8 +674,6 @@ void tree1r()
   double MC_NoFsr_Align_Ideal_Forward[nb_Y][nb];   
   double MC_NoFsr_Align_Startup_Forward[nb_Y][nb];   
   double MC_NoFsr_Align_Bowing_Forward[nb_Y][nb];   
-  double MC_NoFsr_Align_Curl_Forward[nb_Y][nb];   
-  double MC_NoFsr_Align_Curl200mu_Forward[nb_Y][nb];   
   double MC_NoFsr_Align_Elliptical_Forward[nb_Y][nb];   
   double MC_NoFsr_Align_Radial_Forward[nb_Y][nb];   
   double MC_NoFsr_Align_Sagitta_Forward[nb_Y][nb];   
@@ -744,8 +686,6 @@ void tree1r()
   double MC_NoFsr_Align_Ideal_Backward[nb_Y][nb];   
   double MC_NoFsr_Align_Startup_Backward[nb_Y][nb];   
   double MC_NoFsr_Align_Bowing_Backward[nb_Y][nb];   
-  double MC_NoFsr_Align_Curl_Backward[nb_Y][nb];   
-  double MC_NoFsr_Align_Curl200mu_Backward[nb_Y][nb];   
   double MC_NoFsr_Align_Elliptical_Backward[nb_Y][nb];   
   double MC_NoFsr_Align_Radial_Backward[nb_Y][nb];   
   double MC_NoFsr_Align_Sagitta_Backward[nb_Y][nb];   
@@ -1085,6 +1025,7 @@ void tree1r()
       h_MC_Unfolded_NoFsr_AFB_Diff_sin2412m2312[k]->SetBinContent(i+1,diff1);
       h_MC_Unfolded_NoFsr_AFB_Diff_sin2212m2312[k]->SetBinContent(i+1,diff2);
       //sin2thetaW systematics born lepton level table
+      /*
       if (k == 0 && i == 0){ 
 	cout<<"sin2thetaW SYSTEMATICS (Born Level)"<<endl;
 	cout<<"---------------"<<endl;
@@ -1093,13 +1034,12 @@ void tree1r()
       }
       cout<<Y_bin_limits[k]<<"-"<<Y_bin_limits[k+1]<<" &  "<<xAxis_AFB[i]<<"-"<<xAxis_AFB[i+1]<<"  &  "<<setprecision(3)<<diff1<<"  &  "<<setprecision(3)<<diff2<<"    \\\\    "<<endl;
       //end of sin2theta systematics born lepton level table
+      */
     }
     for (int i=0;i<nb;i++){//alignment loop
       MC_Raw_Align_Ideal_AFB[i] = 0;   
       MC_Raw_Align_Startup_AFB[i] = 0;   
       MC_Raw_Align_Bowing_AFB[i] = 0;   
-      MC_Raw_Align_Curl_AFB[i] = 0;   
-      MC_Raw_Align_Curl200mu_AFB[i] = 0;   
       MC_Raw_Align_Elliptical_AFB[i] = 0;   
       MC_Raw_Align_Radial_AFB[i] = 0;   
       MC_Raw_Align_Sagitta_AFB[i] = 0;   
@@ -1112,8 +1052,6 @@ void tree1r()
       MC_UnDet_Align_Ideal_AFB[i] = 0;   
       MC_UnDet_Align_Startup_AFB[i] = 0;   
       MC_UnDet_Align_Bowing_AFB[i] = 0;   
-      MC_UnDet_Align_Curl_AFB[i] = 0;   
-      MC_UnDet_Align_Curl200mu_AFB[i] = 0;   
       MC_UnDet_Align_Elliptical_AFB[i] = 0;   
       MC_UnDet_Align_Radial_AFB[i] = 0;   
       MC_UnDet_Align_Sagitta_AFB[i] = 0;   
@@ -1126,8 +1064,6 @@ void tree1r()
       MC_UnDet_Align_Ideal_Forward[k][i] = 0;   
       MC_UnDet_Align_Startup_Forward[k][i] = 0;   
       MC_UnDet_Align_Bowing_Forward[k][i] = 0;   
-      MC_UnDet_Align_Curl_Forward[k][i] = 0;   
-      MC_UnDet_Align_Curl200mu_Forward[k][i] = 0;   
       MC_UnDet_Align_Elliptical_Forward[k][i] = 0;   
       MC_UnDet_Align_Radial_Forward[k][i] = 0;   
       MC_UnDet_Align_Sagitta_Forward[k][i] = 0;   
@@ -1140,8 +1076,6 @@ void tree1r()
       MC_UnDet_Align_Ideal_Backward[k][i] = 0;   
       MC_UnDet_Align_Startup_Backward[k][i] = 0;   
       MC_UnDet_Align_Bowing_Backward[k][i] = 0;   
-      MC_UnDet_Align_Curl_Backward[k][i] = 0;   
-      MC_UnDet_Align_Curl200mu_Backward[k][i] = 0;   
       MC_UnDet_Align_Elliptical_Backward[k][i] = 0;   
       MC_UnDet_Align_Radial_Backward[k][i] = 0;   
       MC_UnDet_Align_Sagitta_Backward[k][i] = 0;   
@@ -1154,8 +1088,6 @@ void tree1r()
       MC_NoFsr_Align_Ideal_AFB[i] = 0;   
       MC_NoFsr_Align_Startup_AFB[i] = 0;   
       MC_NoFsr_Align_Bowing_AFB[i] = 0;   
-      MC_NoFsr_Align_Curl_AFB[i] = 0;   
-      MC_NoFsr_Align_Curl200mu_AFB[i] = 0;   
       MC_NoFsr_Align_Elliptical_AFB[i] = 0;   
       MC_NoFsr_Align_Radial_AFB[i] = 0;   
       MC_NoFsr_Align_Sagitta_AFB[i] = 0;   
@@ -1168,8 +1100,6 @@ void tree1r()
       MC_NoFsr_Align_Ideal_Forward[k][i] = 0;   
       MC_NoFsr_Align_Startup_Forward[k][i] = 0;   
       MC_NoFsr_Align_Bowing_Forward[k][i] = 0;   
-      MC_NoFsr_Align_Curl_Forward[k][i] = 0;   
-      MC_NoFsr_Align_Curl200mu_Forward[k][i] = 0;   
       MC_NoFsr_Align_Elliptical_Forward[k][i] = 0;   
       MC_NoFsr_Align_Radial_Forward[k][i] = 0;   
       MC_NoFsr_Align_Sagitta_Forward[k][i] = 0;   
@@ -1182,8 +1112,6 @@ void tree1r()
       MC_NoFsr_Align_Ideal_Backward[k][i] = 0;   
       MC_NoFsr_Align_Startup_Backward[k][i] = 0;   
       MC_NoFsr_Align_Bowing_Backward[k][i] = 0;   
-      MC_NoFsr_Align_Curl_Backward[k][i] = 0;   
-      MC_NoFsr_Align_Curl200mu_Backward[k][i] = 0;   
       MC_NoFsr_Align_Elliptical_Backward[k][i] = 0;   
       MC_NoFsr_Align_Radial_Backward[k][i] = 0;   
       MC_NoFsr_Align_Sagitta_Backward[k][i] = 0;   
@@ -1193,11 +1121,10 @@ void tree1r()
       MC_NoFsr_Align_Twist_Backward[k][i] = 0;   
       MC_NoFsr_Align_Zexpansion_Backward[k][i] = 0; 
 
+
       MC_Raw_Align_Ideal_AFB[i] = AFB(Align_Ideal_hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),Align_Ideal_hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
       MC_Raw_Align_Startup_AFB[i] = AFB(Align_Startup_hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),Align_Startup_hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
       MC_Raw_Align_Bowing_AFB[i] = AFB(Align_Bowing_hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),Align_Bowing_hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
-      MC_Raw_Align_Curl_AFB[i] = AFB(Align_Curl_hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),Align_Curl_hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
-      MC_Raw_Align_Curl200mu_AFB[i] = AFB(Align_Curl200mu_hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),Align_Curl200mu_hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
       MC_Raw_Align_Elliptical_AFB[i] = AFB(Align_Elliptical_hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),Align_Elliptical_hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
       MC_Raw_Align_Radial_AFB[i] = AFB(Align_Radial_hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),Align_Radial_hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
       MC_Raw_Align_Sagitta_AFB[i] = AFB(Align_Sagitta_hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),Align_Sagitta_hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
@@ -1209,8 +1136,6 @@ void tree1r()
 
       float diff_Startup = MC_Raw_Align_Startup_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
       float diff_Bowing = MC_Raw_Align_Bowing_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
-      float diff_Curl = MC_Raw_Align_Curl_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
-      float diff_Curl200mu = MC_Raw_Align_Curl200mu_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
       float diff_Elliptical = MC_Raw_Align_Elliptical_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
       float diff_Radial = MC_Raw_Align_Radial_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
       float diff_Sagitta = MC_Raw_Align_Sagitta_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
@@ -1220,10 +1145,9 @@ void tree1r()
       float diff_Twist = MC_Raw_Align_Twist_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
       float diff_Zexpansion = MC_Raw_Align_Zexpansion_AFB[i] - MC_Raw_Align_Ideal_AFB[i];
 
+
       h_MC_Raw_Align_Startup_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Bowing);
       h_MC_Raw_Align_Bowing_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Bowing);
-      h_MC_Raw_Align_Curl_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Curl);
-      h_MC_Raw_Align_Curl200mu_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Curl200mu);
       h_MC_Raw_Align_Elliptical_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Elliptical);
       h_MC_Raw_Align_Radial_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Radial);
       h_MC_Raw_Align_Sagitta_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Sagitta);
@@ -1233,66 +1157,59 @@ void tree1r()
       h_MC_Raw_Align_Twist_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Twist);
       h_MC_Raw_Align_Zexpansion_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Zexpansion);
 
-      for (int j=0;j<nb;j++){
-	MC_UnDet_Align_Ideal_Forward[k][i] += Align_Ideal_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Ideal_Backward[k][i] += Align_Ideal_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Startup_Forward[k][i] += Align_Startup_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Startup_Backward[k][i] += Align_Startup_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Bowing_Forward[k][i] += Align_Bowing_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Bowing_Backward[k][i] += Align_Bowing_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Curl_Forward[k][i] += Align_Curl_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Curl_Backward[k][i] += Align_Curl_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Curl200mu_Forward[k][i] += Align_Curl200mu_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Curl200mu_Backward[k][i] += Align_Curl200mu_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Elliptical_Forward[k][i] += Align_Elliptical_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Elliptical_Backward[k][i] += Align_Elliptical_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Radial_Forward[k][i] += Align_Radial_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Radial_Backward[k][i] += Align_Radial_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Sagitta_Forward[k][i] += Align_Sagitta_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Sagitta_Backward[k][i] += Align_Sagitta_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Skew_Forward[k][i] += Align_Skew_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Skew_Backward[k][i] += Align_Skew_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Telescope_Forward[k][i] += Align_Telescope_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Telescope_Backward[k][i] += Align_Telescope_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_CurlV2TF_Forward[k][i] += Align_CurlV2TF_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_CurlV2TF_Backward[k][i] += Align_CurlV2TF_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Twist_Forward[k][i] += Align_Twist_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Twist_Backward[k][i] += Align_Twist_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Zexpansion_Forward[k][i] += Align_Zexpansion_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_UnDet_Align_Zexpansion_Backward[k][i] += Align_Zexpansion_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
 
-	MC_NoFsr_Align_Ideal_Forward[k][i] += Align_Ideal_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Ideal_Backward[k][i] += Align_Ideal_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Startup_Forward[k][i] += Align_Startup_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Startup_Backward[k][i] += Align_Startup_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Bowing_Forward[k][i] += Align_Bowing_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Bowing_Backward[k][i] += Align_Bowing_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Curl_Forward[k][i] += Align_Curl_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Curl_Backward[k][i] += Align_Curl_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Curl200mu_Forward[k][i] += Align_Curl200mu_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Curl200mu_Backward[k][i] += Align_Curl200mu_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Elliptical_Forward[k][i] += Align_Elliptical_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Elliptical_Backward[k][i] += Align_Elliptical_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Radial_Forward[k][i] += Align_Radial_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Radial_Backward[k][i] += Align_Radial_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Sagitta_Forward[k][i] += Align_Sagitta_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Sagitta_Backward[k][i] += Align_Sagitta_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Skew_Forward[k][i] += Align_Skew_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Skew_Backward[k][i] += Align_Skew_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Telescope_Forward[k][i] += Align_Telescope_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Telescope_Backward[k][i] += Align_Telescope_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_CurlV2TF_Forward[k][i] += Align_CurlV2TF_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_CurlV2TF_Backward[k][i] += Align_CurlV2TF_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Twist_Forward[k][i] += Align_Twist_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Twist_Backward[k][i] += Align_Twist_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Zexpansion_Forward[k][i] += Align_Zexpansion_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[j]->GetBinContent(j+1);
-	MC_NoFsr_Align_Zexpansion_Backward[k][i] += Align_Zexpansion_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[j]->GetBinContent(j+1);
+
+      for (int j=0;j<nb;j++){
+	MC_UnDet_Align_Ideal_Forward[k][i] += Align_Ideal_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Ideal_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Ideal_Backward[k][i] += Align_Ideal_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Ideal_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Startup_Forward[k][i] += Align_Startup_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Startup_Backward[k][i] += Align_Startup_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Bowing_Forward[k][i] += Align_Bowing_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Bowing_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Bowing_Backward[k][i] += Align_Bowing_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Bowing_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Elliptical_Forward[k][i] += Align_Elliptical_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Elliptical_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Elliptical_Backward[k][i] += Align_Elliptical_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Elliptical_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Radial_Forward[k][i] += Align_Radial_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Radial_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Radial_Backward[k][i] += Align_Radial_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Radial_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);    
+	MC_UnDet_Align_Sagitta_Forward[k][i] += Align_Sagitta_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Sagitta_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Sagitta_Backward[k][i] += Align_Sagitta_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Sagitta_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Skew_Forward[k][i] += Align_Skew_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Skew_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Skew_Backward[k][i] += Align_Skew_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Skew_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Telescope_Forward[k][i] += Align_Telescope_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Telescope_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Telescope_Backward[k][i] += Align_Telescope_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Telescope_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_CurlV2TF_Forward[k][i] += Align_CurlV2TF_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_CurlV2TF_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_CurlV2TF_Backward[k][i] += Align_CurlV2TF_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_CurlV2TF_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Twist_Forward[k][i] += Align_Twist_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Twist_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Twist_Backward[k][i] += Align_Twist_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Twist_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Zexpansion_Forward[k][i] += Align_Zexpansion_Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*Align_Zexpansion_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_UnDet_Align_Zexpansion_Backward[k][i] += Align_Zexpansion_Inv_Response_UnDetector_Backward[k]->GetBinContent(j+1,i+1)*Align_Zexpansion_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+       
+	MC_NoFsr_Align_Ideal_Forward[k][i] += Align_Ideal_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Ideal_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Ideal_Backward[k][i] += Align_Ideal_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Ideal_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Startup_Forward[k][i] += Align_Startup_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Startup_Backward[k][i] += Align_Startup_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Startup_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Bowing_Forward[k][i] += Align_Bowing_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Bowing_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Bowing_Backward[k][i] += Align_Bowing_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Bowing_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Elliptical_Forward[k][i] += Align_Elliptical_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Elliptical_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Elliptical_Backward[k][i] += Align_Elliptical_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Elliptical_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Radial_Forward[k][i] += Align_Radial_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Radial_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Radial_Backward[k][i] += Align_Radial_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Radial_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Sagitta_Forward[k][i] += Align_Sagitta_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Sagitta_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Sagitta_Backward[k][i] += Align_Sagitta_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Sagitta_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Skew_Forward[k][i] += Align_Skew_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Skew_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Skew_Backward[k][i] += Align_Skew_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Skew_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Telescope_Forward[k][i] += Align_Telescope_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Telescope_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Telescope_Backward[k][i] += Align_Telescope_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Telescope_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_CurlV2TF_Forward[k][i] += Align_CurlV2TF_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_CurlV2TF_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_CurlV2TF_Backward[k][i] += Align_CurlV2TF_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_CurlV2TF_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Twist_Forward[k][i] += Align_Twist_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Twist_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Twist_Backward[k][i] += Align_Twist_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Twist_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Zexpansion_Forward[k][i] += Align_Zexpansion_Inv_Response_NoFsr_Forward[k]->GetBinContent(j+1,i+1)*Align_Zexpansion_hMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
+	MC_NoFsr_Align_Zexpansion_Backward[k][i] += Align_Zexpansion_Inv_Response_NoFsr_Backward[k]->GetBinContent(j+1,i+1)*Align_Zexpansion_hMeasCos_M_Y_Backward[k]->GetBinContent(j+1);
+		
       }
       MC_UnDet_Align_Ideal_AFB[i] = AFB(MC_UnDet_Align_Ideal_Forward[k][i],MC_UnDet_Align_Ideal_Backward[k][i]);
       MC_UnDet_Align_Startup_AFB[i] = AFB(MC_UnDet_Align_Startup_Forward[k][i],MC_UnDet_Align_Startup_Backward[k][i]);
       MC_UnDet_Align_Bowing_AFB[i] = AFB(MC_UnDet_Align_Bowing_Forward[k][i],MC_UnDet_Align_Bowing_Backward[k][i]);
-      MC_UnDet_Align_Curl_AFB[i] = AFB(MC_UnDet_Align_Curl_Forward[k][i],MC_UnDet_Align_Curl_Backward[k][i]);
-      MC_UnDet_Align_Curl200mu_AFB[i] = AFB(MC_UnDet_Align_Curl200mu_Forward[k][i],MC_UnDet_Align_Curl200mu_Backward[k][i]);
       MC_UnDet_Align_Elliptical_AFB[i] = AFB(MC_UnDet_Align_Elliptical_Forward[k][i],MC_UnDet_Align_Elliptical_Backward[k][i]);
       MC_UnDet_Align_Radial_AFB[i] = AFB(MC_UnDet_Align_Radial_Forward[k][i],MC_UnDet_Align_Radial_Backward[k][i]);
       MC_UnDet_Align_Sagitta_AFB[i] = AFB(MC_UnDet_Align_Sagitta_Forward[k][i],MC_UnDet_Align_Sagitta_Backward[k][i]);
@@ -1304,8 +1221,6 @@ void tree1r()
 
       diff_Startup = MC_UnDet_Align_Startup_AFB[i] - MC_UnDet_Align_Ideal_AFB[i];
       diff_Bowing = MC_UnDet_Align_Bowing_AFB[i] - MC_UnDet_Align_Ideal_AFB[i];
-      diff_Curl = MC_UnDet_Align_Curl_AFB[i] - MC_UnDet_Align_Ideal_AFB[i];
-      diff_Curl200mu = MC_UnDet_Align_Curl200mu_AFB[i] - MC_UnDet_Align_Ideal_AFB[i];
       diff_Elliptical = MC_UnDet_Align_Elliptical_AFB[i] - MC_UnDet_Align_Ideal_AFB[i];
       diff_Radial = MC_UnDet_Align_Radial_AFB[i] - MC_UnDet_Align_Ideal_AFB[i];
       diff_Sagitta = MC_UnDet_Align_Sagitta_AFB[i] - MC_UnDet_Align_Ideal_AFB[i];
@@ -1317,8 +1232,6 @@ void tree1r()
 
       h_MC_Unfolded_UnDet_Align_Startup_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Bowing);
       h_MC_Unfolded_UnDet_Align_Bowing_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Bowing);
-      h_MC_Unfolded_UnDet_Align_Curl_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Curl);
-      h_MC_Unfolded_UnDet_Align_Curl200mu_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Curl200mu);
       h_MC_Unfolded_UnDet_Align_Elliptical_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Elliptical);
       h_MC_Unfolded_UnDet_Align_Radial_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Radial);
       h_MC_Unfolded_UnDet_Align_Sagitta_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Sagitta);
@@ -1332,8 +1245,6 @@ void tree1r()
       MC_NoFsr_Align_Ideal_AFB[i] = AFB(MC_NoFsr_Align_Ideal_Forward[k][i],MC_NoFsr_Align_Ideal_Backward[k][i]);
       MC_NoFsr_Align_Startup_AFB[i] = AFB(MC_NoFsr_Align_Startup_Forward[k][i],MC_NoFsr_Align_Startup_Backward[k][i]);
       MC_NoFsr_Align_Bowing_AFB[i] = AFB(MC_NoFsr_Align_Bowing_Forward[k][i],MC_NoFsr_Align_Bowing_Backward[k][i]);
-      MC_NoFsr_Align_Curl_AFB[i] = AFB(MC_NoFsr_Align_Curl_Forward[k][i],MC_NoFsr_Align_Curl_Backward[k][i]);
-      MC_NoFsr_Align_Curl200mu_AFB[i] = AFB(MC_NoFsr_Align_Curl200mu_Forward[k][i],MC_NoFsr_Align_Curl200mu_Backward[k][i]);
       MC_NoFsr_Align_Elliptical_AFB[i] = AFB(MC_NoFsr_Align_Elliptical_Forward[k][i],MC_NoFsr_Align_Elliptical_Backward[k][i]);
       MC_NoFsr_Align_Radial_AFB[i] = AFB(MC_NoFsr_Align_Radial_Forward[k][i],MC_NoFsr_Align_Radial_Backward[k][i]);
       MC_NoFsr_Align_Sagitta_AFB[i] = AFB(MC_NoFsr_Align_Sagitta_Forward[k][i],MC_NoFsr_Align_Sagitta_Backward[k][i]);
@@ -1345,8 +1256,6 @@ void tree1r()
 
       diff_Startup = MC_NoFsr_Align_Startup_AFB[i] - MC_NoFsr_Align_Ideal_AFB[i];
       diff_Bowing = MC_NoFsr_Align_Bowing_AFB[i] - MC_NoFsr_Align_Ideal_AFB[i];
-      diff_Curl = MC_NoFsr_Align_Curl_AFB[i] - MC_NoFsr_Align_Ideal_AFB[i];
-      diff_Curl200mu = MC_NoFsr_Align_Curl200mu_AFB[i] - MC_NoFsr_Align_Ideal_AFB[i];
       diff_Elliptical = MC_NoFsr_Align_Elliptical_AFB[i] - MC_NoFsr_Align_Ideal_AFB[i];
       diff_Radial = MC_NoFsr_Align_Radial_AFB[i] - MC_NoFsr_Align_Ideal_AFB[i];
       diff_Sagitta = MC_NoFsr_Align_Sagitta_AFB[i] - MC_NoFsr_Align_Ideal_AFB[i];
@@ -1358,8 +1267,6 @@ void tree1r()
 
       h_MC_Unfolded_NoFsr_Align_Startup_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Bowing);
       h_MC_Unfolded_NoFsr_Align_Bowing_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Bowing);
-      h_MC_Unfolded_NoFsr_Align_Curl_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Curl);
-      h_MC_Unfolded_NoFsr_Align_Curl200mu_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Curl200mu);
       h_MC_Unfolded_NoFsr_Align_Elliptical_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Elliptical);
       h_MC_Unfolded_NoFsr_Align_Radial_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Radial);
       h_MC_Unfolded_NoFsr_Align_Sagitta_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Sagitta);
@@ -1853,7 +1760,7 @@ void tree1r()
     gPad->SetLogx();
     h_MC_Raw_Align_Startup_m_Ideal_AFB[k]->SetLineWidth(2);
     h_MC_Raw_Align_Startup_m_Ideal_AFB[k]->SetLineColor(1);
-    h_MC_Raw_Align_Startup_m_Ideal_AFB[k]->GetYaxis()->SetRangeUser(-0.04,0.04);
+    h_MC_Raw_Align_Startup_m_Ideal_AFB[k]->GetYaxis()->SetRangeUser(-0.1,0.1);
     h_MC_Raw_Align_Startup_m_Ideal_AFB[k]->GetYaxis()->SetTitle("#DeltaA_{FB}");
     h_MC_Raw_Align_Startup_m_Ideal_AFB[k]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
     sprintf(name_h,"|Y|=%.2f-%.2f",Y_bin_limits[k],Y_bin_limits[k+1]);
@@ -1864,44 +1771,36 @@ void tree1r()
     h_MC_Raw_Align_Bowing_m_Ideal_AFB[k]->SetLineColor(2);
     h_MC_Raw_Align_Bowing_m_Ideal_AFB[k]->Draw("sames");
 
-    h_MC_Raw_Align_Curl_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Curl_m_Ideal_AFB[k]->SetLineColor(2);
-    h_MC_Raw_Align_Curl_m_Ideal_AFB[k]->Draw("sames");
-
-    h_MC_Raw_Align_Curl200mu_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Curl200mu_m_Ideal_AFB[k]->SetLineColor(2);
-    h_MC_Raw_Align_Curl200mu_m_Ideal_AFB[k]->Draw("sames");
-
     h_MC_Raw_Align_Elliptical_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Elliptical_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Raw_Align_Elliptical_m_Ideal_AFB[k]->SetLineColor(5);
     h_MC_Raw_Align_Elliptical_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Raw_Align_Radial_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Radial_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Raw_Align_Radial_m_Ideal_AFB[k]->SetLineColor(6);
     h_MC_Raw_Align_Radial_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Raw_Align_Sagitta_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Sagitta_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Raw_Align_Sagitta_m_Ideal_AFB[k]->SetLineColor(7);
     h_MC_Raw_Align_Sagitta_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Raw_Align_Skew_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Skew_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Raw_Align_Skew_m_Ideal_AFB[k]->SetLineColor(8);
     h_MC_Raw_Align_Skew_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Raw_Align_Telescope_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Telescope_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Raw_Align_Telescope_m_Ideal_AFB[k]->SetLineColor(9);
     h_MC_Raw_Align_Telescope_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Raw_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Raw_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineColor(13);
     h_MC_Raw_Align_CurlV2TF_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Raw_Align_Twist_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Twist_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Raw_Align_Twist_m_Ideal_AFB[k]->SetLineColor(11);
     h_MC_Raw_Align_Twist_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Raw_Align_Zexpansion_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Raw_Align_Zexpansion_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Raw_Align_Zexpansion_m_Ideal_AFB[k]->SetLineColor(12);
     h_MC_Raw_Align_Zexpansion_m_Ideal_AFB[k]->Draw("sames");
   }
   r13->SaveAs("Alignment_uncertainty_at_raw_level.C");
@@ -1924,44 +1823,36 @@ void tree1r()
     h_MC_Unfolded_UnDet_Align_Bowing_m_Ideal_AFB[k]->SetLineColor(2);
     h_MC_Unfolded_UnDet_Align_Bowing_m_Ideal_AFB[k]->Draw("sames");
 
-    h_MC_Unfolded_UnDet_Align_Curl_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Curl_m_Ideal_AFB[k]->SetLineColor(2);
-    h_MC_Unfolded_UnDet_Align_Curl_m_Ideal_AFB[k]->Draw("sames");
-
-    h_MC_Unfolded_UnDet_Align_Curl200mu_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Curl200mu_m_Ideal_AFB[k]->SetLineColor(2);
-    h_MC_Unfolded_UnDet_Align_Curl200mu_m_Ideal_AFB[k]->Draw("sames");
-
     h_MC_Unfolded_UnDet_Align_Elliptical_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Elliptical_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_UnDet_Align_Elliptical_m_Ideal_AFB[k]->SetLineColor(5);
     h_MC_Unfolded_UnDet_Align_Elliptical_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_UnDet_Align_Radial_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Radial_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_UnDet_Align_Radial_m_Ideal_AFB[k]->SetLineColor(6);
     h_MC_Unfolded_UnDet_Align_Radial_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_UnDet_Align_Sagitta_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Sagitta_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_UnDet_Align_Sagitta_m_Ideal_AFB[k]->SetLineColor(7);
     h_MC_Unfolded_UnDet_Align_Sagitta_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_UnDet_Align_Skew_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Skew_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_UnDet_Align_Skew_m_Ideal_AFB[k]->SetLineColor(8);
     h_MC_Unfolded_UnDet_Align_Skew_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_UnDet_Align_Telescope_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Telescope_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_UnDet_Align_Telescope_m_Ideal_AFB[k]->SetLineColor(9);
     h_MC_Unfolded_UnDet_Align_Telescope_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_UnDet_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_UnDet_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineColor(13);
     h_MC_Unfolded_UnDet_Align_CurlV2TF_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_UnDet_Align_Twist_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Twist_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_UnDet_Align_Twist_m_Ideal_AFB[k]->SetLineColor(11);
     h_MC_Unfolded_UnDet_Align_Twist_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_UnDet_Align_Zexpansion_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_UnDet_Align_Zexpansion_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_UnDet_Align_Zexpansion_m_Ideal_AFB[k]->SetLineColor(12);
     h_MC_Unfolded_UnDet_Align_Zexpansion_m_Ideal_AFB[k]->Draw("sames");
   }
   r14->SaveAs("Alignment_uncertainty_at_bare_lepton_level.C");
@@ -1984,44 +1875,36 @@ void tree1r()
     h_MC_Unfolded_NoFsr_Align_Bowing_m_Ideal_AFB[k]->SetLineColor(2);
     h_MC_Unfolded_NoFsr_Align_Bowing_m_Ideal_AFB[k]->Draw("sames");
 
-    h_MC_Unfolded_NoFsr_Align_Curl_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Curl_m_Ideal_AFB[k]->SetLineColor(2);
-    h_MC_Unfolded_NoFsr_Align_Curl_m_Ideal_AFB[k]->Draw("sames");
-
-    h_MC_Unfolded_NoFsr_Align_Curl200mu_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Curl200mu_m_Ideal_AFB[k]->SetLineColor(2);
-    h_MC_Unfolded_NoFsr_Align_Curl200mu_m_Ideal_AFB[k]->Draw("sames");
-
     h_MC_Unfolded_NoFsr_Align_Elliptical_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Elliptical_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_NoFsr_Align_Elliptical_m_Ideal_AFB[k]->SetLineColor(5);
     h_MC_Unfolded_NoFsr_Align_Elliptical_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_NoFsr_Align_Radial_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Radial_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_NoFsr_Align_Radial_m_Ideal_AFB[k]->SetLineColor(6);
     h_MC_Unfolded_NoFsr_Align_Radial_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_NoFsr_Align_Sagitta_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Sagitta_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_NoFsr_Align_Sagitta_m_Ideal_AFB[k]->SetLineColor(7);
     h_MC_Unfolded_NoFsr_Align_Sagitta_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_NoFsr_Align_Skew_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Skew_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_NoFsr_Align_Skew_m_Ideal_AFB[k]->SetLineColor(8);
     h_MC_Unfolded_NoFsr_Align_Skew_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_NoFsr_Align_Telescope_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Telescope_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_NoFsr_Align_Telescope_m_Ideal_AFB[k]->SetLineColor(9);
     h_MC_Unfolded_NoFsr_Align_Telescope_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_NoFsr_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_NoFsr_Align_CurlV2TF_m_Ideal_AFB[k]->SetLineColor(13);
     h_MC_Unfolded_NoFsr_Align_CurlV2TF_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_NoFsr_Align_Twist_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Twist_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_NoFsr_Align_Twist_m_Ideal_AFB[k]->SetLineColor(11);
     h_MC_Unfolded_NoFsr_Align_Twist_m_Ideal_AFB[k]->Draw("sames");
 
     h_MC_Unfolded_NoFsr_Align_Zexpansion_m_Ideal_AFB[k]->SetLineWidth(2);
-    h_MC_Unfolded_NoFsr_Align_Zexpansion_m_Ideal_AFB[k]->SetLineColor(2);
+    h_MC_Unfolded_NoFsr_Align_Zexpansion_m_Ideal_AFB[k]->SetLineColor(12);
     h_MC_Unfolded_NoFsr_Align_Zexpansion_m_Ideal_AFB[k]->Draw("sames");
   }
   r15->SaveAs("Alignment_uncertainty_at_Born_level.C");
