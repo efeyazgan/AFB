@@ -8,7 +8,6 @@ void tree1r()
   double AFB(double forward, double backward);
   double RAWAFBERROR(double rawafb, double forward, double backward);
 
-
   int nb = 10;
   int nb_sin = 8;
   float xAxis_AFB[nb+1]; 
@@ -35,7 +34,76 @@ void tree1r()
   Y_bin_limits[3] = 1.5;
   Y_bin_limits[4] = 2.1;
 
+  int n_ct = 53;
+  int n_mstw = 41;
+  int n_nnpdf = 101;
 
+
+  int ct10as_index = 11;//ct10weights 0 to 10 are alphas uncertainties in the ct10as file 
+
+  int nPDF; ///!!!
+  //pdf set 0: CT10, 1: nnpdf, 2: MSTW, 3: CT10as
+  int pdf_set = 0;
+  
+  if (pdf_set == 0){ 
+	cout<<"PDF SET :  CT10"<<endl;
+	nPDF = n_ct;
+  }
+  if (pdf_set == 1){ 
+	cout<<"PDF SET :  NNPDF"<<endl;
+        nPDF = n_nnpdf;
+  }
+  if (pdf_set == 2){ 
+	cout<<"PDF SET :  MSTW"<<endl;
+        nPDF = n_mstw;
+  } 
+  if (pdf_set == 3){
+    cout<<"PDF SET : CT10 alphas"<<endl;//MSTW in the root file = ct10as
+	nPDF = ct10as_index;
+  }
+
+  TH1D *hMeasCos_M_Y_Forward_PDF_ct10[nb_Y][n_ct];
+  TH1D *hMeasCos_M_Y_Backward_PDF_ct10[nb_Y][n_ct];
+  TH2D *Inv_Response_UnDetector_Forward_PDF_ct10[nb_Y];
+  TH2D *Inv_Response_UnDetector_Backward_PDF_ct10[nb_Y];
+  TH2D *Inv_Response_NoFsr_Forward_PDF_ct10[nb_Y];
+  TH2D *Inv_Response_NoFsr_Backward_PDF_ct10[nb_Y];
+
+  TH1D *hMeasCos_M_Y_Forward_PDF_mstw[nb_Y][n_mstw];
+  TH1D *hMeasCos_M_Y_Backward_PDF_mstw[nb_Y][n_mstw];
+  TH2D *Inv_Response_UnDetector_Forward_PDF_mstw[nb_Y];
+  TH2D *Inv_Response_UnDetector_Backward_PDF_mstw[nb_Y];
+  TH2D *Inv_Response_NoFsr_Forward_PDF_mstw[nb_Y];
+  TH2D *Inv_Response_NoFsr_Backward_PDF_mstw[nb_Y];
+
+  TH1D *hMeasCos_M_Y_Forward_PDF_nnpdf[nb_Y][n_nnpdf];
+  TH1D *hMeasCos_M_Y_Backward_PDF_nnpdf[nb_Y][n_nnpdf];
+  TH2D *Inv_Response_UnDetector_Forward_PDF_nnpdf[nb_Y];
+  TH2D *Inv_Response_UnDetector_Backward_PDF_nnpdf[nb_Y];
+  TH2D *Inv_Response_NoFsr_Forward_PDF_nnpdf[nb_Y];
+  TH2D *Inv_Response_NoFsr_Backward_PDF_nnpdf[nb_Y];
+
+  TH1D *hMeasCos_M_Y_Forward_PDF_alpha_s[nb_Y][ct10as_index];
+  TH1D *hMeasCos_M_Y_Backward_PDF_alpha_s[nb_Y][ct10as_index];
+  TH2D *Inv_Response_UnDetector_Forward_PDF_alpha_s[nb_Y];
+  TH2D *Inv_Response_UnDetector_Backward_PDF_alpha_s[nb_Y];
+  TH2D *Inv_Response_NoFsr_Forward_PDF_alpha_s[nb_Y];
+  TH2D *Inv_Response_NoFsr_Backward_PDF_alpha_s[nb_Y];
+
+
+  float delta_plus = -999.;
+  float delta_minus = -999.;
+  float afb_p = -999.;
+  float afb_m = -999.;
+  float afb_0 = -999.;
+  float afb_nnpdf = -999.;
+  float afb_alphas0 = -999.;
+  float afb_alphas5 = -999.;
+  float afb_alphas10 = -999.;
+
+  float DeltaXmaxPlus[nb][nb_Y];
+  float DeltaXmaxMinus[nb][nb_Y];
+  float sigma[nb][nb_Y];
 
 
   TFile input_fsr_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated.root","read");
@@ -43,18 +111,21 @@ void tree1r()
   TFile input_sin2312_file("RootFiles/sin2thetaW2312_MUON_MC_Meas_NoFsr.root","read");
   TFile input_sin2412_file("RootFiles/sin2thetaW2412_MUON_MC_Meas_NoFsr.root","read");
   TFile input_sin2212_file("RootFiles/sin2thetaW2212_MUON_MC_Meas_NoFsr.root","read");
-  TFile input_Align_Bowing_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root");
-  TFile input_Align_Elliptical_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Elliptical.root");
-  TFile input_Align_Radial_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Radial.root");
-  TFile input_Align_Sagitta_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Sagitta.root");
-  TFile input_Align_Skew_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Skew.root");
-  TFile input_Align_Telescope_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Telescope.root");
-  TFile input_Align_CurlV2TF_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_CurlV2TF.root");
-  TFile input_Align_Twist_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Twist.root");
-  TFile input_Align_Zexpansion_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Zexpansion.root");
-  TFile input_Align_Ideal_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Ideal.root");
-  TFile input_Align_Startup_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Startup.root");
-
+  TFile input_Align_Bowing_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root","read");
+  TFile input_Align_Elliptical_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Elliptical.root","read");
+  TFile input_Align_Radial_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Radial.root","read");
+  TFile input_Align_Sagitta_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Sagitta.root","read");
+  TFile input_Align_Skew_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Skew.root","read");
+  TFile input_Align_Telescope_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Telescope.root","read");
+  TFile input_Align_CurlV2TF_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_CurlV2TF.root","read");
+  TFile input_Align_Twist_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Twist.root","read");
+  TFile input_Align_Zexpansion_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Zexpansion.root","read");
+  TFile input_Align_Ideal_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Ideal.root","read");
+  TFile input_Align_Startup_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Startup.root","read");
+  TFile input_PDF_ct10_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_CT10.root","read");
+  TFile input_PDF_mstw_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_MSTW.root","read");
+  TFile input_PDF_nnpdf_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_NNPDF.root","read");
+  TFile input_PDF_alpha_s_file("RootFiles/MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_ALPHA_S.root","read");
 
 
   for (int j=0;j<nb_Y;j++){
@@ -578,7 +649,71 @@ void tree1r()
     h_MC_Unfolded_NoFsr_AFB_FSR_Diff_Up[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"h_MC_Unfolded_NoFsr_AFB_FSR_Diff_Down_%i",j);
     h_MC_Unfolded_NoFsr_AFB_FSR_Diff_Down[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    //pdf
+    for (int k=0;k<n_ct;k++){
+      sprintf(name_h,"MC_meas_Forward_PDF_%i_pdf_%i_set_%i",j,k,0);
+      input_PDF_ct10_file.GetObject(name_h,hMeasCos_M_Y_Forward_PDF_ct10[j][k]);
+      sprintf(name_h,"MC_meas_Backward_PDF_%i_pdf_%i_set_%i",j,k,0);
+      input_PDF_ct10_file.GetObject(name_h,hMeasCos_M_Y_Backward_PDF_ct10[j][k]);
+    }
+    for (int k=0;k<n_mstw;k++){
+      sprintf(name_h,"MC_meas_Forward_PDF_%i_pdf_%i_set_%i",j,k,2);
+      input_PDF_mstw_file.GetObject(name_h,hMeasCos_M_Y_Forward_PDF_mstw[j][k]);
+      sprintf(name_h,"MC_meas_Backward_PDF_%i_pdf_%i_set_%i",j,k,2);
+      input_PDF_mstw_file.GetObject(name_h,hMeasCos_M_Y_Backward_PDF_mstw[j][k]);
+    }
+    for (int k=0;k<n_nnpdf;k++){
+      sprintf(name_h,"MC_meas_Forward_PDF_%i_pdf_%i_set_%i",j,k,1);
+      input_PDF_nnpdf_file.GetObject(name_h,hMeasCos_M_Y_Forward_PDF_nnpdf[j][k]);
+      sprintf(name_h,"MC_meas_Backward_PDF_%i_pdf_%i_set_%i",j,k,1);
+      input_PDF_nnpdf_file.GetObject(name_h,hMeasCos_M_Y_Backward_PDF_nnpdf[j][k]);
+    }
+    for (int k=0;k<ct10as_index;k++){
+      sprintf(name_h,"MC_meas_Forward_PDF_%i_pdf_%i_set_%i",j,k,3);
+      input_PDF_alpha_s_file.GetObject(name_h,hMeasCos_M_Y_Forward_PDF_alpha_s[j][k]);
+      sprintf(name_h,"MC_meas_Backward_PDF_%i_pdf_%i_set_%i",j,k,3);
+      input_PDF_alpha_s_file.GetObject(name_h,hMeasCos_M_Y_Backward_PDF_alpha_s[j][k]);
+    }
+
+    sprintf(name_h,"inv_response_undetector_forward_PDF_%i_set_%i",j,pdf_set);
+    input_PDF_ct10_file.GetObject(name_h,Inv_Response_UnDetector_Forward_PDF_ct10[j]);
+    sprintf(name_h,"inv_response_undetector_backward_PDF_%i_set_%i",j,pdf_set);
+    input_PDF_ct10_file.GetObject(name_h,Inv_Response_UnDetector_Backward_PDF_ct10[j]);
+    
+    sprintf(name_h,"inv_response_nofsr_forward_PDF_%i_set_%i",j,pdf_set);
+    input_PDF_ct10_file.GetObject(name_h,Inv_Response_NoFsr_Forward_PDF_ct10[j]);
+    sprintf(name_h,"inv_response_nofsr_backward_PDF_%i_set_%i",j,pdf_set);
+    input_PDF_ct10_file.GetObject(name_h,Inv_Response_NoFsr_Backward_PDF_ct10[j]);
+
+    sprintf(name_h,"h_DeltaXmaxPlus_ct10_%i",j);
+    h_DeltaXmaxPlus_ct10[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"h_DeltaXmaxMinus_ct10_%i",j);
+    h_DeltaXmaxMinus_ct10[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    sprintf(name_h,"h_DeltaXmaxPlus_mstw_%i",j);
+    h_DeltaXmaxPlus_mstw[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"h_DeltaXmaxMinus_mstw_%i",j);
+    h_DeltaXmaxMinus_mstw[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    sprintf(name_h,"h_sigma_%i",j);
+    h_sigma[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    sprintf(name_h,"h_Delta_AFB_alphas_PLUS_%i",j);
+    h_Delta_AFB_alphas_PLUS[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"h_Delta_AFB_alphas_MINUS_%i",j);
+    h_Delta_AFB_alphas_MINUS[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    sprintf(name_h,"h_DeltaX_CT10_ALPHAS_PLUS_%i",j);
+    h_DeltaX_CT10_ALPHAS_PLUS[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"h_DeltaX_CT10_ALPHAS_MINUS_%i",j);
+    h_DeltaX_CT10_ALPHAS_MINUS[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    //eo pdf
   } 
+
+
+
 
   double Raw_AFB[nb];
   double Raw_error[nb];
@@ -781,7 +916,11 @@ void tree1r()
       error_closure_backward[i] = 0;
       error_forward[i] = 0;
       error_backward[i] = 0;	
-
+      //pdf
+      DeltaXmaxPlus[i][k] = 0;
+      DeltaXmaxMinus[i][k] = 0;
+      sigma[i][k] = 0;
+      //
       for (int j=0;j<nb;j++){
 	//note the j, i order!!!!
 	Unfolded_UnDet_Forward[k][i] += Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*hDataMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
@@ -1277,6 +1416,77 @@ void tree1r()
       h_MC_Unfolded_NoFsr_Align_Zexpansion_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Zexpansion);
 
     }//eo alignment loop
+
+
+    for (int i=0;i<nb;i++){ //pdf loop
+      afb_0 = AFB(hMeasCos_M_Y_Forward_PDF_ct10[k][0]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_ct10[k][0]->GetBinContent(i+1));
+
+
+      afb_alphas0 = AFB(hMeasCos_M_Y_Forward_PDF_alpha_s[k][0]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_alpha_s[k][0]->GetBinContent(i+1));
+      afb_alphas5 = AFB(hMeasCos_M_Y_Forward_PDF_alpha_s[k][5]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_alpha_s[k][5]->GetBinContent(i+1));
+      afb_alphas10 = AFB(hMeasCos_M_Y_Forward_PDF_alpha_s[k][10]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_alpha_s[k][10]->GetBinContent(i+1));  
+      h_Delta_AFB_alphas_PLUS[k]->SetBinContent(i+1,afb_alphas10-afb_alphas5);
+      h_Delta_AFB_alphas_MINUS[k]->SetBinContent(i+1,afb_alphas0-afb_alphas5);
+
+
+	for (int pdfindex=1; pdfindex<n_ct; pdfindex+=2){
+	  afb_p = AFB(hMeasCos_M_Y_Forward_PDF_ct10[k][pdfindex]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_ct10[k][pdfindex]->GetBinContent(i+1));
+	  afb_m = AFB(hMeasCos_M_Y_Forward_PDF_ct10[k][pdfindex+1]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_ct10[k][pdfindex+1]->GetBinContent(i+1));
+	  delta_plus = afb_p - afb_0;
+	  delta_minus = afb_m - afb_0;
+	  arrayformax_p[0] = delta_plus;
+	  arrayformax_p[1] = delta_minus;
+	  arrayformax_p[2] = 0;	  
+	  arrayformax_m[0] = -delta_plus;
+	  arrayformax_m[1] = -delta_minus;
+	  arrayformax_m[2] = 0;
+	  DeltaXmaxPlus[i][k] += pow(TMath::MaxElement(3,arrayformax_p),2);
+	  DeltaXmaxMinus[i][k] += pow(TMath::MaxElement(3,arrayformax_m),2);
+	}
+	DeltaXmaxPlus[i][k] = sqrt(DeltaXmaxPlus[i][k]);
+	DeltaXmaxMinus[i][k] = sqrt(DeltaXmaxMinus[i][k]);
+	h_DeltaXmaxPlus_ct10[k]->SetBinContent(i+1,DeltaXmaxPlus[i][k]);
+	h_DeltaXmaxMinus_ct10[k]->SetBinContent(i+1,DeltaXmaxMinus[i][k]);
+	float DeltaX_CT10_ALPHAS_PLUS = sqrt(pow(DeltaXmaxPlus[i][k],2)+pow(afb_alphas10-afb_alphas5,2));
+	float DeltaX_CT10_ALPHAS_MINUS = sqrt(pow(DeltaXmaxMinus[i][k],2)+pow(afb_alphas0-afb_alphas5,2));
+	h_DeltaX_CT10_ALPHAS_PLUS[k]->SetBinContent(i+1,DeltaX_CT10_ALPHAS_PLUS);
+	h_DeltaX_CT10_ALPHAS_MINUS[k]->SetBinContent(i+1,DeltaX_CT10_ALPHAS_MINUS);
+	DeltaXmaxPlus[i][k] = 0;
+	DeltaXmaxMinus[i][k] = 0;
+	for (int pdfindex=1; pdfindex<n_mstw; pdfindex+=2){
+	  afb_p = AFB(hMeasCos_M_Y_Forward_PDF_mstw[k][pdfindex]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_mstw[k][pdfindex]->GetBinContent(i+1));
+	  afb_m = AFB(hMeasCos_M_Y_Forward_PDF_mstw[k][pdfindex+1]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_mstw[k][pdfindex+1]->GetBinContent(i+1));
+	  delta_plus = afb_p - afb_0;
+	  delta_minus = afb_m - afb_0;
+	  arrayformax_p[0] = delta_plus;
+	  arrayformax_p[1] = delta_minus;
+	  arrayformax_p[2] = 0;	  
+	  arrayformax_m[0] = -delta_plus;
+	  arrayformax_m[1] = -delta_minus;
+	  arrayformax_m[2] = 0;
+	  DeltaXmaxPlus[i][k] += pow(TMath::MaxElement(3,arrayformax_p),2);
+	  DeltaXmaxMinus[i][k] += pow(TMath::MaxElement(3,arrayformax_m),2);
+	}
+	DeltaXmaxPlus[i][k] = sqrt(DeltaXmaxPlus[i][k]);
+	DeltaXmaxMinus[i][k] = sqrt(DeltaXmaxMinus[i][k]);
+	h_DeltaXmaxPlus_mstw[k]->SetBinContent(i+1,DeltaXmaxPlus[i][k]);
+	h_DeltaXmaxMinus_mstw[k]->SetBinContent(i+1,DeltaXmaxMinus[i][k]);
+
+
+	float average_afb = 0;
+	for (int pdfindex=1;pdfindex<n_nnpdf;pdfindex++){
+	  afb_nnpdf = AFB(hMeasCos_M_Y_Forward_PDF_nnpdf[k][pdfindex]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_nnpdf[k][pdfindex]->GetBinContent(i+1));
+	  average_afb += afb_nnpdf;
+	}
+	average_afb = average_afb/((n_nnpdf-1)*1.);
+	for (int pdfindex=1;pdfindex<n_nnpdf;pdfindex++){
+	  afb_nnpdf = AFB(hMeasCos_M_Y_Forward_PDF_nnpdf[k][pdfindex]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_nnpdf[k][pdfindex]->GetBinContent(i+1));
+	  sigma[i][k] += pow(afb_nnpdf - average_afb,2);
+	}
+	sigma[i][k] = sigma[i][k]/(n_nnpdf*1.-2.);
+	sigma[i][k] = sqrt(sigma[i][k]);
+	h_sigma[k]->SetBinContent(i+1,sigma[i][k]);
+    }
   }
   TCanvas *ca_0 = new TCanvas();
   ca_0->Divide(2,2);
@@ -1909,6 +2119,102 @@ void tree1r()
   }
   r15->SaveAs("Alignment_uncertainty_at_Born_level.C");
 
+ TCanvas *r16 = new TCanvas();
+  r16->Divide(2,2);
+  for (int k=0;k<nb_Y;k++){
+    r16->cd(k+1);
+    gPad->SetLogx();
+    h_DeltaXmaxPlus_ct10[k]->SetLineWidth(2);
+    h_DeltaXmaxPlus_ct10[k]->SetLineColor(4);
+    h_DeltaXmaxPlus_ct10[k]->GetYaxis()->SetRangeUser(0.,0.016);
+    h_DeltaXmaxPlus_ct10[k]->GetYaxis()->SetTitle("#DeltaA_{FB}");
+    h_DeltaXmaxPlus_ct10[k]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+    sprintf(name_h,"|Y|=%.2f-%.2f",Y_bin_limits[k],Y_bin_limits[k+1]);
+    h_DeltaXmaxPlus_ct10[k]->SetTitle(name_h);
+    h_DeltaXmaxPlus_ct10[k]->Draw();
+    h_DeltaXmaxMinus_ct10[k]->SetLineWidth(2);
+    h_DeltaXmaxMinus_ct10[k]->SetLineColor(2);
+    h_DeltaXmaxMinus_ct10[k]->SetLineStyle(2);
+    h_DeltaXmaxMinus_ct10[k]->Draw("sames");
+  }
+  r16->SaveAs("pdf_ct10_uncertainty_at_raw_level.C");
+
+ TCanvas *r17 = new TCanvas();
+  r17->Divide(2,2);
+  for (int k=0;k<nb_Y;k++){
+    r17->cd(k+1);
+    gPad->SetLogx();
+    h_DeltaXmaxPlus_mstw[k]->SetLineWidth(2);
+    h_DeltaXmaxPlus_mstw[k]->SetLineColor(4);
+    h_DeltaXmaxPlus_mstw[k]->GetYaxis()->SetRangeUser(0.,0.052);
+    h_DeltaXmaxPlus_mstw[k]->GetYaxis()->SetTitle("#DeltaA_{FB}");
+    h_DeltaXmaxPlus_mstw[k]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+    sprintf(name_h,"|Y|=%.2f-%.2f",Y_bin_limits[k],Y_bin_limits[k+1]);
+    h_DeltaXmaxPlus_mstw[k]->SetTitle(name_h);
+    h_DeltaXmaxPlus_mstw[k]->Draw();
+    h_DeltaXmaxMinus_mstw[k]->SetLineWidth(2);
+    h_DeltaXmaxMinus_mstw[k]->SetLineColor(2);
+    h_DeltaXmaxMinus_mstw[k]->SetLineStyle(2);
+    h_DeltaXmaxMinus_mstw[k]->Draw("sames");
+  }
+  r17->SaveAs("pdf_mstw_uncertainty_at_raw_level.C");
+
+ TCanvas *r18 = new TCanvas();
+  r18->Divide(2,2);
+  for (int k=0;k<nb_Y;k++){
+    r18->cd(k+1);
+    gPad->SetLogx();
+    h_sigma[k]->SetLineWidth(2);
+    h_sigma[k]->SetLineColor(4);
+    h_sigma[k]->GetYaxis()->SetRangeUser(0.,0.01);
+    h_sigma[k]->GetYaxis()->SetTitle("#DeltaA_{FB}");
+    h_sigma[k]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+    sprintf(name_h,"|Y|=%.2f-%.2f",Y_bin_limits[k],Y_bin_limits[k+1]);
+    h_sigma[k]->SetTitle(name_h);
+    h_sigma[k]->Draw();
+  }
+  r18->SaveAs("pdf_nnpdf_uncertainty_at_raw_level.C");
+
+
+ TCanvas *r19 = new TCanvas();
+  r19->Divide(2,2);
+  for (int k=0;k<nb_Y;k++){
+    r19->cd(k+1);
+    gPad->SetLogx();
+    h_Delta_AFB_alphas_PLUS[k]->SetLineWidth(2);
+    h_Delta_AFB_alphas_PLUS[k]->SetLineColor(4);
+    h_Delta_AFB_alphas_PLUS[k]->GetYaxis()->SetRangeUser(-0.003,0.003);
+    h_Delta_AFB_alphas_PLUS[k]->GetYaxis()->SetTitle("#DeltaA_{FB}");
+    h_Delta_AFB_alphas_PLUS[k]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+    sprintf(name_h,"|Y|=%.2f-%.2f",Y_bin_limits[k],Y_bin_limits[k+1]);
+    h_Delta_AFB_alphas_PLUS[k]->SetTitle(name_h);
+    h_Delta_AFB_alphas_PLUS[k]->Draw();
+    h_Delta_AFB_alphas_MINUS[k]->SetLineWidth(2);
+    h_Delta_AFB_alphas_MINUS[k]->SetLineColor(2);
+    h_Delta_AFB_alphas_MINUS[k]->SetLineStyle(2);
+    h_Delta_AFB_alphas_MINUS[k]->Draw("sames");
+  }
+  r19->SaveAs("pdf_alpha_s_uncertainty_at_raw_level.C");
+
+TCanvas *r20 = new TCanvas();
+  r20->Divide(2,2);
+  for (int k=0;k<nb_Y;k++){
+    r20->cd(k+1);
+    gPad->SetLogx();
+    h_DeltaX_CT10_ALPHAS_PLUS[k]->SetLineWidth(2);
+    h_DeltaX_CT10_ALPHAS_PLUS[k]->SetLineColor(4);
+    h_DeltaX_CT10_ALPHAS_PLUS[k]->GetYaxis()->SetRangeUser(0.,0.016);
+    h_DeltaX_CT10_ALPHAS_PLUS[k]->GetYaxis()->SetTitle("#DeltaA_{FB}");
+    h_DeltaX_CT10_ALPHAS_PLUS[k]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+    sprintf(name_h,"|Y|=%.2f-%.2f",Y_bin_limits[k],Y_bin_limits[k+1]);
+    h_DeltaX_CT10_ALPHAS_PLUS[k]->SetTitle(name_h);
+    h_DeltaX_CT10_ALPHAS_PLUS[k]->Draw();
+    h_DeltaX_CT10_ALPHAS_MINUS[k]->SetLineWidth(2);
+    h_DeltaX_CT10_ALPHAS_MINUS[k]->SetLineColor(2);
+    h_DeltaX_CT10_ALPHAS_MINUS[k]->SetLineStyle(2);
+    h_DeltaX_CT10_ALPHAS_MINUS[k]->Draw("sames");
+  }
+  r20->SaveAs("pdf_CT10_plus_alpha_s_uncertainty_at_raw_level.C");
 
 }//end void
 
