@@ -712,6 +712,12 @@ void tree1r()
 
     sprintf(name_h,"h_envelope_sigma_%i",j);
     h_envelope_sigma[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    sprintf(name_h,"h_total_plus_%i",j);
+    h_total_plus[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"h_total_minus_%i",j);
+    h_total_minus[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
     //eo pdf
   } 
 
@@ -875,6 +881,9 @@ void tree1r()
   double error_forward[nb];
   double error_backward[nb];
 
+  double total_plus[nb_Y][nb];
+  double total_minus[nb_Y][nb];
+
   for (int k=0;k<nb_Y;k++){
     for (int i=0;i<nb;i++){
       Unfolded_UnDet_Forward[k][i] = 0;
@@ -924,6 +933,8 @@ void tree1r()
       DeltaXmaxMinus[i][k] = 0;
       sigma[i][k] = 0;
       //
+      total_plus[k][i] = 0;
+      total_minus[k][i] = 0;
       for (int j=0;j<nb;j++){
 	//note the j, i order!!!!
 	Unfolded_UnDet_Forward[k][i] += Inv_Response_UnDetector_Forward[k]->GetBinContent(j+1,i+1)*hDataMeasCos_M_Y_Forward[k]->GetBinContent(j+1);
@@ -957,6 +968,8 @@ void tree1r()
       h_MC_Raw_AFB_FSR_DOWN[k]->SetBinContent(i+1,MC_Raw_AFB_FSR_DOWN[i]);
       float diff1 = MC_Raw_AFB_FSR_UP[i]-MC_Raw_AFB[i];
       float diff2 = MC_Raw_AFB_FSR_DOWN[i]-MC_Raw_AFB[i];
+      if (diff1 >0. ? total_plus[k][i] += diff1*diff1 : total_minus[k][i] += diff1*diff1);
+      if (diff2 >0. ? total_plus[k][i] += diff2*diff2 : total_minus[k][i] += diff2*diff2);
       //fsr table raw level
       /*
 	if (k == 0 && i == 0){ 
@@ -1114,6 +1127,8 @@ void tree1r()
       float diff2 = MC_Raw_sin2212_AFB[i]-MC_Raw_sin2312_AFB[i];
       h_MC_Raw_sin2412m2312_AFB[k]->SetBinContent(i+1,diff1);
       h_MC_Raw_sin2212m2312_AFB[k]->SetBinContent(i+1,diff2);
+      if (diff1 >0. ? total_plus[k][i] += diff1*diff1 : total_minus[k][i] += diff1*diff1);
+      if (diff2 >0. ? total_plus[k][i] += diff2*diff2 : total_minus[k][i] += diff2*diff2);
       /*
       //sin2thetaW systematics raw level table
       if (k == 0 && i == 0){ 
@@ -1299,6 +1314,16 @@ void tree1r()
       h_MC_Raw_Align_Twist_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Twist);
       h_MC_Raw_Align_Zexpansion_m_Ideal_AFB[k]->SetBinContent(i+1,diff_Zexpansion);
 
+      if (diff_Startup >0. ? total_plus[k][i] += diff_Startup*diff_Startup : total_minus[k][i] += diff_Startup*diff_Startup);
+      if (diff_Bowing >0. ? total_plus[k][i] += diff_Bowing*diff_Bowing : total_minus[k][i] += diff_Bowing*diff_Bowing);
+      if (diff_Elliptical >0. ? total_plus[k][i] += diff_Elliptical*diff_Elliptical : total_minus[k][i] += diff_Elliptical*diff_Elliptical);
+      if (diff_Radial >0. ? total_plus[k][i] += diff_Radial*diff_Radial : total_minus[k][i] += diff_Radial*diff_Radial);
+      if (diff_Sagitta >0. ? total_plus[k][i] += diff_Sagitta*diff_Sagitta : total_minus[k][i] += diff_Sagitta*diff_Startup);
+      if (diff_Skew >0. ? total_plus[k][i] += diff_Skew*diff_Skew : total_minus[k][i] += diff_Skew*diff_Skew);
+      if (diff_Telescope >0. ? total_plus[k][i] += diff_Telescope*diff_Telescope : total_minus[k][i] += diff_Telescope*diff_Telescope);
+      if (diff_CurlV2TF >0. ? total_plus[k][i] += diff_CurlV2TF*diff_CurlV2TF : total_minus[k][i] += diff_CurlV2TF*diff_CurlV2TF);
+      if (diff_Twist >0. ? total_plus[k][i] += diff_Twist*diff_Twist : total_minus[k][i] += diff_Twist*diff_Twist);
+      if (diff_Zexpansion >0. ? total_plus[k][i] += diff_Zexpansion*diff_Zexpansion : total_minus[k][i] += diff_Zexpansion*diff_Zexpansion);
 
 
       for (int j=0;j<nb;j++){
@@ -1498,7 +1523,14 @@ void tree1r()
 	float envelope_mm = TMath::Max(envelope_m,afb_0_mstw-DeltaXmaxMinus[i][k]);
 
 	float envelope_mean = (envelope_pp + envelope_mm)/2.;
-	h_envelope_sigma[k]->SetBinContent(i+1,envelope_pp-envelope_mean);
+	float diff_env = envelope_pp-envelope_mean;
+	h_envelope_sigma[k]->SetBinContent(i+1,diff_env);
+	total_plus[k][i] += diff_env*diff_env; 
+	total_plus[k][i] = sqrt(total_plus[k][i]);
+	total_minus[k][i] += diff_env*diff_env;
+	total_minus[k][i] = -1.*sqrt(total_minus[k][i]);
+	h_total_plus[k]->SetBinContent(i+1,total_plus[k][i]);
+	h_total_minus[k]->SetBinContent(i+1,total_minus[k][i]);	
     }//eof pdf loop
   }
   TCanvas *ca_0 = new TCanvas();
@@ -2244,6 +2276,103 @@ TCanvas *r21 = new TCanvas();
     h_envelope_sigma[k]->Draw();
   }
   r21->SaveAs("pdf_envelope_uncertainty_at_raw_level.C");
+
+TCanvas *r22 = new TCanvas();
+  r22->Divide(2,2);
+  for (int k=0;k<nb_Y;k++){
+    r22->cd(k+1);
+    gPad->SetLogx();
+    h_total_plus[k]->SetLineWidth(2);
+    h_total_plus[k]->SetLineColor(4);
+    h_total_plus[k]->GetYaxis()->SetRangeUser(0.,0.016);
+    h_total_plus[k]->GetYaxis()->SetTitle("#DeltaA_{FB}");
+    h_total_plus[k]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+    sprintf(name_h,"|Y|=%.2f-%.2f",Y_bin_limits[k],Y_bin_limits[k+1]);
+    h_total_plus[k]->SetTitle(name_h);
+    h_total_plus[k]->Draw();
+    h_total_minus[k]->SetLineWidth(2);
+    h_total_minus[k]->SetLineColor(2);
+    h_total_minus[k]->SetLineStyle(2);
+    h_total_minus[k]->Draw("sames");
+  }
+  r22->SaveAs("total_systematic_uncertainty_at_raw_level.C");
+
+  int j = nb-1;
+  for (int i=0;i<nb;i++){
+    band_x1[i] =  (xAxis_AFB[i]+xAxis_AFB[i+1])/2.;
+    band_x1[i+nb] =  (xAxis_AFB[j]+xAxis_AFB[j+1])/2.;
+    band_y1[i] = total_minus[0][i];
+    band_y1[i+nb] = total_plus[0][j];
+
+    band_afb_y1[i] = h_MC_Raw_AFB[0]->GetBinContent(i+1)+total_minus[0][i];
+    band_afb_y1[i+nb] =  h_MC_Raw_AFB[0]->GetBinContent(i+1)+total_plus[0][j];
+
+    band_y2[i] = total_minus[1][i];
+    band_y2[i+nb] = total_plus[1][j];
+
+    band_afb_y2[i] = h_MC_Raw_AFB[1]->GetBinContent(i+1)+total_minus[1][i];
+    band_afb_y2[i+nb] =  h_MC_Raw_AFB[1]->GetBinContent(i+1)+total_plus[1][j];
+
+
+    band_y3[i] = total_minus[2][i];
+    band_y3[i+nb] = total_plus[2][j];
+
+    band_afb_y3[i] = h_MC_Raw_AFB[2]->GetBinContent(i+1)+total_minus[2][i];
+    band_afb_y3[i+nb] =  h_MC_Raw_AFB[2]->GetBinContent(i+1)+total_plus[2][j];
+
+
+    band_y4[i] = total_minus[3][i];
+    band_y4[i+nb] = total_plus[3][j];
+
+    band_afb_y4[i] = h_MC_Raw_AFB[3]->GetBinContent(i+1)+total_minus[3][i];
+    band_afb_y4[i+nb] =  h_MC_Raw_AFB[3]->GetBinContent(i+1)+total_plus[3][j];
+
+    j--;
+  }
+  for (int i=0;i<(nb)*2;i++) cout<<i<<"  "<<band_x1[i]<<"  "<<band_y1[i]<<endl;
+
+  /*
+  TGraph *gr_band1 = new TGraph(nb*2,band_x1,band_y1);
+  TGraph *gr_band2 = new TGraph(nb*2,band_x1,band_y2);
+  TGraph *gr_band3 = new TGraph(nb*2,band_x1,band_y3);
+  TGraph *gr_band4 = new TGraph(nb*2,band_x1,band_y4);
+  
+  TCanvas *r23 = new TCanvas();
+  TH2F* frame1 = new TH2F("frame1","|Y|=0.00-1.00",100,30,1000,100,-0.1,0.1);
+  frame1->GetXaxis()->SetRangeUser(40,320);
+  frame1->GetYaxis()->SetRangeUser(-0.098,0.072);
+  frame1->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+  frame1->GetYaxis()->SetTitle("A_{FB}(mod)-A_{FB}");
+  frame1->GetYaxis()->CenterTitle();
+  frame1->Draw();
+  gr_band1->SetMarkerStyle(28);
+  gr_band1->SetFillColor(20);
+  gr_band1->SetLineColor(20);
+  gr_band1->SetMarkerColor(20);
+  gr_band1->Draw("F");
+  r23->SaveAs("del.C");
+  */
+
+  TGraph *gr_afb_band1 = new TGraph(nb*2,band_x1,band_afb_y1);
+  TGraph *gr_afb_band2 = new TGraph(nb*2,band_x1,band_afb_y2);
+  TGraph *gr_afb_band3 = new TGraph(nb*2,band_x1,band_afb_y3);
+  TGraph *gr_afb_band4 = new TGraph(nb*2,band_x1,band_afb_y4);
+  TCanvas *r24 = new TCanvas();
+  TH2F* frame1a = new TH2F("frame1a","|Y|=0.00-1.00",100,30,1000,100,-0.4,0.6);
+  frame1a->GetXaxis()->SetRangeUser(40,320);
+  frame1a->GetYaxis()->SetRangeUser(-0.4,0.6);
+  frame1a->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+  frame1a->GetYaxis()->SetTitle("A_{FB}(mod)");
+  frame1a->GetYaxis()->CenterTitle();
+  frame1a->Draw();
+  gr_afb_band1->SetMarkerStyle(28);
+  gr_afb_band1->SetFillColor(20);
+  gr_afb_band1->SetLineColor(20);
+  gr_afb_band1->SetMarkerColor(20);
+  gr_afb_band1->Draw("F");
+  h_MC_Raw_AFB[0]->Draw("sames");
+  h_Raw_AFB[0]->Draw("e1sames");
+  r24->SaveAs("del.C");
 
 }//end void
 
