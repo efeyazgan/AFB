@@ -96,6 +96,7 @@ void tree1r()
   float afb_p = -999.;
   float afb_m = -999.;
   float afb_0 = -999.;
+  float afb_0_mstw = -999.;
   float afb_nnpdf = -999.;
   float afb_alphas0 = -999.;
   float afb_alphas5 = -999.;
@@ -709,6 +710,8 @@ void tree1r()
     sprintf(name_h,"h_DeltaX_CT10_ALPHAS_MINUS_%i",j);
     h_DeltaX_CT10_ALPHAS_MINUS[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
 
+    sprintf(name_h,"h_envelope_sigma_%i",j);
+    h_envelope_sigma[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     //eo pdf
   } 
 
@@ -1420,6 +1423,7 @@ void tree1r()
 
     for (int i=0;i<nb;i++){ //pdf loop
       afb_0 = AFB(hMeasCos_M_Y_Forward_PDF_ct10[k][0]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_ct10[k][0]->GetBinContent(i+1));
+      afb_0_mstw = AFB(hMeasCos_M_Y_Forward_PDF_mstw[k][0]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_mstw[k][0]->GetBinContent(i+1));
 
 
       afb_alphas0 = AFB(hMeasCos_M_Y_Forward_PDF_alpha_s[k][0]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_alpha_s[k][0]->GetBinContent(i+1));
@@ -1451,13 +1455,14 @@ void tree1r()
 	float DeltaX_CT10_ALPHAS_MINUS = sqrt(pow(DeltaXmaxMinus[i][k],2)+pow(afb_alphas0-afb_alphas5,2));
 	h_DeltaX_CT10_ALPHAS_PLUS[k]->SetBinContent(i+1,DeltaX_CT10_ALPHAS_PLUS);
 	h_DeltaX_CT10_ALPHAS_MINUS[k]->SetBinContent(i+1,DeltaX_CT10_ALPHAS_MINUS);
+
 	DeltaXmaxPlus[i][k] = 0;
 	DeltaXmaxMinus[i][k] = 0;
 	for (int pdfindex=1; pdfindex<n_mstw; pdfindex+=2){
 	  afb_p = AFB(hMeasCos_M_Y_Forward_PDF_mstw[k][pdfindex]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_mstw[k][pdfindex]->GetBinContent(i+1));
 	  afb_m = AFB(hMeasCos_M_Y_Forward_PDF_mstw[k][pdfindex+1]->GetBinContent(i+1),hMeasCos_M_Y_Backward_PDF_mstw[k][pdfindex+1]->GetBinContent(i+1));
-	  delta_plus = afb_p - afb_0;
-	  delta_minus = afb_m - afb_0;
+	  delta_plus = afb_p - afb_0_mstw;
+	  delta_minus = afb_m - afb_0_mstw;
 	  arrayformax_p[0] = delta_plus;
 	  arrayformax_p[1] = delta_minus;
 	  arrayformax_p[2] = 0;	  
@@ -1486,7 +1491,15 @@ void tree1r()
 	sigma[i][k] = sigma[i][k]/(n_nnpdf*1.-2.);
 	sigma[i][k] = sqrt(sigma[i][k]);
 	h_sigma[k]->SetBinContent(i+1,sigma[i][k]);
-    }
+
+	float envelope_p = TMath::Max(afb_0+DeltaX_CT10_ALPHAS_PLUS,average_afb+sigma[i][k]);
+	float envelope_m = TMath::Max(afb_0-DeltaX_CT10_ALPHAS_MINUS,average_afb-sigma[i][k]);
+	float envelope_pp = TMath::Max(envelope_p,afb_0_mstw+DeltaXmaxPlus[i][k]);
+	float envelope_mm = TMath::Max(envelope_m,afb_0_mstw-DeltaXmaxMinus[i][k]);
+
+	float envelope_mean = (envelope_pp + envelope_mm)/2.;
+	h_envelope_sigma[k]->SetBinContent(i+1,envelope_pp-envelope_mean);
+    }//eof pdf loop
   }
   TCanvas *ca_0 = new TCanvas();
   ca_0->Divide(2,2);
@@ -2215,6 +2228,22 @@ TCanvas *r20 = new TCanvas();
     h_DeltaX_CT10_ALPHAS_MINUS[k]->Draw("sames");
   }
   r20->SaveAs("pdf_CT10_plus_alpha_s_uncertainty_at_raw_level.C");
+
+TCanvas *r21 = new TCanvas();
+  r21->Divide(2,2);
+  for (int k=0;k<nb_Y;k++){
+    r21->cd(k+1);
+    gPad->SetLogx();
+    h_envelope_sigma[k]->SetLineWidth(2);
+    h_envelope_sigma[k]->SetLineColor(4);
+    h_envelope_sigma[k]->GetYaxis()->SetRangeUser(0.,0.016);
+    h_envelope_sigma[k]->GetYaxis()->SetTitle("#DeltaA_{FB}");
+    h_envelope_sigma[k]->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+    sprintf(name_h,"|Y|=%.2f-%.2f",Y_bin_limits[k],Y_bin_limits[k+1]);
+    h_envelope_sigma[k]->SetTitle(name_h);
+    h_envelope_sigma[k]->Draw();
+  }
+  r21->SaveAs("pdf_envelope_uncertainty_at_raw_level.C");
 
 }//end void
 
