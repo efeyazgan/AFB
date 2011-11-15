@@ -109,7 +109,7 @@ void tree1r()
   Y_bin_limits[1] = 1.0;
   Y_bin_limits[2] = 1.25;
   Y_bin_limits[3] = 1.5;
-  Y_bin_limits[4] = 2.1;
+  Y_bin_limits[4] = 2.5;
  
 
 
@@ -166,7 +166,7 @@ void tree1r()
 
 
     float ptcut = 20;
-
+    float eta_cut = 2.4;
 
   
     float parton_pt[50] = {};
@@ -268,13 +268,13 @@ void tree1r()
     int gen_st1_select = 0;
     int select = 0;
 
-    if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1) gen_select = 1;
-    if (MZ_st1 > 40. && parton_pt_st1[0] > ptcut &&  parton_pt_st1[1] > ptcut && fabs(parton_eta_st1[0]) < 2.1 && fabs(parton_eta_st1[1]) < 2.1) gen_st1_select = 1;
+    if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < eta_cut && fabs(parton_eta[1]) < eta_cut) gen_select = 1;
+    if (MZ_st1 > 40. && parton_pt_st1[0] > ptcut &&  parton_pt_st1[1] > ptcut && fabs(parton_eta_st1[0]) < eta_cut && fabs(parton_eta_st1[1]) < eta_cut) gen_st1_select = 1;
 
     TVector3 mom1(RecMuonPx[0],RecMuonPy[0],RecMuonPz[0]);
     TVector3 mom2(RecMuonPx[1],RecMuonPy[1],RecMuonPz[1]);
     float cosine = mom1.Angle(mom2) - TMath::Pi();    
-    if (RecMuonPt[0] > ptcut && RecMuonPt[1] > ptcut && fabs(RecMuonEta[0]) <2.1 && fabs(RecMuonEta[1]) <2.1 && cosine < -0.025 && MZmuon > 40.){
+    if (RecMuonPt[0] > ptcut && RecMuonPt[1] > ptcut && fabs(RecMuonEta[0]) <eta_cut && fabs(RecMuonEta[1]) <eta_cut && cosine < -0.025 && MZmuon > 40.){
       select = 1;
       hMass->Fill(MZmuon);
     }

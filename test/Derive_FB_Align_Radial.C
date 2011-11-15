@@ -6,7 +6,7 @@ void tree1r()
 {
 
  // TFile *file_cov = new TFile("MUON_MC_Meas_NoFsr_ForClosure.root","RECREATE"); float r_test = 0.5; 
-  TFile *file_cov = new TFile("MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Bowing.root","RECREATE"); float r_test = 1.0;
+  TFile *file_cov = new TFile("MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_Radial.root","RECREATE"); float r_test = 1.0;
   file_cov->cd(); 
  
   /*
@@ -21,7 +21,7 @@ void tree1r()
   //  myTree.Add("/data1/efe/ntuples/keng/mc/DYToMuMu_M-20_Summer11-PU_S4.root");
 
   TChain myTree("demo/MuonTree"); 
-  myTree.Add("/data1/efe/ntuples/nhan/sin2thW_weakmodes/Bowing/newmuons.root");
+  myTree.Add("/data1/efe/ntuples/nhan/sin2thW_weakmodes/Radial/newmuons.root");
 
   TH1::AddDirectory(true);
   int event; 
@@ -256,9 +256,9 @@ void tree1r()
 
   for (int j=0;j<nb_Y;j++){
     sprintf(name_h,"hMeasCos_Forward_Y_%i_",j);
-    Align_Bowing_hMeasCos_M_Y_Forward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    Align_Radial_hMeasCos_M_Y_Forward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"hMeasCos_Backward_Y_%i_",j);
-    Align_Bowing_hMeasCos_M_Y_Backward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    Align_Radial_hMeasCos_M_Y_Backward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
 
 
     sprintf(name_h,"hUnDetetorCos_Forward_Y_%i",j);
@@ -302,15 +302,15 @@ void tree1r()
     Response_NoFsr_Backward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
 
 
-    sprintf(name_h,"Align_Bowing_Inv_Response_UnDetector_Forward_Y_%i_",j);
-    Align_Bowing_Inv_Response_UnDetector_Forward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
-    sprintf(name_h,"Align_Bowing_Inv_Response_UnDetector_Backward_Y_%i_",j);
-    Align_Bowing_Inv_Response_UnDetector_Backward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+    sprintf(name_h,"Align_Radial_Inv_Response_UnDetector_Forward_Y_%i_",j);
+    Align_Radial_Inv_Response_UnDetector_Forward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+    sprintf(name_h,"Align_Radial_Inv_Response_UnDetector_Backward_Y_%i_",j);
+    Align_Radial_Inv_Response_UnDetector_Backward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
 
-    sprintf(name_h,"Align_Bowing_Inv_Response_NoFsr_Forward_Y_%i_",j);
-    Align_Bowing_Inv_Response_NoFsr_Forward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
-    sprintf(name_h,"Align_Bowing_Inv_Response_NoFsr_Backward_Y_%i_",j);
-    Align_Bowing_Inv_Response_NoFsr_Backward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+    sprintf(name_h,"Align_Radial_Inv_Response_NoFsr_Forward_Y_%i_",j);
+    Align_Radial_Inv_Response_NoFsr_Forward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+    sprintf(name_h,"Align_Radial_Inv_Response_NoFsr_Backward_Y_%i_",j);
+    Align_Radial_Inv_Response_NoFsr_Backward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
 
 
   }
@@ -592,7 +592,7 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 	    RecMuonIsoSumPt[j] < 3. && RecMuonIsoSumPt[jk] < 3. &&
 	    //            RecMuonIsoDY[j] < 0.15 && RecMuonIsoDY[jk] < 0.15 &&
 	    //(RecMuonIsoSumPt[j] + RecMuonIsoHad[j])/RecMuonPt[j] < 0.15 && (RecMuonIsoSumPt[jk] + RecMuonIsoHad[jk])/RecMuonPt[jk] < 0.15 &&//!!!!!!!!!
-            fabs(RecMuonEta[j]) <eta_cut && fabs(RecMuonEta[jk]) <eta_cut && //common3
+            fabs(RecMuonEta[j]) < eta_cut && fabs(RecMuonEta[jk]) < eta_cut && //common3
 	    //	    (hltmatchedmuon[j] == 1 || hltmatchedmuon[jk] == 1) &&//!!!!!!!!!!!!!!!!!!!!
             fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2){
 	  if (cosine < -0.025){
@@ -665,8 +665,8 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
       if (select){
        	for (int j=0;j<nb_Y;j++){
 	  if (fabs(Ymuon) > Y_bin_limits[j] && fabs(Ymuon) < Y_bin_limits[j+1]){ 
-	    if (costhetaCSreco__RECO > 0) Align_Bowing_hMeasCos_M_Y_Forward[j]->Fill(MZ__RECO);
-	    if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1.) Align_Bowing_hMeasCos_M_Y_Backward[j]->Fill(MZ__RECO);
+	    if (costhetaCSreco__RECO > 0) Align_Radial_hMeasCos_M_Y_Forward[j]->Fill(MZ__RECO);
+	    if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1.) Align_Radial_hMeasCos_M_Y_Backward[j]->Fill(MZ__RECO);
 	 
 	    if (gen_st1_select){
 	      if (gen_costhetaCSreco_st1 > 0){ 
@@ -1029,45 +1029,45 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 	if (test_bb_NoFsr_3[k] != 1) cout<<"diagonal for the inv x resp for backward fsr matrix  "<< i<<"   "<<j<<"   "<<test_bb_NoFsr_3[k]<<endl;
       }
    
-      Align_Bowing_Inv_Response_UnDetector_Forward[0]->SetBinContent(i+1,j+1,inv_ff_0[k]);
-      Align_Bowing_Inv_Response_UnDetector_Forward[1]->SetBinContent(i+1,j+1,inv_ff_1[k]);
-      Align_Bowing_Inv_Response_UnDetector_Forward[2]->SetBinContent(i+1,j+1,inv_ff_2[k]);
-      Align_Bowing_Inv_Response_UnDetector_Forward[3]->SetBinContent(i+1,j+1,inv_ff_3[k]);
+      Align_Radial_Inv_Response_UnDetector_Forward[0]->SetBinContent(i+1,j+1,inv_ff_0[k]);
+      Align_Radial_Inv_Response_UnDetector_Forward[1]->SetBinContent(i+1,j+1,inv_ff_1[k]);
+      Align_Radial_Inv_Response_UnDetector_Forward[2]->SetBinContent(i+1,j+1,inv_ff_2[k]);
+      Align_Radial_Inv_Response_UnDetector_Forward[3]->SetBinContent(i+1,j+1,inv_ff_3[k]);
 
-      Align_Bowing_Inv_Response_NoFsr_Forward[0]->SetBinContent(i+1,j+1,inv_ff_NoFsr_0[k]);
-      Align_Bowing_Inv_Response_NoFsr_Forward[1]->SetBinContent(i+1,j+1,inv_ff_NoFsr_1[k]);
-      Align_Bowing_Inv_Response_NoFsr_Forward[2]->SetBinContent(i+1,j+1,inv_ff_NoFsr_2[k]);
-      Align_Bowing_Inv_Response_NoFsr_Forward[3]->SetBinContent(i+1,j+1,inv_ff_NoFsr_3[k]);
+      Align_Radial_Inv_Response_NoFsr_Forward[0]->SetBinContent(i+1,j+1,inv_ff_NoFsr_0[k]);
+      Align_Radial_Inv_Response_NoFsr_Forward[1]->SetBinContent(i+1,j+1,inv_ff_NoFsr_1[k]);
+      Align_Radial_Inv_Response_NoFsr_Forward[2]->SetBinContent(i+1,j+1,inv_ff_NoFsr_2[k]);
+      Align_Radial_Inv_Response_NoFsr_Forward[3]->SetBinContent(i+1,j+1,inv_ff_NoFsr_3[k]);
 
-      Align_Bowing_Inv_Response_UnDetector_Backward[0]->SetBinContent(i+1,j+1,inv_bb_0[k]);
-      Align_Bowing_Inv_Response_UnDetector_Backward[1]->SetBinContent(i+1,j+1,inv_bb_1[k]);
-      Align_Bowing_Inv_Response_UnDetector_Backward[2]->SetBinContent(i+1,j+1,inv_bb_2[k]);
-      Align_Bowing_Inv_Response_UnDetector_Backward[3]->SetBinContent(i+1,j+1,inv_bb_3[k]);
+      Align_Radial_Inv_Response_UnDetector_Backward[0]->SetBinContent(i+1,j+1,inv_bb_0[k]);
+      Align_Radial_Inv_Response_UnDetector_Backward[1]->SetBinContent(i+1,j+1,inv_bb_1[k]);
+      Align_Radial_Inv_Response_UnDetector_Backward[2]->SetBinContent(i+1,j+1,inv_bb_2[k]);
+      Align_Radial_Inv_Response_UnDetector_Backward[3]->SetBinContent(i+1,j+1,inv_bb_3[k]);
 
-      Align_Bowing_Inv_Response_NoFsr_Backward[0]->SetBinContent(i+1,j+1,inv_bb_NoFsr_0[k]);
-      Align_Bowing_Inv_Response_NoFsr_Backward[1]->SetBinContent(i+1,j+1,inv_bb_NoFsr_1[k]);
-      Align_Bowing_Inv_Response_NoFsr_Backward[2]->SetBinContent(i+1,j+1,inv_bb_NoFsr_2[k]);
-      Align_Bowing_Inv_Response_NoFsr_Backward[3]->SetBinContent(i+1,j+1,inv_bb_NoFsr_3[k]);
+      Align_Radial_Inv_Response_NoFsr_Backward[0]->SetBinContent(i+1,j+1,inv_bb_NoFsr_0[k]);
+      Align_Radial_Inv_Response_NoFsr_Backward[1]->SetBinContent(i+1,j+1,inv_bb_NoFsr_1[k]);
+      Align_Radial_Inv_Response_NoFsr_Backward[2]->SetBinContent(i+1,j+1,inv_bb_NoFsr_2[k]);
+      Align_Radial_Inv_Response_NoFsr_Backward[3]->SetBinContent(i+1,j+1,inv_bb_NoFsr_3[k]);
     }
   }
 
 
     for (int j=0;j<nb_Y;j++){
-      sprintf(name_h,"Align_Bowing_MC_meas_Forward_%i",j);
-      file_cov->WriteTObject(Align_Bowing_hMeasCos_M_Y_Forward[j],name_h);
-      sprintf(name_h,"Align_Bowing_MC_meas_Backward_%i",j);
-      file_cov->WriteTObject(Align_Bowing_hMeasCos_M_Y_Backward[j],name_h);
+      sprintf(name_h,"Align_Radial_MC_meas_Forward_%i",j);
+      file_cov->WriteTObject(Align_Radial_hMeasCos_M_Y_Forward[j],name_h);
+      sprintf(name_h,"Align_Radial_MC_meas_Backward_%i",j);
+      file_cov->WriteTObject(Align_Radial_hMeasCos_M_Y_Backward[j],name_h);
 
 
-      sprintf(name_h,"Align_Bowing_inv_response_undetector_forward_%i",j);
-      file_cov->WriteTObject(Align_Bowing_Inv_Response_UnDetector_Forward[j],name_h);
-      sprintf(name_h,"Align_Bowing_inv_response_undetector_backward_%i",j);
-      file_cov->WriteTObject(Align_Bowing_Inv_Response_UnDetector_Backward[j],name_h);
+      sprintf(name_h,"Align_Radial_inv_response_undetector_forward_%i",j);
+      file_cov->WriteTObject(Align_Radial_Inv_Response_UnDetector_Forward[j],name_h);
+      sprintf(name_h,"Align_Radial_inv_response_undetector_backward_%i",j);
+      file_cov->WriteTObject(Align_Radial_Inv_Response_UnDetector_Backward[j],name_h);
 
-      sprintf(name_h,"Align_Bowing_inv_response_nofsr_forward_%i",j);
-      file_cov->WriteTObject(Align_Bowing_Inv_Response_NoFsr_Forward[j],name_h);
-      sprintf(name_h,"Align_Bowing_inv_response_nofsr_backward_%i",j);
-      file_cov->WriteTObject(Align_Bowing_Inv_Response_NoFsr_Backward[j],name_h);
+      sprintf(name_h,"Align_Radial_inv_response_nofsr_forward_%i",j);
+      file_cov->WriteTObject(Align_Radial_Inv_Response_NoFsr_Forward[j],name_h);
+      sprintf(name_h,"Align_Radial_inv_response_nofsr_backward_%i",j);
+      file_cov->WriteTObject(Align_Radial_Inv_Response_NoFsr_Backward[j],name_h);
     }
   //  file_cov->Write();
 

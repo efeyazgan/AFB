@@ -6,7 +6,12 @@ void tree1r()
 {
 
  // TFile *file_cov = new TFile("MUON_MC_Meas_NoFsr_ForClosure.root","RECREATE"); float r_test = 0.5; 
-  TFile *file_cov = new TFile("MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_ALPHA_S.root","RECREATE"); float r_test = 1.0;
+
+   // TFile *file_cov = new TFile("MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_ALPHA_S.root","RECREATE"); float r_test = 1.0;
+    TFile *file_cov = new TFile("MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_CT10_new.root","RECREATE"); float r_test = 1.0;
+ //  TFile *file_cov = new TFile("MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_MSTW_new.root","RECREATE"); float r_test = 1.0;
+//   TFile *file_cov = new TFile("MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated_NNPDF_new.root","RECREATE"); float r_test = 1.0;
+
   file_cov->cd(); 
  
   /*
@@ -21,9 +26,9 @@ void tree1r()
   //  myTree.Add("/data1/efe/ntuples/keng/mc/DYToMuMu_M-20_Summer11-PU_S4.root");
 
   TChain myTree("demo/MuonTree"); 
-  myTree.Add("/data2/efe/ntuples/nhan/PDFNtuples/CTEQ_alphaS_NNPDF_mc_withPDFWeights_CT10as_NNPDF.root");
-  //myTree.Add("/data2/efe/ntuples/nhan/PDFNtuples/MSTW_CTEQ__mc_387p2_HLT_2010RealisticGeom_withPDFWeights.root");  
-  //myTree.Add("/data2/efe/ntuples/nhan/PDFNtuples/mc_withPDFWeights_MSTWnlo68cl_NNPDF.root");//mstw?
+  //myTree.Add("/data2/efe/ntuples/nhan/PDFNtuples/CTEQ_alphaS_NNPDF_mc_withPDFWeights_CT10as_NNPDF.root");//CT10as,nnpdf
+  myTree.Add("/data2/efe/ntuples/nhan/PDFNtuples/MSTW_CTEQ__mc_387p2_HLT_2010RealisticGeom_withPDFWeights.root");  //ct10?
+ // myTree.Add("/data2/efe/ntuples/nhan/PDFNtuples/mc_withPDFWeights_MSTWnlo68cl_NNPDF.root");//mstw
 
   int n_ct = 53;
   int n_mstw = 41;
@@ -35,8 +40,9 @@ void tree1r()
   int ct10as_index = 11;//ct10weights 0 to 10 are alphas uncertainties in the ct10as file 
 
   int nPDF; ///!!!
-  //pdf set 0: CT10, 1: nnpdf, 2: MSTW, 3: CT10as
-  int pdf_set = 3;
+  //pdf set 
+  //0: CT10, 1: nnpdf, 2: MSTW, 3: CT10as
+  int pdf_set = 0;
   
   if (pdf_set == 0){ 
 	cout<<"PDF SET :  CT10"<<endl;
@@ -243,8 +249,7 @@ void tree1r()
   xAxis_AFB[7] = 120;
   xAxis_AFB[8] = 150;
   xAxis_AFB[9] = 200;
-  xAxis_AFB[10] = 600;
-  xAxis_AFB[11] = 1500;
+  xAxis_AFB[10] = 2000;
   
 
  /* 
@@ -271,7 +276,7 @@ void tree1r()
   Y_bin_limits[1] = 1.0;
   Y_bin_limits[2] = 1.25;
   Y_bin_limits[3] = 1.5;
-  Y_bin_limits[4] = 2.1;
+  Y_bin_limits[4] = 2.5;
  
  // eta and pt dependence efficiency (DoubleMuon HLT + ID) to each muon leg..
  const Float_t etlow[5]   = {20,30,40,50,1000};
@@ -372,16 +377,16 @@ void tree1r()
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);
-    //for (int i=0;i<nPDF;i++) cout<<i<<"   "<<ct10Weights[i]<<endl;
-    //for (int i=0;i<nPDF;i++) cout<<i<<"   "<<mstw2008Weights[i]<<endl;
-    //for (int i=0;i<nPDF;i++) cout<<i<<"   "<<nnpdf21Weights[i]<<endl;
+    //for (int i=0;i<nPDF+3;i++) cout<<i<<"   "<<ct10Weights[i]<<endl;
+    //for (int i=0;i<nPDF+3;i++) cout<<i<<"   "<<mstw2008Weights[i]<<endl;
+    //for (int i=0;i<nPDF+3;i++) cout<<i<<"   "<<nnpdf21Weights[i]<<endl;
     //for (int i=0;i<nPDF;i++) cout<<i<<"   "<<mstw2008Weights[i]<<endl;//alphas
 
     //if (iev > 10) return;
 
     int common = 0;
     float ptcut = 20;
-
+    float eta_cut = 2.4;
 
     int parpar = 0;
     int parpar_st1 = 0;
@@ -531,7 +536,7 @@ void tree1r()
     }
     
 
-    if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1) gen_select = 1;
+    if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < eta_cut && fabs(parton_eta[1]) < eta_cut) gen_select = 1;
 
     gen_Qreco = MZ;
     gen_QTreco = sqrt(pow((parton_px[0]+parton_px[1]),2)+pow((parton_py[0]+parton_py[1]),2));
@@ -553,7 +558,7 @@ void tree1r()
     if (gen_QZreco < 0.) gen_costhetaCSreco = -gen_costhetaCSreco;
 
     //status 1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-    if (MZ_st1 > 40. && parton_pt_st1[0] > ptcut &&  parton_pt_st1[1] > ptcut && fabs(parton_eta_st1[0]) < 2.1 && fabs(parton_eta_st1[1]) < 2.1) gen_st1_select = 1;
+    if (MZ_st1 > 40. && parton_pt_st1[0] > ptcut &&  parton_pt_st1[1] > ptcut && fabs(parton_eta_st1[0]) < eta_cut && fabs(parton_eta_st1[1]) < eta_cut) gen_st1_select = 1;
 
 
     gen_Qreco_st1 = MZ_st1;
@@ -638,7 +643,7 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 	    RecMuonIsoSumPt[j] < 3. && RecMuonIsoSumPt[jk] < 3. &&
 	    //            RecMuonIsoDY[j] < 0.15 && RecMuonIsoDY[jk] < 0.15 &&
 	    //(RecMuonIsoSumPt[j] + RecMuonIsoHad[j])/RecMuonPt[j] < 0.15 && (RecMuonIsoSumPt[jk] + RecMuonIsoHad[jk])/RecMuonPt[jk] < 0.15 &&//!!!!!!!!!
-            fabs(RecMuonEta[j]) <2.1 && fabs(RecMuonEta[jk]) <2.1 && //common3
+            fabs(RecMuonEta[j]) <eta_cut && fabs(RecMuonEta[jk]) <eta_cut && //common3
 	    //	    (hltmatchedmuon[j] == 1 || hltmatchedmuon[jk] == 1) &&//!!!!!!!!!!!!!!!!!!!!
             fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2){
 	  if (cosine < -0.025){

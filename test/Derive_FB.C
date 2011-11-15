@@ -5,8 +5,8 @@ using namespace std;
 void tree1r()
 {
 
- // TFile *file_cov = new TFile("MUON_MC_Meas_NoFsr_ForClosure.root","RECREATE"); float r_test = 0.5; 
-  TFile *file_cov = new TFile("MUON_MC_Meas_UnDetector_NoFsr_DYbins_Updated.root","RECREATE"); float r_test = 1.0;
+  // TFile *file_cov = new TFile("MUON_MC_Meas_NoFsr_ForClosure.root","RECREATE"); float r_test = 0.5; 
+  TFile *file_cov = new TFile("MC_Y25_eta24_Weights.root","RECREATE"); float r_test = 1.0;
   file_cov->cd(); 
  
   /*
@@ -16,9 +16,21 @@ void tree1r()
   //myTree.Add("/tmp/efe/DY_MuMu_UPDATED_powheg_wo_HLT_filter.root");
  
   TChain myTree("analyzeBasicPat/MuonTree");
-  //myTree.Add("/data2/efe/ntuples/keng/DoubleMu_May10ReReco.root");
+  //main MC file///
+  
+    myTree.Add("/data1/efe/ntuples/keng/high_mass_Drell_Yan/DYToMuMu_M-500_ntuple.root");
+    
+    myTree.Add("/data1/efe/ntuples/keng/high_mass_Drell_Yan/DYToMuMu_M-800_ntuple.root");
+    
+    myTree.Add("/data1/efe/ntuples/keng/high_mass_Drell_Yan/DYToMuMu_M-1000_ntuple.root");
+    
+    myTree.Add("/data1/efe/ntuples/keng/mc/DYToMuMu_M-20_Summer11-PU_S4.root");
+    
 
-  myTree.Add("/data1/efe/ntuples/keng/mc/DYToMuMu_M-20_Summer11-PU_S4.root");
+  /////
+
+  //old geometry
+  //myTree.Add("/data2/efe/ntuples/keng/alignment/DoubleMu_Relval_old_ntuple.root");
 
   TH1::AddDirectory(true);
   int event; 
@@ -178,6 +190,7 @@ void tree1r()
   myTree.SetBranchAddress("vtxisFake",vtxisFake);
 
 
+
   //  cout<<"r_TESTTTTTT = "<<r_test<<endl;
   //  cout<<"USING  "<< r_test*100 <<"   PERCENT OF ALL EVENTS FOR THE MEASURED!!!!!!"<<endl;
   int nb = 10;
@@ -198,8 +211,7 @@ void tree1r()
   xAxis_AFB[7] = 120;
   xAxis_AFB[8] = 150;
   xAxis_AFB[9] = 200;
-  xAxis_AFB[10] = 600;
-  xAxis_AFB[11] = 1500;
+  xAxis_AFB[10] = 2000;
   
 
  /* 
@@ -225,36 +237,92 @@ void tree1r()
   Y_bin_limits[0] = 0.0;
   Y_bin_limits[1] = 1.0;
   Y_bin_limits[2] = 1.25;
-  Y_bin_limits[3] = 1.5;
-  Y_bin_limits[4] = 2.1;
- 
+  Y_bin_limits[3] = 1.50;//!!!!!!!
+  Y_bin_limits[4] = 2.5;////!!!!!!!!!
+
  // eta and pt dependence efficiency (DoubleMuon HLT + ID) to each muon leg..
  const Float_t etlow[5]   = {20,30,40,50,1000};
  const Float_t etalow[11] = {-2.5,-2.0,-1.5,-1.0,-0.5,0.0,0.5,1.0,1.5,2.0,2.5};
  // efficiency scale....
+/*
   float scl_eff[4][10] = {{0.978971,0.985087,0.978348,0.97011,0.97656,0.981229,0.989604,0.972174,1.00218,0.981141},
 			  {0.96554,0.999062,0.984348,0.981431,0.982378,0.980314,0.989259,0.979383,0.989701,0.977227},
 			  {0.966041,0.997964,0.987181,0.987912,0.981217,0.987673,0.989819,0.993106,1.00265,0.993692},
-			  {1.07848,0.928631,0.982425,0.973578,0.97559,0.970705,0.975343,0.948695,1.01482,0.895468}};//to apply to each leg
+			  {1.07848,0.928631,0.982425,0.973578,0.97559,0.970705,0.975343,0.948695,1.01482,0.895468}};
+*/
+float scl_eff[4][10] = {{0.964853,0.994226,0.980953,0.992122,0.991453,0.997174,0.989473,0.984736,1.00038,0.964278},
+{0.962557,0.99659,0.983375,0.995887,0.997313,0.999414,0.992492,0.988577,1.00128,0.971709},
+{0.96937,0.995251,0.985783,0.993291,0.996459,1.00022,0.992584,0.989125,0.995711,0.973312},
+{0.982333,0.973491,0.982161,0.99153,0.978178,0.984767,0.983578,0.982076,0.993406,0.93746}};
+//to apply to each leg
 
 
 // vertex weighting.. 0-11, then >11
- float vtx_scale[12] = {0,0.132328,0.728345,1.35569,1.84319,1.93182,1.79917,1.44223,1.03293,0.691829,0.46149,0.170495};
- float vtx_scale_err[12] = {0.0,0.00417728,0.0121021,0.0160448,0.0186817,0.0191781,0.0188025,0.0173093,0.0153488,0.0134817,0.012101,0.00447711};
+// float vtx_scale[12] = {0,0.132328,0.728345,1.35569,1.84319,1.93182,1.79917,1.44223,1.03293,0.691829,0.46149,0.170495};
+//% float vtx_scale_err[12] = {0.0,0.00417728,0.0121021,0.0160448,0.0186817,0.0191781,0.0188025,0.0173093,0.0153488,0.0134817,0.012101,0.00447711};
+float vtx_scale[12] = {0,0.109411,0.610614,1.1612,1.62284,1.81524,1.74755,1.5003,1.20797,0.922271,0.690438,0.313203};
+float vtx_scale_err[12] =
+{0.0,0.00113436,0.00340148,0.00468926,0.00566155,0.00606247,0.00602607,0.00567722,0.00526479,0.00486738,0.00457206,0.00183512};
 ////////////////////////////////////////
+
+
 
 
   TH1D *hNoFsrTruthCos_M_Y[30][5];
   TH1D *hdummy_m2[30][5];
   TH1D *hdummy_t2[30][5];
   char name_1[100],name_2[100];
+  
+  TH1D *h_debug_eta1 = new TH1D("h_debug_eta1","h_debug_eta1",20,-2.6,2.6);
+  TH1D *h_debug_eta2 = new TH1D("h_debug_eta2","h_debug_eta2",20,-2.6,2.6);
 
+  TH1D *h_debug_eta1_control = new TH1D("h_debug_eta1_control","h_debug_eta1_control",20,-2.6,2.6);
+  TH1D *h_debug_eta2_control = new TH1D("h_debug_eta2_control","h_debug_eta2_control",20,-2.6,2.6);
 
+  TH1D *h_debug_pt1 = new TH1D("h_debug_pt1","h_debug_pt1",60,0,300);
+  TH1D *h_debug_pt2 = new TH1D("h_debug_pt2","h_debug_pt2",60,0,300);
+
+  TH1D *h_debug_pt1_control = new TH1D("h_debug_pt1_control","h_debug_pt1_control",60,0,300);
+  TH1D *h_debug_pt2_control = new TH1D("h_debug_pt2_control","h_debug_pt2_control",60,0,300);
+
+  TH1D *h_debug_y = new TH1D("h_debug_y","h_debug_y",50,-3,3);
+  TH1D *h_debug_y_control = new TH1D("h_debug_y_control","h_debug_y_control",50,-3,3);
+
+  TH1D *h_debug_costheta = new TH1D("h_debug_costheta","h_debug_costheta",22,-1.05,1.05);
+  TH1D *h_debug_costheta_control = new TH1D("h_debug_costheta_control","h_debug_costheta_control",22,-1.05,1.05);
+
+  TProfile *h_debug_y_vs_costheta = new TProfile("h_debug_y_vs_costheta","h_debug_y_vs_costheta",10,-2.4,2.4);
+  
   for (int j=0;j<nb_Y;j++){
     sprintf(name_h,"hMeasCos_Forward_Y_%i_",j);
     hMeasCos_M_Y_Forward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"hMeasCos_Backward_Y_%i_",j);
     hMeasCos_M_Y_Backward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    sprintf(name_h,"hTrueCos_Forward_Y_%i_",j);
+    hTrueCos_M_Y_Forward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"hTrueCos_Backward_Y_%i_",j);
+    hTrueCos_M_Y_Backward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    for (int ii=0;ii<nb;ii++){
+      sprintf(name_h,"hExpectedMass_RAW_M_Y_%i_%i",j,ii);
+      hExpectedMass_RAW_M_Y[j][ii] = new TH1D(name_h,name_h,100, xAxis_AFB[ii], xAxis_AFB[ii+1]);
+      sprintf(name_h,"hExpectedMass_UnDet_M_Y_%i_%i",j,ii);
+      hExpectedMass_UnDet_M_Y[j][ii] = new TH1D(name_h,name_h,100, xAxis_AFB[ii], xAxis_AFB[ii+1]);
+      sprintf(name_h,"hExpectedMass_NoFsr_M_Y_%i_%i",j,ii);
+      hExpectedMass_NoFsr_M_Y[j][ii] = new TH1D(name_h,name_h,100, xAxis_AFB[ii], xAxis_AFB[ii+1]);
+
+      sprintf(name_h,"h_costheta_inverse_ratio_%i_%i",j,ii);
+      h_costheta_inverse_ratio[j][ii] = new TH1D(name_h,name_h,20,-1,1); 
+
+      sprintf(name_h,"h_costheta_inverse_ratio_parton_%i_%i",j,ii);
+      h_costheta_inverse_ratio_parton[j][ii] = new TH1D(name_h,name_h,20,-1,1); 
+    }
+
+    sprintf(name_h,"hMeasCos_Forward_NoWeight_Y_%i_",j);
+    hMeasCos_M_Y_Forward_NoWeight[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"hMeasCos_Backward_NoWeight_Y_%i_",j);
+    hMeasCos_M_Y_Backward_NoWeight[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
 
     sprintf(name_h,"hMeasCos_Forward_FSR_UP_Y_%i_",j);
     hMeasCos_M_Y_Forward_FSR_UP[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
@@ -266,18 +334,30 @@ void tree1r()
     sprintf(name_h,"hMeasCos_Backward_FSR_DOWN_Y_%i_",j);
     hMeasCos_M_Y_Backward_FSR_DOWN[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
 
-    sprintf(name_h,"hUnDetetorCos_Forward_Y_%i",j);
+    sprintf(name_h,"hMeasCos_Forward_ES_UP_Y_%i_",j);
+    hMeasCos_M_Y_Forward_ES_UP[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"hMeasCos_Backward_ES_UP_Y_%i_",j);
+    hMeasCos_M_Y_Backward_ES_UP[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+    sprintf(name_h,"hMeasCos_Forward_ES_DOWN_Y_%i_",j);
+    hMeasCos_M_Y_Forward_ES_DOWN[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"hMeasCos_Backward_ES_DOWN_Y_%i_",j);
+    hMeasCos_M_Y_Backward_ES_DOWN[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+
+
+
+    sprintf(name_h,"hUnDetectorCos_Forward_Y_%i",j);
     hUnDetectorCos_M_Y_Forward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     //   hUnDetectorCos_M_Y_Forward[j]->Sumw2();
     sprintf(name_h,"hUnDetectorCos_Backward_Y_%i",j);
     hUnDetectorCos_M_Y_Backward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     //    hUnDetectorCos_M_Y_Backward[j]->Sumw2();
 
-    sprintf(name_h,"hUnDetetorCos_Forward_Y_FSR_UP_%i",j);
+    sprintf(name_h,"hUnDetectorCos_Forward_Y_FSR_UP_%i",j);
     hUnDetectorCos_M_Y_Forward_FSR_UP[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"hUnDetectorCos_Backward_Y_FSR_UP_%i",j);
     hUnDetectorCos_M_Y_Backward_FSR_UP[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
-    sprintf(name_h,"hUnDetetorCos_Forward_Y_FSR_DOWN_%i",j);
+    sprintf(name_h,"hUnDetectorCos_Forward_Y_FSR_DOWN_%i",j);
     hUnDetectorCos_M_Y_Forward_FSR_DOWN[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"hUnDetectorCos_Backward_Y_FSR_DOWN_%i",j);
     hUnDetectorCos_M_Y_Backward_FSR_DOWN[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
@@ -324,6 +404,17 @@ void tree1r()
     sprintf(name_h,"Response_NoFsr_Backward_Y_FSR_DOWN_%i_",j);
     Response_NoFsr_Backward_FSR_DOWN[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
 
+    sprintf(name_h,"Response_UnDet_Forward_Y_FSR_UP_%i_",j);
+    Response_UnDet_Forward_FSR_UP[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+    sprintf(name_h,"Response_UnDet_Backward_Y_FSR_UP_%i_",j);
+    Response_UnDet_Backward_FSR_UP[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+
+    sprintf(name_h,"Response_UnDet_Forward_Y_FSR_DOWN_%i_",j);
+    Response_UnDet_Forward_FSR_DOWN[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+    sprintf(name_h,"Response_UnDet_Backward_Y_FSR_DOWN_%i_",j);
+    Response_UnDet_Backward_FSR_DOWN[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+
+
     sprintf(name_h,"Inv_Response_UnDetector_Forward_Y_%i_",j);
     Inv_Response_UnDetector_Forward[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
     sprintf(name_h,"Inv_Response_UnDetector_Backward_Y_%i_",j);
@@ -343,6 +434,17 @@ void tree1r()
     Inv_Response_NoFsr_Forward_FSR_DOWN[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
     sprintf(name_h,"Inv_Response_NoFsr_Backward_Y_FSR_DOWN_%i_",j);
     Inv_Response_NoFsr_Backward_FSR_DOWN[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+
+
+    sprintf(name_h,"Inv_Response_UnDet_Forward_Y_FSR_UP_%i_",j);
+    Inv_Response_UnDet_Forward_FSR_UP[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+    sprintf(name_h,"Inv_Response_UnDet_Backward_FSR_UP_Y_%i_",j);
+    Inv_Response_UnDet_Backward_FSR_UP[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+
+    sprintf(name_h,"Inv_Response_UnDet_Forward_Y_FSR_DOWN_%i_",j);
+    Inv_Response_UnDet_Forward_FSR_DOWN[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
+    sprintf(name_h,"Inv_Response_UnDet_Backward_Y_FSR_DOWN_%i_",j);
+    Inv_Response_UnDet_Backward_FSR_DOWN[j] = new TH2D(name_h,name_h,nb, xAxis_AFB,nb, xAxis_AFB);
   }
 
   TH1D* h_MZ_st3 = new TH1D("h_MZ_st3","",nb, xAxis_AFB);
@@ -355,17 +457,18 @@ void tree1r()
 
   TH1D *hMass = new TH1D("hMass","hMass",nb,xAxis_AFB);
 
+  float es = 0.001;
 
   Int_t nevent = myTree.GetEntries();
-  //nevent = 2000000;
+  //nevent = 200000;
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);
 
 
     int common = 0;
-    float ptcut = 20;
-
+    float ptcut = 20.;
+    float etacut = 2.4;//!!!!
 
     int parpar = 0;
     int parpar_st1 = 0;
@@ -391,11 +494,36 @@ void tree1r()
     int parton_id_st1[50] = {};
     int parton_charge_st1[50] = {};
 
+    //
+    int qq = 0;
+    float quark_pt[50] = {};
+    float quark_eta[50] = {};
+    float quark_phi[50] = {};
+    float quark_px[50] = {};
+    float quark_py[50] = {};
+    float quark_pz[50] = {};
+    float quark_m[50] = {};
+    float quark_e[50] = {};
+    int quark_id[50] = {};
+    int quark_charge[50] = {};
+    float emitpart_e = -99.;
+    float emitpart_px = -99.;
+    float emitpart_py = -99.;
+    float emitpart_pz = -99.;
+    float emitpart_p = -99.;
+    float Z_e = -99.;
+    float Z_px = -99.;
+    float Z_py = -99.;
+    float Z_pz = -99.;
+    float Z_p = -99.;
+    //
   
     int posid = -999;
     int negid = -999;
     int posid_st1 = -999;
     int negid_st1 = -999;
+    int quark_pos_id = -999;
+    int quark_neg_id = -999;
 
     for (int ppo = 0;ppo<50;++ppo) parton_id[ppo] = 9999;
     if (realdata) GenInx = 0;
@@ -439,9 +567,41 @@ void tree1r()
         if (parton_charge[parpar] == +1) negid = parpar;       
 	++parpar;
       }
+     if (abs(GenID[j]) >= 1 && abs(GenID[j]) < 5 && j >= 4 && j <= 5){
+
+	quark_pt[qq] = ParticlePt[j];
+	quark_eta[qq] = ParticleEta[j];
+	quark_phi[qq] = ParticlePhi[j];
+	//	quark_id[qq] = ParticleId[j];
+        quark_id[qq] = GenID[j];
+	quark_px[qq] = ParticlePx[j];
+	quark_py[qq] = ParticlePy[j];
+	quark_pz[qq] = ParticlePz[j];
+	quark_m[qq] = ParticleM[j];
+	quark_e[qq] = ParticleE[j];
+	//       quark_charge[qq] = ParticleId[j]/abs(ParticleId[j]);
+	quark_charge[qq] = GenID[j]/abs(GenID[j]);
+        if (quark_charge[qq] ==  1) quark_pos_id = qq;
+        if (quark_charge[qq] == -1) quark_neg_id = qq;
+	++qq;
+      }
 
       //      if (abs(ParticleId[j]) >= 1 && abs(ParticleId[j]) < 5 && j >= 4 && j <= 5){
       //      if (ParticleId[j] == 23){
+     if (GenID[j] == 23){
+        Z_e = ParticleE[j];
+        Z_px = ParticlePx[j];
+        Z_py = ParticlePy[j];
+        Z_pz = ParticlePz[j];
+        Z_p = sqrt(pow(Z_px,2)+pow(Z_py,2)+pow(Z_pz,2));
+      }
+      if (j == 7){
+        emitpart_e = ParticleE[j];
+        emitpart_px = ParticlePx[j];
+        emitpart_py = ParticlePy[j];
+        emitpart_pz = ParticlePz[j];
+        emitpart_p = sqrt(pow(emitpart_px,2)+pow(emitpart_py,2)+pow(emitpart_pz,2));
+      }
     }
 
     float MZ = 0;
@@ -480,6 +640,10 @@ void tree1r()
   
     int gen_select = 0;
     int gen_st1_select = 0;
+    int true_select = 0;
+    float true_costheta = -99.;
+    float MZ_test = -9999.;
+    float rapidity = -9999.;
 
     float dimuonrapidity = -9999.;
 
@@ -502,15 +666,21 @@ void tree1r()
     float weight_down = 1.;
     pos_diff_E_muon = parton_e[posid] - parton_e_st1[posid_st1];
     neg_diff_E_muon = parton_e[negid] - parton_e_st1[negid_st1];
+
+
+    if (-1.*pos_diff_E_muon > 0.000001) continue;//getting rid of the non-energy conserving events
+    if (-1.*neg_diff_E_muon > 0.000001) continue;//getting rid of the non-energy conserving events
+
     h_EneDiff_P->Fill(pos_diff_E_muon);
     h_EneDiff_N->Fill(neg_diff_E_muon);
+
     if (pos_diff_E_muon > 1. || neg_diff_E_muon > 1.){ 
       weight_up = 1.05;
       weight_down = 0.95;
     }
     
 
-    if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < 2.1 && fabs(parton_eta[1]) < 2.1) gen_select = 1;
+    if (MZ > 40. && parton_pt[0] > ptcut &&  parton_pt[1] > ptcut && fabs(parton_eta[0]) < etacut && fabs(parton_eta[1]) < etacut) gen_select = 1;
 
     gen_Qreco = MZ;
     gen_QTreco = sqrt(pow((parton_px[0]+parton_px[1]),2)+pow((parton_py[0]+parton_py[1]),2));
@@ -532,7 +702,7 @@ void tree1r()
     if (gen_QZreco < 0.) gen_costhetaCSreco = -gen_costhetaCSreco;
 
     //status 1@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
-    if (MZ_st1 > 40. && parton_pt_st1[0] > ptcut &&  parton_pt_st1[1] > ptcut && fabs(parton_eta_st1[0]) < 2.1 && fabs(parton_eta_st1[1]) < 2.1) gen_st1_select = 1;
+    if (MZ_st1 > 40. && parton_pt_st1[0] > ptcut &&  parton_pt_st1[1] > ptcut && fabs(parton_eta_st1[0]) < etacut && fabs(parton_eta_st1[1]) < etacut) gen_st1_select = 1;
 
     gen_Qreco_st1 = MZ_st1;
     gen_QTreco_st1 = sqrt(pow((parton_px_st1[0]+parton_px_st1[1]),2)+pow((parton_py_st1[0]+parton_py_st1[1]),2));
@@ -556,6 +726,14 @@ void tree1r()
     //eof fsr@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@//
     dimuonrapidity = 0.5*log((parton_e[0]+parton_e[1]+parton_pz[0]+parton_pz[1])/(parton_e[0]+parton_e[1]-parton_pz[0]-parton_pz[1]));
   
+    MZ_test = sqrt( pow(quark_e[0]+quark_e[1]-emitpart_e,2) - ( pow(quark_px[0]+quark_px[1]-emitpart_px,2)+pow(quark_py[0]+quark_py[1]-emitpart_py,2)+pow(quark_pz[0]+quark_pz[1]-emitpart_pz,2) ));
+    rapidity = 0.5*log((quark_e[0]+quark_e[1]-emitpart_e+quark_pz[0]+quark_pz[1]-emitpart_pz)/(quark_e[0]+quark_e[1]-emitpart_e-quark_pz[0]-quark_pz[1]+emitpart_pz));
+    if (qq == 2 && quark_charge[0]*quark_charge[1] == -1){
+      true_select = 1;
+      true_costheta = (2./(gen_Qreco*sqrt(gen_Qreco*gen_Qreco+gen_QTreco*gen_QTreco)))*(gen_P1preco*gen_P2mreco-gen_P1mreco*gen_P2preco);
+      if (quark_pz[quark_pos_id] < 0) true_costheta = -true_costheta;   
+    }
+
 float weight = 1;
 
 //-----------------------Pileup Reweighting -------------------------
@@ -564,6 +742,9 @@ float weight = 1;
      if (nGoodVertices < 12) vtx_wgt = vtx_scale[int(nGoodVertices)];
      else                   vtx_wgt = vtx_scale[11];
    }
+
+
+
 
  
 //efficiency correction////////////////////////////////////////////////////////
@@ -590,8 +771,9 @@ float weight = 1;
     }
 /////////////////////////////////////////////////////////////////////////////// 
    
-weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
-//cout<<"weight:     "<<weight<<endl;
+float eff_weight = eff_wgt_0*eff_wgt_1;
+
+
 
     int index1[10],index2[10];//if (RecMuonIsoSumPt[j]/RecMuonPt[j] > 0.15) continue;   
     for (int j = 0; j < MuInx; ++j){
@@ -609,7 +791,7 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 	    RecMuonIsoSumPt[j] < 3. && RecMuonIsoSumPt[jk] < 3. &&
 	    //            RecMuonIsoDY[j] < 0.15 && RecMuonIsoDY[jk] < 0.15 &&
 	    //(RecMuonIsoSumPt[j] + RecMuonIsoHad[j])/RecMuonPt[j] < 0.15 && (RecMuonIsoSumPt[jk] + RecMuonIsoHad[jk])/RecMuonPt[jk] < 0.15 &&//!!!!!!!!!
-            fabs(RecMuonEta[j]) <2.1 && fabs(RecMuonEta[jk]) <2.1 && //common3
+            fabs(RecMuonEta[j]) <etacut && fabs(RecMuonEta[jk]) <etacut && //common3
 	    //	    (hltmatchedmuon[j] == 1 || hltmatchedmuon[jk] == 1) &&//!!!!!!!!!!!!!!!!!!!!
             fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2){
 	  if (cosine < -0.025){
@@ -649,9 +831,11 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
       if (MZmuon < 0.) MZmuon = -1.*sqrt(fabs(MZmuon));
       if (MZmuon > 0.) MZmuon = sqrt(MZmuon);
       Ymuon = 0.5*log((RecMuonE[ind1]+RecMuonE[ind2]+RecMuonPz[ind1]+RecMuonPz[ind2])/(RecMuonE[ind1]+RecMuonE[ind2]-RecMuonPz[ind1]-RecMuonPz[ind2]));
+
       qT = sqrt(pow(RecMuonPx[ind1] + RecMuonPx[ind2],2)+pow(RecMuonPy[ind1] + RecMuonPy[ind2],2));
       if (MZmuon > 40.){   
 	hMass->Fill(MZmuon);
+	//eo debug
 	select = 1;
 	p1dotp2__RECO = RecMuonPx[ind1]*RecMuonPx[ind2]+RecMuonPy[ind1]*RecMuonPy[ind2]+RecMuonPz[ind1]*RecMuonPz[ind2];
 	MZ__RECO  = RecMuonM[ind1]+RecMuonM[ind2]+2*(RecMuonE[ind1]*RecMuonE[ind2]-p1dotp2__RECO);
@@ -672,44 +856,120 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 	}
 	QZreco__RECO = RecMuonPz[ind1]+RecMuonPz[ind2];
 	costhetaCSreco__RECO = (2/(Qreco__RECO*sqrt(Qreco__RECO*Qreco__RECO+QTreco__RECO*QTreco__RECO)))*(P1preco__RECO*P2mreco__RECO-P1mreco__RECO*P2preco__RECO);
-	if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;       	
+	if (QZreco__RECO < 0.) costhetaCSreco__RECO = -costhetaCSreco__RECO;   
+
+        
+
+	//debug Y>1.50
+	if (MZmuon > 200. && MZmuon < 600.){
+	  h_debug_y_vs_costheta->Fill(Ymuon,costhetaCSreco__RECO);
+	  if (fabs(Ymuon) > 1.50 && fabs(Ymuon) < etacut){
+	    h_debug_eta1->Fill(RecMuonEta[ind1]);
+	    h_debug_eta2->Fill(RecMuonEta[ind2]);
+	    
+	    h_debug_pt1->Fill(RecMuonPt[ind1]);
+	    h_debug_pt2->Fill(RecMuonPt[ind2]);
+	    
+	    h_debug_y->Fill(Ymuon);
+	    h_debug_costheta->Fill(costhetaCSreco__RECO);
+	  }
+	  if (fabs(Ymuon) > 1.25 && fabs(Ymuon) < 1.50 ){
+	    h_debug_eta1_control->Fill(RecMuonEta[ind1]);
+	    h_debug_eta2_control->Fill(RecMuonEta[ind2]);
+	    
+	    h_debug_pt1_control->Fill(RecMuonPt[ind1]);
+	    h_debug_pt2_control->Fill(RecMuonPt[ind2]);
+	    
+	    h_debug_y_control->Fill(Ymuon);
+	    h_debug_costheta_control->Fill(costhetaCSreco__RECO);
+	  }	
+	}
+    	
       }//mass cut
     }
 
     if (!realdata){
 
+      float cross_weight = 1.;
+      if (iev > 0 && iev < 55000) cross_weight = 0.027/1666.;
+      if (iev > 55000 && iev < 110000) cross_weight = 0.0031/1666.;
+      if (iev > 110000 && iev < 165000) cross_weight = 0.00097/1666.;
+
+
       if (select){
        	for (int j=0;j<nb_Y;j++){
 	  if (fabs(Ymuon) > Y_bin_limits[j] && fabs(Ymuon) < Y_bin_limits[j+1]){ 
-	    if (costhetaCSreco__RECO > 0) hMeasCos_M_Y_Forward[j]->Fill(MZ__RECO);
-	    if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1.) hMeasCos_M_Y_Backward[j]->Fill(MZ__RECO);
-	    //fsr weighting for the raw level
+//
+           for (int i=0;i<nb;i++){ 
+              if (MZmuon > xAxis_AFB[i] && MZmuon < xAxis_AFB[i+1]){
+                 h_costheta_inverse_ratio[j][i]->Fill(fabs(costhetaCSreco__RECO/(1+costhetaCSreco__RECO*costhetaCSreco__RECO)));
+                 h_costheta_inverse_ratio_parton[j][i]->Fill(fabs(true_costheta/(1+true_costheta*true_costheta)));
+              }
+           }
+//
+	    //if (MZ__RECO > 200. && fabs(Ymuon) > 1.5 ) cout<<costhetaCSreco__RECO<<"   "<<MZ__RECO<<endl;
+	    if (costhetaCSreco__RECO > 0) hMeasCos_M_Y_Forward[j]->Fill(MZ__RECO,vtx_wgt*eff_weight*cross_weight);
+	    if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1.) hMeasCos_M_Y_Backward[j]->Fill(MZ__RECO,vtx_wgt*eff_weight*cross_weight);
+	    for (int ii=0;ii<nb;ii++){
+	      if (MZ__RECO > xAxis_AFB[ii] && MZ__RECO < xAxis_AFB[ii+1]) hExpectedMass_RAW_M_Y[j][ii]->Fill(MZ__RECO,vtx_wgt*eff_weight*cross_weight);//WEIGHT at high mass !!!!!!!!!!!
+	    }
+	    //noweight
+	    if (costhetaCSreco__RECO > 0) hMeasCos_M_Y_Forward_NoWeight[j]->Fill(MZ__RECO);
+	    if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1.) hMeasCos_M_Y_Backward_NoWeight[j]->Fill(MZ__RECO);
+	    //
 	    if (costhetaCSreco__RECO > 0){ 
-	      hMeasCos_M_Y_Forward_FSR_UP[j]->Fill(MZ__RECO,weight_up);
-	      hMeasCos_M_Y_Forward_FSR_DOWN[j]->Fill(MZ__RECO,weight_down);
+	      hMeasCos_M_Y_Forward_FSR_UP[j]->Fill(MZ__RECO,vtx_wgt*eff_weight*weight_up*cross_weight);
+	      hMeasCos_M_Y_Forward_FSR_DOWN[j]->Fill(MZ__RECO,vtx_wgt*eff_weight*weight_down*cross_weight);
+              hMeasCos_M_Y_Forward_ES_UP[j]->Fill(MZ__RECO*(1+es),vtx_wgt*eff_weight*cross_weight);
+              hMeasCos_M_Y_Forward_ES_DOWN[j]->Fill(MZ__RECO*(1-es),vtx_wgt*eff_weight*cross_weight);
 	    }
 	    if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1.){ 
-	      hMeasCos_M_Y_Backward_FSR_UP[j]->Fill(MZ__RECO,weight_up);
-	      hMeasCos_M_Y_Backward_FSR_DOWN[j]->Fill(MZ__RECO,weight_down);
+	      hMeasCos_M_Y_Backward_FSR_UP[j]->Fill(MZ__RECO,vtx_wgt*eff_weight*weight_up*cross_weight);
+	      hMeasCos_M_Y_Backward_FSR_DOWN[j]->Fill(MZ__RECO,vtx_wgt*eff_weight*weight_down*cross_weight);
+              hMeasCos_M_Y_Backward_ES_UP[j]->Fill(MZ__RECO*(1+es),vtx_wgt*eff_weight*cross_weight);
+              hMeasCos_M_Y_Backward_ES_DOWN[j]->Fill(MZ__RECO*(1-es),vtx_wgt*eff_weight*cross_weight);
 	    }
 	    //
+
+	    //parton level
+	    if (fabs(Ymuon) > Y_bin_limits[j] && fabs(Ymuon) < Y_bin_limits[j+1]){ //reco level Y!!!
+	      if (true_costheta > 0) hTrueCos_M_Y_Forward[j]->Fill(MZ_test,cross_weight);
+	      if (true_costheta < 0 && true_costheta >= -1.) hTrueCos_M_Y_Backward[j]->Fill(MZ_test,cross_weight);
+	    }
+	    
+	    //
+
 	    if (gen_st1_select){
+	    for (int ii=0;ii<nb;ii++){
+	      if (MZ_st1 > xAxis_AFB[ii] && MZ_st1 < xAxis_AFB[ii+1]) hExpectedMass_UnDet_M_Y[j][ii]->Fill(MZ_st1,vtx_wgt*cross_weight);// WEIGHT at high mass !!!!!!!!!!!
+	    }
 	      if (gen_costhetaCSreco_st1 > 0){ 
 		hUnDetectorCos_M_Y_Forward[j]->Fill(MZ_st1);
-		hUnDetectorCos_M_Y_Forward_FSR_UP[j]->Fill(MZ_st1,weight_up);
-		hUnDetectorCos_M_Y_Forward_FSR_DOWN[j]->Fill(MZ_st1,weight_down);
+		hUnDetectorCos_M_Y_Forward_FSR_UP[j]->Fill(MZ_st1,vtx_wgt*weight_up);
+		hUnDetectorCos_M_Y_Forward_FSR_DOWN[j]->Fill(MZ_st1,vtx_wgt*weight_down);
 	      }
 	      if (gen_costhetaCSreco_st1 < 0 && gen_costhetaCSreco_st1 >= -1.){ 
 		hUnDetectorCos_M_Y_Backward[j]->Fill(MZ_st1);
-		hUnDetectorCos_M_Y_Backward_FSR_UP[j]->Fill(MZ_st1,weight_up);
-		hUnDetectorCos_M_Y_Backward_FSR_DOWN[j]->Fill(MZ_st1,weight_down);
+		hUnDetectorCos_M_Y_Backward_FSR_UP[j]->Fill(MZ_st1,vtx_wgt*weight_up);
+		hUnDetectorCos_M_Y_Backward_FSR_DOWN[j]->Fill(MZ_st1,vtx_wgt*weight_down);
 	      }
-	      if (costhetaCSreco__RECO > 0 && gen_costhetaCSreco_st1 > 0) Response_UnDetector_Forward[j]->Fill(MZ_st1, MZ__RECO);
-	      if (costhetaCSreco__RECO < 0 && gen_costhetaCSreco_st1 < 0 && costhetaCSreco__RECO >= -1. && gen_costhetaCSreco_st1 >= -1.) Response_UnDetector_Backward[j]->Fill(MZ_st1, MZ__RECO);
+	      if (costhetaCSreco__RECO > 0 && gen_costhetaCSreco_st1 > 0){
+		Response_UnDetector_Forward[j]->Fill(MZ_st1, MZ__RECO);
+		Response_UnDet_Forward_FSR_UP[j]->Fill(MZ_st1, MZ__RECO,weight_up);
+		Response_UnDet_Forward_FSR_DOWN[j]->Fill(MZ_st1, MZ__RECO,weight_down);
+	      }
+	      if (costhetaCSreco__RECO < 0 && gen_costhetaCSreco_st1 < 0 && costhetaCSreco__RECO >= -1. && gen_costhetaCSreco_st1 >= -1.){
+		Response_UnDetector_Backward[j]->Fill(MZ_st1, MZ__RECO);
+		Response_UnDet_Backward_FSR_UP[j]->Fill(MZ_st1, MZ__RECO,weight_up);
+		Response_UnDet_Backward_FSR_DOWN[j]->Fill(MZ_st1, MZ__RECO,weight_down);
+	      }
 	      if (costhetaCSreco__RECO < 0 && gen_costhetaCSreco_st1 > 0 && costhetaCSreco__RECO >= -1.) Response_UnDetector_ForwardBackward[j]->Fill(MZ_st1, MZ__RECO);
 	      if (costhetaCSreco__RECO > 0 && gen_costhetaCSreco_st1 < 0 && gen_costhetaCSreco_st1 >= -1.) Response_UnDetector_BackwardForward[j]->Fill(MZ_st1, MZ__RECO);
 	    }
 	    if (gen_select){
+	    for (int ii=0;ii<nb;ii++){
+	      if (MZ > xAxis_AFB[ii] && MZ < xAxis_AFB[ii+1]) hExpectedMass_NoFsr_M_Y[j][ii]->Fill(MZ,vtx_wgt*cross_weight);
+	    }
 	      if (gen_costhetaCSreco > 0) hNoFsrTruthCos_M_Y_Forward[j]->Fill(MZ);
 	      if (gen_costhetaCSreco < 0 && gen_costhetaCSreco >= -1.) hNoFsrTruthCos_M_Y_Backward[j]->Fill(MZ);
 	      if (costhetaCSreco__RECO > 0 && gen_costhetaCSreco > 0){ 
@@ -753,6 +1013,13 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 
   double norm_factor_fsr_forward_FSR_DOWN[nb][nb_Y];
   double norm_factor_fsr_backward_FSR_DOWN[nb][nb_Y];
+
+
+  double norm_factor_undet_fsr_forward_FSR_UP[nb][nb_Y];
+  double norm_factor_undet_fsr_backward_FSR_UP[nb][nb_Y];
+
+  double norm_factor_undet_fsr_forward_FSR_DOWN[nb][nb_Y];
+  double norm_factor_undet_fsr_backward_FSR_DOWN[nb][nb_Y];
   //
   for (int k=0;k<nb_Y;k++){
     for (int i=0;i<nb;i++){
@@ -767,6 +1034,13 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 
       norm_factor_fsr_forward_FSR_DOWN[i][k] = 0;
       norm_factor_fsr_backward_FSR_DOWN[i][k] = 0;
+
+
+      norm_factor_undet_fsr_forward_FSR_UP[i][k] = 0;
+      norm_factor_undet_fsr_backward_FSR_UP[i][k] = 0;
+
+      norm_factor_undet_fsr_forward_FSR_DOWN[i][k] = 0;
+      norm_factor_undet_fsr_backward_FSR_DOWN[i][k] = 0;
       //
       for (int j=0;j<nb;j++){
 	norm_factor_forward[i][k] += Response_UnDetector_Forward[k]->GetBinContent(i+1,j+1);
@@ -784,6 +1058,13 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 
 	norm_factor_fsr_forward_FSR_DOWN[i][k] += Response_NoFsr_Forward_FSR_DOWN[k]->GetBinContent(i+1,j+1);
 	norm_factor_fsr_backward_FSR_DOWN[i][k] += Response_NoFsr_Backward_FSR_DOWN[k]->GetBinContent(i+1,j+1);
+
+
+	norm_factor_undet_fsr_forward_FSR_UP[i][k] += Response_UnDet_Forward_FSR_UP[k]->GetBinContent(i+1,j+1);
+	norm_factor_undet_fsr_backward_FSR_UP[i][k] += Response_UnDet_Backward_FSR_UP[k]->GetBinContent(i+1,j+1);
+
+	norm_factor_undet_fsr_forward_FSR_DOWN[i][k] += Response_UnDet_Forward_FSR_DOWN[k]->GetBinContent(i+1,j+1);
+	norm_factor_undet_fsr_backward_FSR_DOWN[i][k] += Response_UnDet_Backward_FSR_DOWN[k]->GetBinContent(i+1,j+1);
 	//
       }
       if (norm_factor_forward[i][k] != 0.) for (int j=0;j<nb;j++) Response_UnDetector_Forward[k]->SetBinContent(i+1,j+1,Response_UnDetector_Forward[k]->GetBinContent(i+1,j+1)/norm_factor_forward[i][k]);
@@ -801,6 +1082,16 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
 
       if (norm_factor_fsr_forward_FSR_DOWN[i][k] != 0.) for (int j=0;j<nb;j++) Response_NoFsr_Forward_FSR_DOWN[k]->SetBinContent(i+1,j+1,Response_NoFsr_Forward_FSR_DOWN[k]->GetBinContent(i+1,j+1)/norm_factor_fsr_forward_FSR_DOWN[i][k]);
       if (norm_factor_fsr_backward_FSR_DOWN[i][k] != 0.) for (int j=0;j<nb;j++) Response_NoFsr_Backward_FSR_DOWN[k]->SetBinContent(i+1,j+1,Response_NoFsr_Backward_FSR_DOWN[k]->GetBinContent(i+1,j+1)/norm_factor_fsr_backward_FSR_DOWN[i][k]);
+
+
+
+
+      if (norm_factor_undet_fsr_forward_FSR_UP[i][k] != 0.) for (int j=0;j<nb;j++) Response_UnDet_Forward_FSR_UP[k]->SetBinContent(i+1,j+1,Response_UnDet_Forward_FSR_UP[k]->GetBinContent(i+1,j+1)/norm_factor_undet_fsr_forward_FSR_UP[i][k]);
+      if (norm_factor_undet_fsr_backward_FSR_UP[i][k] != 0.) for (int j=0;j<nb;j++) Response_UnDet_Backward_FSR_UP[k]->SetBinContent(i+1,j+1,Response_UnDet_Backward_FSR_UP[k]->GetBinContent(i+1,j+1)/norm_factor_undet_fsr_backward_FSR_UP[i][k]);
+
+      if (norm_factor_undet_fsr_forward_FSR_DOWN[i][k] != 0.) for (int j=0;j<nb;j++) Response_UnDet_Forward_FSR_DOWN[k]->SetBinContent(i+1,j+1,Response_UnDet_Forward_FSR_DOWN[k]->GetBinContent(i+1,j+1)/norm_factor_undet_fsr_forward_FSR_DOWN[i][k]);
+      if (norm_factor_undet_fsr_backward_FSR_DOWN[i][k] != 0.) for (int j=0;j<nb;j++) Response_UnDet_Backward_FSR_DOWN[k]->SetBinContent(i+1,j+1,Response_UnDet_Backward_FSR_DOWN[k]->GetBinContent(i+1,j+1)/norm_factor_undet_fsr_backward_FSR_DOWN[i][k]);
+
       //
 
     } 
@@ -847,6 +1138,30 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
   TMatrixD Rij_NoFsr_BB_FSR_DOWN_1(nb,nb);
   TMatrixD Rij_NoFsr_BB_FSR_DOWN_2(nb,nb);
   TMatrixD Rij_NoFsr_BB_FSR_DOWN_3(nb,nb);
+
+
+
+
+  TMatrixD Rij_UnDet_FF_FSR_UP_0(nb,nb);
+  TMatrixD Rij_UnDet_FF_FSR_UP_1(nb,nb);
+  TMatrixD Rij_UnDet_FF_FSR_UP_2(nb,nb);
+  TMatrixD Rij_UnDet_FF_FSR_UP_3(nb,nb);
+
+  TMatrixD Rij_UnDet_FF_FSR_DOWN_0(nb,nb);
+  TMatrixD Rij_UnDet_FF_FSR_DOWN_1(nb,nb);
+  TMatrixD Rij_UnDet_FF_FSR_DOWN_2(nb,nb);
+  TMatrixD Rij_UnDet_FF_FSR_DOWN_3(nb,nb);
+
+  TMatrixD Rij_UnDet_BB_FSR_UP_0(nb,nb);
+  TMatrixD Rij_UnDet_BB_FSR_UP_1(nb,nb);
+  TMatrixD Rij_UnDet_BB_FSR_UP_2(nb,nb);
+  TMatrixD Rij_UnDet_BB_FSR_UP_3(nb,nb);
+
+  TMatrixD Rij_UnDet_BB_FSR_DOWN_0(nb,nb);
+  TMatrixD Rij_UnDet_BB_FSR_DOWN_1(nb,nb);
+  TMatrixD Rij_UnDet_BB_FSR_DOWN_2(nb,nb);
+  TMatrixD Rij_UnDet_BB_FSR_DOWN_3(nb,nb);
+
   //
 
   TMatrixD Orig_Rij_UnDet_FF_0(nb,nb);
@@ -909,6 +1224,28 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
   TMatrixD Inv_Rij_NoFsr_BB_FSR_DOWN_1(nb,nb);
   TMatrixD Inv_Rij_NoFsr_BB_FSR_DOWN_2(nb,nb);
   TMatrixD Inv_Rij_NoFsr_BB_FSR_DOWN_3(nb,nb);
+
+
+
+  TMatrixD Inv_Rij_UnDet_FF_FSR_UP_0(nb,nb);
+  TMatrixD Inv_Rij_UnDet_FF_FSR_UP_1(nb,nb);
+  TMatrixD Inv_Rij_UnDet_FF_FSR_UP_2(nb,nb);
+  TMatrixD Inv_Rij_UnDet_FF_FSR_UP_3(nb,nb);
+
+  TMatrixD Inv_Rij_UnDet_FF_FSR_DOWN_0(nb,nb);
+  TMatrixD Inv_Rij_UnDet_FF_FSR_DOWN_1(nb,nb);
+  TMatrixD Inv_Rij_UnDet_FF_FSR_DOWN_2(nb,nb);
+  TMatrixD Inv_Rij_UnDet_FF_FSR_DOWN_3(nb,nb);
+
+  TMatrixD Inv_Rij_UnDet_BB_FSR_UP_0(nb,nb);
+  TMatrixD Inv_Rij_UnDet_BB_FSR_UP_1(nb,nb);
+  TMatrixD Inv_Rij_UnDet_BB_FSR_UP_2(nb,nb);
+  TMatrixD Inv_Rij_UnDet_BB_FSR_UP_3(nb,nb);
+
+  TMatrixD Inv_Rij_UnDet_BB_FSR_DOWN_0(nb,nb);
+  TMatrixD Inv_Rij_UnDet_BB_FSR_DOWN_1(nb,nb);
+  TMatrixD Inv_Rij_UnDet_BB_FSR_DOWN_2(nb,nb);
+  TMatrixD Inv_Rij_UnDet_BB_FSR_DOWN_3(nb,nb);
   //
 
 
@@ -973,6 +1310,28 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
   TArrayD bb_NoFsr_FSR_DOWN_1(totdim);
   TArrayD bb_NoFsr_FSR_DOWN_2(totdim);
   TArrayD bb_NoFsr_FSR_DOWN_3(totdim);
+
+
+
+  TArrayD ff_UnDet_FSR_UP_0(totdim);
+  TArrayD ff_UnDet_FSR_UP_1(totdim);
+  TArrayD ff_UnDet_FSR_UP_2(totdim);
+  TArrayD ff_UnDet_FSR_UP_3(totdim);
+
+  TArrayD ff_UnDet_FSR_DOWN_0(totdim);
+  TArrayD ff_UnDet_FSR_DOWN_1(totdim);
+  TArrayD ff_UnDet_FSR_DOWN_2(totdim);
+  TArrayD ff_UnDet_FSR_DOWN_3(totdim);
+
+  TArrayD bb_UnDet_FSR_UP_0(totdim);
+  TArrayD bb_UnDet_FSR_UP_1(totdim);
+  TArrayD bb_UnDet_FSR_UP_2(totdim);
+  TArrayD bb_UnDet_FSR_UP_3(totdim);
+
+  TArrayD bb_UnDet_FSR_DOWN_0(totdim);
+  TArrayD bb_UnDet_FSR_DOWN_1(totdim);
+  TArrayD bb_UnDet_FSR_DOWN_2(totdim);
+  TArrayD bb_UnDet_FSR_DOWN_3(totdim);
   //
   for (int i=0;i<nb;i++){
     for (int j=0;j<nb;j++){
@@ -1017,6 +1376,28 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
       bb_NoFsr_FSR_DOWN_1[k] = Response_NoFsr_Backward_FSR_DOWN[1]->GetBinContent(i+1,j+1);
       bb_NoFsr_FSR_DOWN_2[k] = Response_NoFsr_Backward_FSR_DOWN[2]->GetBinContent(i+1,j+1);
       bb_NoFsr_FSR_DOWN_3[k] = Response_NoFsr_Backward_FSR_DOWN[3]->GetBinContent(i+1,j+1);
+
+
+
+      ff_UnDet_FSR_UP_0[k] = Response_UnDet_Forward_FSR_UP[0]->GetBinContent(i+1,j+1);
+      ff_UnDet_FSR_UP_1[k] = Response_UnDet_Forward_FSR_UP[1]->GetBinContent(i+1,j+1);
+      ff_UnDet_FSR_UP_2[k] = Response_UnDet_Forward_FSR_UP[2]->GetBinContent(i+1,j+1);
+      ff_UnDet_FSR_UP_3[k] = Response_UnDet_Forward_FSR_UP[3]->GetBinContent(i+1,j+1);     
+
+      ff_UnDet_FSR_DOWN_0[k] = Response_UnDet_Forward_FSR_DOWN[0]->GetBinContent(i+1,j+1);
+      ff_UnDet_FSR_DOWN_1[k] = Response_UnDet_Forward_FSR_DOWN[1]->GetBinContent(i+1,j+1);
+      ff_UnDet_FSR_DOWN_2[k] = Response_UnDet_Forward_FSR_DOWN[2]->GetBinContent(i+1,j+1);
+      ff_UnDet_FSR_DOWN_3[k] = Response_UnDet_Forward_FSR_DOWN[3]->GetBinContent(i+1,j+1);    
+
+      bb_UnDet_FSR_UP_0[k] = Response_UnDet_Backward_FSR_UP[0]->GetBinContent(i+1,j+1);
+      bb_UnDet_FSR_UP_1[k] = Response_UnDet_Backward_FSR_UP[1]->GetBinContent(i+1,j+1);
+      bb_UnDet_FSR_UP_2[k] = Response_UnDet_Backward_FSR_UP[2]->GetBinContent(i+1,j+1);
+      bb_UnDet_FSR_UP_3[k] = Response_UnDet_Backward_FSR_UP[3]->GetBinContent(i+1,j+1);     
+
+      bb_UnDet_FSR_DOWN_0[k] = Response_UnDet_Backward_FSR_DOWN[0]->GetBinContent(i+1,j+1);
+      bb_UnDet_FSR_DOWN_1[k] = Response_UnDet_Backward_FSR_DOWN[1]->GetBinContent(i+1,j+1);
+      bb_UnDet_FSR_DOWN_2[k] = Response_UnDet_Backward_FSR_DOWN[2]->GetBinContent(i+1,j+1);
+      bb_UnDet_FSR_DOWN_3[k] = Response_UnDet_Backward_FSR_DOWN[3]->GetBinContent(i+1,j+1);
       //
     }
   }
@@ -1060,6 +1441,29 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
   Rij_NoFsr_BB_FSR_DOWN_1.SetMatrixArray(bb_NoFsr_FSR_DOWN_1.GetArray());
   Rij_NoFsr_BB_FSR_DOWN_2.SetMatrixArray(bb_NoFsr_FSR_DOWN_2.GetArray());
   Rij_NoFsr_BB_FSR_DOWN_3.SetMatrixArray(bb_NoFsr_FSR_DOWN_3.GetArray());
+
+
+
+
+  Rij_UnDet_FF_FSR_UP_0.SetMatrixArray(ff_UnDet_FSR_UP_0.GetArray());
+  Rij_UnDet_FF_FSR_UP_1.SetMatrixArray(ff_UnDet_FSR_UP_1.GetArray());
+  Rij_UnDet_FF_FSR_UP_2.SetMatrixArray(ff_UnDet_FSR_UP_2.GetArray());
+  Rij_UnDet_FF_FSR_UP_3.SetMatrixArray(ff_UnDet_FSR_UP_3.GetArray());
+
+  Rij_UnDet_FF_FSR_DOWN_0.SetMatrixArray(ff_UnDet_FSR_DOWN_0.GetArray());
+  Rij_UnDet_FF_FSR_DOWN_1.SetMatrixArray(ff_UnDet_FSR_DOWN_1.GetArray());
+  Rij_UnDet_FF_FSR_DOWN_2.SetMatrixArray(ff_UnDet_FSR_DOWN_2.GetArray());
+  Rij_UnDet_FF_FSR_DOWN_3.SetMatrixArray(ff_UnDet_FSR_DOWN_3.GetArray());
+
+  Rij_UnDet_BB_FSR_UP_0.SetMatrixArray(bb_UnDet_FSR_UP_0.GetArray());
+  Rij_UnDet_BB_FSR_UP_1.SetMatrixArray(bb_UnDet_FSR_UP_1.GetArray());
+  Rij_UnDet_BB_FSR_UP_2.SetMatrixArray(bb_UnDet_FSR_UP_2.GetArray());
+  Rij_UnDet_BB_FSR_UP_3.SetMatrixArray(bb_UnDet_FSR_UP_3.GetArray());
+
+  Rij_UnDet_BB_FSR_DOWN_0.SetMatrixArray(bb_UnDet_FSR_DOWN_0.GetArray());
+  Rij_UnDet_BB_FSR_DOWN_1.SetMatrixArray(bb_UnDet_FSR_DOWN_1.GetArray());
+  Rij_UnDet_BB_FSR_DOWN_2.SetMatrixArray(bb_UnDet_FSR_DOWN_2.GetArray());
+  Rij_UnDet_BB_FSR_DOWN_3.SetMatrixArray(bb_UnDet_FSR_DOWN_3.GetArray());
   //
 
 
@@ -1124,6 +1528,27 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
   Inv_Rij_NoFsr_BB_FSR_DOWN_1 = Rij_NoFsr_BB_FSR_DOWN_1.Invert();
   Inv_Rij_NoFsr_BB_FSR_DOWN_2 = Rij_NoFsr_BB_FSR_DOWN_2.Invert();
   Inv_Rij_NoFsr_BB_FSR_DOWN_3 = Rij_NoFsr_BB_FSR_DOWN_3.Invert();
+
+
+  Inv_Rij_UnDet_FF_FSR_UP_0 = Rij_UnDet_FF_FSR_UP_0.Invert();
+  Inv_Rij_UnDet_FF_FSR_UP_1 = Rij_UnDet_FF_FSR_UP_1.Invert();
+  Inv_Rij_UnDet_FF_FSR_UP_2 = Rij_UnDet_FF_FSR_UP_2.Invert();
+  Inv_Rij_UnDet_FF_FSR_UP_3 = Rij_UnDet_FF_FSR_UP_3.Invert();
+
+  Inv_Rij_UnDet_FF_FSR_DOWN_0 = Rij_UnDet_FF_FSR_DOWN_0.Invert();
+  Inv_Rij_UnDet_FF_FSR_DOWN_1 = Rij_UnDet_FF_FSR_DOWN_1.Invert();
+  Inv_Rij_UnDet_FF_FSR_DOWN_2 = Rij_UnDet_FF_FSR_DOWN_2.Invert();
+  Inv_Rij_UnDet_FF_FSR_DOWN_3 = Rij_UnDet_FF_FSR_DOWN_3.Invert();
+
+  Inv_Rij_UnDet_BB_FSR_UP_0 = Rij_UnDet_BB_FSR_UP_0.Invert();
+  Inv_Rij_UnDet_BB_FSR_UP_1 = Rij_UnDet_BB_FSR_UP_1.Invert();
+  Inv_Rij_UnDet_BB_FSR_UP_2 = Rij_UnDet_BB_FSR_UP_2.Invert();
+  Inv_Rij_UnDet_BB_FSR_UP_3 = Rij_UnDet_BB_FSR_UP_3.Invert();
+
+  Inv_Rij_UnDet_BB_FSR_DOWN_0 = Rij_UnDet_BB_FSR_DOWN_0.Invert();
+  Inv_Rij_UnDet_BB_FSR_DOWN_1 = Rij_UnDet_BB_FSR_DOWN_1.Invert();
+  Inv_Rij_UnDet_BB_FSR_DOWN_2 = Rij_UnDet_BB_FSR_DOWN_2.Invert();
+  Inv_Rij_UnDet_BB_FSR_DOWN_3 = Rij_UnDet_BB_FSR_DOWN_3.Invert();
   //
 
 
@@ -1210,6 +1635,28 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
   const double *inv_bb_NoFsr_FSR_DOWN_1 = Inv_Rij_NoFsr_BB_FSR_DOWN_1.GetMatrixArray();
   const double *inv_bb_NoFsr_FSR_DOWN_2 = Inv_Rij_NoFsr_BB_FSR_DOWN_2.GetMatrixArray();
   const double *inv_bb_NoFsr_FSR_DOWN_3 = Inv_Rij_NoFsr_BB_FSR_DOWN_3.GetMatrixArray();
+
+
+
+  const double *inv_ff_UnDet_FSR_UP_0 = Inv_Rij_UnDet_FF_FSR_UP_0.GetMatrixArray();
+  const double *inv_ff_UnDet_FSR_UP_1 = Inv_Rij_UnDet_FF_FSR_UP_1.GetMatrixArray();
+  const double *inv_ff_UnDet_FSR_UP_2 = Inv_Rij_UnDet_FF_FSR_UP_2.GetMatrixArray();
+  const double *inv_ff_UnDet_FSR_UP_3 = Inv_Rij_UnDet_FF_FSR_UP_3.GetMatrixArray();
+
+  const double *inv_ff_UnDet_FSR_DOWN_0 = Inv_Rij_UnDet_FF_FSR_DOWN_0.GetMatrixArray();
+  const double *inv_ff_UnDet_FSR_DOWN_1 = Inv_Rij_UnDet_FF_FSR_DOWN_1.GetMatrixArray();
+  const double *inv_ff_UnDet_FSR_DOWN_2 = Inv_Rij_UnDet_FF_FSR_DOWN_2.GetMatrixArray();
+  const double *inv_ff_UnDet_FSR_DOWN_3 = Inv_Rij_UnDet_FF_FSR_DOWN_3.GetMatrixArray();
+
+  const double *inv_bb_UnDet_FSR_UP_0 = Inv_Rij_UnDet_BB_FSR_UP_0.GetMatrixArray();
+  const double *inv_bb_UnDet_FSR_UP_1 = Inv_Rij_UnDet_BB_FSR_UP_1.GetMatrixArray();
+  const double *inv_bb_UnDet_FSR_UP_2 = Inv_Rij_UnDet_BB_FSR_UP_2.GetMatrixArray();
+  const double *inv_bb_UnDet_FSR_UP_3 = Inv_Rij_UnDet_BB_FSR_UP_3.GetMatrixArray();
+
+  const double *inv_bb_UnDet_FSR_DOWN_0 = Inv_Rij_UnDet_BB_FSR_DOWN_0.GetMatrixArray();
+  const double *inv_bb_UnDet_FSR_DOWN_1 = Inv_Rij_UnDet_BB_FSR_DOWN_1.GetMatrixArray();
+  const double *inv_bb_UnDet_FSR_DOWN_2 = Inv_Rij_UnDet_BB_FSR_DOWN_2.GetMatrixArray();
+  const double *inv_bb_UnDet_FSR_DOWN_3 = Inv_Rij_UnDet_BB_FSR_DOWN_3.GetMatrixArray();
   //
 
 
@@ -1279,6 +1726,29 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
       Inv_Response_NoFsr_Backward_FSR_DOWN[1]->SetBinContent(i+1,j+1,inv_bb_NoFsr_FSR_DOWN_1[k]);
       Inv_Response_NoFsr_Backward_FSR_DOWN[2]->SetBinContent(i+1,j+1,inv_bb_NoFsr_FSR_DOWN_2[k]);
       Inv_Response_NoFsr_Backward_FSR_DOWN[3]->SetBinContent(i+1,j+1,inv_bb_NoFsr_FSR_DOWN_3[k]);
+
+
+
+
+      Inv_Response_UnDet_Forward_FSR_UP[0]->SetBinContent(i+1,j+1,inv_ff_UnDet_FSR_UP_0[k]);
+      Inv_Response_UnDet_Forward_FSR_UP[1]->SetBinContent(i+1,j+1,inv_ff_UnDet_FSR_UP_1[k]);
+      Inv_Response_UnDet_Forward_FSR_UP[2]->SetBinContent(i+1,j+1,inv_ff_UnDet_FSR_UP_2[k]);
+      Inv_Response_UnDet_Forward_FSR_UP[3]->SetBinContent(i+1,j+1,inv_ff_UnDet_FSR_UP_3[k]);
+
+      Inv_Response_UnDet_Forward_FSR_DOWN[0]->SetBinContent(i+1,j+1,inv_ff_UnDet_FSR_DOWN_0[k]);
+      Inv_Response_UnDet_Forward_FSR_DOWN[1]->SetBinContent(i+1,j+1,inv_ff_UnDet_FSR_DOWN_1[k]);
+      Inv_Response_UnDet_Forward_FSR_DOWN[2]->SetBinContent(i+1,j+1,inv_ff_UnDet_FSR_DOWN_2[k]);
+      Inv_Response_UnDet_Forward_FSR_DOWN[3]->SetBinContent(i+1,j+1,inv_ff_UnDet_FSR_DOWN_3[k]);
+
+      Inv_Response_UnDet_Backward_FSR_UP[0]->SetBinContent(i+1,j+1,inv_bb_UnDet_FSR_UP_0[k]);
+      Inv_Response_UnDet_Backward_FSR_UP[1]->SetBinContent(i+1,j+1,inv_bb_UnDet_FSR_UP_1[k]);
+      Inv_Response_UnDet_Backward_FSR_UP[2]->SetBinContent(i+1,j+1,inv_bb_UnDet_FSR_UP_2[k]);
+      Inv_Response_UnDet_Backward_FSR_UP[3]->SetBinContent(i+1,j+1,inv_bb_UnDet_FSR_UP_3[k]);
+
+      Inv_Response_UnDet_Backward_FSR_DOWN[0]->SetBinContent(i+1,j+1,inv_bb_UnDet_FSR_DOWN_0[k]);
+      Inv_Response_UnDet_Backward_FSR_DOWN[1]->SetBinContent(i+1,j+1,inv_bb_UnDet_FSR_DOWN_1[k]);
+      Inv_Response_UnDet_Backward_FSR_DOWN[2]->SetBinContent(i+1,j+1,inv_bb_UnDet_FSR_DOWN_2[k]);
+      Inv_Response_UnDet_Backward_FSR_DOWN[3]->SetBinContent(i+1,j+1,inv_bb_UnDet_FSR_DOWN_3[k]);
       //
     }
   }
@@ -1290,6 +1760,31 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
       sprintf(name_h,"MC_meas_Backward_%i",j);
       file_cov->WriteTObject(hMeasCos_M_Y_Backward[j],name_h);
 
+      sprintf(name_h,"MC_true_Forward_%i",j);
+      file_cov->WriteTObject(hTrueCos_M_Y_Forward[j],name_h);
+      sprintf(name_h,"MC_true_Backward_%i",j);
+      file_cov->WriteTObject(hTrueCos_M_Y_Backward[j],name_h);
+
+      for (int ii=0;ii<nb;ii++){
+	sprintf(name_h,"hExpectedMass_RAW_M_Y_%i_%i",j,ii);
+	file_cov->WriteTObject(hExpectedMass_RAW_M_Y[j][ii],name_h);
+	sprintf(name_h,"hExpectedMass_UnDet_M_Y_%i_%i",j,ii);
+	file_cov->WriteTObject(hExpectedMass_UnDet_M_Y[j][ii],name_h);
+	sprintf(name_h,"hExpectedMass_NoFsr_M_Y_%i_%i",j,ii);
+	file_cov->WriteTObject(hExpectedMass_NoFsr_M_Y[j][ii],name_h);
+
+        sprintf(name_h,"h_costheta_inverse_ratio_%i_%i",j,ii);
+        file_cov->WriteTObject(h_costheta_inverse_ratio[j][ii],name_h);
+
+        sprintf(name_h,"h_costheta_inverse_ratio_parton_%i_%i",j,ii);
+        file_cov->WriteTObject(h_costheta_inverse_ratio_parton[j][ii],name_h);
+      }
+
+      sprintf(name_h,"MC_meas_Forward_NoWeight_%i",j);
+      file_cov->WriteTObject(hMeasCos_M_Y_Forward_NoWeight[j],name_h);
+      sprintf(name_h,"MC_meas_Backward_NoWeight_%i",j);
+      file_cov->WriteTObject(hMeasCos_M_Y_Backward_NoWeight[j],name_h);
+
       sprintf(name_h,"MC_meas_Forward_FSR_UP_%i",j);
       file_cov->WriteTObject(hMeasCos_M_Y_Forward_FSR_UP[j],name_h);
       sprintf(name_h,"MC_meas_Backward_FSR_UP_%i",j);
@@ -1299,6 +1794,21 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
       file_cov->WriteTObject(hMeasCos_M_Y_Forward_FSR_DOWN[j],name_h);
       sprintf(name_h,"MC_meas_Backward_FSR_DOWN_%i",j);
       file_cov->WriteTObject(hMeasCos_M_Y_Backward_FSR_DOWN[j],name_h);
+
+
+//
+      sprintf(name_h,"MC_meas_Forward_ES_UP_%i",j);
+      file_cov->WriteTObject(hMeasCos_M_Y_Forward_ES_UP[j],name_h);
+      sprintf(name_h,"MC_meas_Backward_ES_UP_%i",j);
+      file_cov->WriteTObject(hMeasCos_M_Y_Backward_ES_UP[j],name_h);
+
+      sprintf(name_h,"MC_meas_Forward_ES_DOWN_%i",j);
+      file_cov->WriteTObject(hMeasCos_M_Y_Forward_ES_DOWN[j],name_h);
+      sprintf(name_h,"MC_meas_Backward_ES_DOWN_%i",j);
+      file_cov->WriteTObject(hMeasCos_M_Y_Backward_ES_DOWN[j],name_h);
+
+//
+
 
       sprintf(name_h,"undetector_forward_%i",j);
       file_cov->WriteTObject(hUnDetectorCos_M_Y_Forward[j],name_h);
@@ -1354,6 +1864,18 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
       file_cov->WriteTObject(Response_NoFsr_Forward_FSR_DOWN[j],name_h);
       sprintf(name_h,"response_nofsr_backward_FSR_DOWN_%i",j);
       file_cov->WriteTObject(Response_NoFsr_Backward_FSR_DOWN[j],name_h);
+
+      sprintf(name_h,"response_undet_forward_FSR_UP_%i",j);
+      file_cov->WriteTObject(Response_UnDet_Forward_FSR_UP[j],name_h);
+      sprintf(name_h,"response_undet_backward_FSR_UP_%i",j);
+      file_cov->WriteTObject(Response_UnDet_Backward_FSR_UP[j],name_h);
+
+      sprintf(name_h,"response_undet_forward_FSR_DOWN_%i",j);
+      file_cov->WriteTObject(Response_UnDet_Forward_FSR_DOWN[j],name_h);
+      sprintf(name_h,"response_undet_backward_FSR_DOWN_%i",j);
+      file_cov->WriteTObject(Response_UnDet_Backward_FSR_DOWN[j],name_h);
+
+
       //
       sprintf(name_h,"inv_response_undetector_forward_%i",j);
       file_cov->WriteTObject(Inv_Response_UnDetector_Forward[j],name_h);
@@ -1375,13 +1897,25 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
       file_cov->WriteTObject(Inv_Response_NoFsr_Forward_FSR_DOWN[j],name_h);
       sprintf(name_h,"inv_response_nofsr_backward_FSR_DOWN_%i",j);
       file_cov->WriteTObject(Inv_Response_NoFsr_Backward_FSR_DOWN[j],name_h);
-      //
+ 
+
+      sprintf(name_h,"inv_response_undet_forward_FSR_UP_%i",j);
+      file_cov->WriteTObject(Inv_Response_UnDet_Forward_FSR_UP[j],name_h);
+      sprintf(name_h,"inv_response_undet_backward_FSR_UP_%i",j);
+      file_cov->WriteTObject(Inv_Response_UnDet_Backward_FSR_UP[j],name_h);
+
+      sprintf(name_h,"inv_response_undet_forward_FSR_DOWN_%i",j);
+      file_cov->WriteTObject(Inv_Response_UnDet_Forward_FSR_DOWN[j],name_h);
+      sprintf(name_h,"inv_response_undet_backward_FSR_DOWN_%i",j);
+      file_cov->WriteTObject(Inv_Response_UnDet_Backward_FSR_DOWN[j],name_h);
+
+     //
     }
   //  file_cov->Write();
 
     //  h_MZ_st1_minus_st3->SaveAs("fsr_check.C");
 
-    /*
+    
   TCanvas *del = new TCanvas();
   hMass->Draw();
   del->SaveAs("hMass_MC.C");
@@ -1391,7 +1925,46 @@ weight = vtx_wgt*eff_wgt_0*eff_wgt_1;
   h_EneDiff_N->SetLineColor(2);
   h_EneDiff_N->Draw("sames");
   del2->SaveAs("fsr_tail.C");
-    */
+    
+
+    TCanvas *c1 = new TCanvas();
+    c1->cd();
+    h_debug_eta1->Draw();
+    h_debug_eta1_control->SetLineColor(4);
+    h_debug_eta1_control->Draw("sames");
+    h_debug_eta2->SetLineColor(2);
+    h_debug_eta2->Draw("sames");
+    h_debug_eta2_control->SetLineColor(6);
+    h_debug_eta2_control->Draw("sames");
+    c1->SaveAs("eta.C");
+
+    TCanvas *c2 = new TCanvas();
+    c2->cd();
+    h_debug_pt1->Draw();
+    h_debug_pt1_control->SetLineColor(4);
+    h_debug_pt1_control->Draw("sames");
+    h_debug_pt2->SetLineColor(2);
+    h_debug_pt2->Draw("sames");
+    h_debug_pt2_control->SetLineColor(6);
+    h_debug_pt2_control->Draw("sames");
+    c2->SaveAs("pt.C");
+
+
+    TCanvas *c3 = new TCanvas();
+    c3->cd();
+    h_debug_y->Draw();
+    h_debug_y_control->SetLineColor(4);
+    h_debug_y_control->Draw("sames");
+    c3->SaveAs("y.C");
+
+    TCanvas *c4 = new TCanvas();
+    c4->cd();
+    h_debug_costheta->Draw();
+    h_debug_costheta_control->SetLineColor(4);
+    h_debug_costheta_control->Draw("sames");
+    c4->SaveAs("costheta.C");
+    
+    h_debug_y_vs_costheta->SaveAs("y_vs_costheta.C");
 }
 
 int main (int argc, char **argv){ 
