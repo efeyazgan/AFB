@@ -6,7 +6,12 @@ void tree1r()
 {
 
  // TFile *file_cov = new TFile("MUON_MC_Meas_NoFsr_ForClosure.root","RECREATE"); float r_test = 0.5; 
-  TFile *file_cov = new TFile("Data_output_new_2fb_eta24_Y25.root","RECREATE"); float r_test = 1.0;
+  TFile *file_cov = new TFile("Data_output_new_5fb_eta24_Y24.root","RECREATE"); float r_test = 1.0;
+  //TFile *file_cov = new TFile("Data_output_2011B_only.root","RECREATE"); float r_test = 1.0;
+
+
+
+
   //  TFile *file_cov = new TFile("RELVAL_NEW_Data_output_new_2fb.root","RECREATE"); float r_test = 1.0;
   file_cov->cd(); 
  
@@ -24,13 +29,24 @@ void tree1r()
 */
 
 //2.2 fb-1 data file
-
+/*
   myTree.Add("/data2/efe/ntuples/keng/2invfb/DoubleMu_May10ReReco_R3_calo.root");//215.146 pb-1
   myTree.Add("/data2/efe/ntuples/keng/2invfb/DoubleMu_Run2011A_167913_calo.root");//930.228
   myTree.Add("/data2/efe/ntuples/keng/2invfb/DoubleMu_05Aug2011_calo.root");//370.915
   myTree.Add("/data2/efe/ntuples/keng/2invfb/DoubleMu_Run2011A_173692_calo.root");//662.967	
-
+*/
   /////
+  //data with HLT info 2011A //update to new ntuples
+/*
+  myTree.Add("/data1/efe/ntuples/keng/2011A/May10ReReco/DoubleMu_May10ReReco_R3_ntuple.root");
+  myTree.Add("/data1/efe/ntuples/keng/2011A/PromptRecoPart1/DoubleMu_Run2011A_167913_ntuple.root");
+  myTree.Add("/data1/efe/ntuples/keng/2011A/Aug2011ReReco/DoubleMu_05Aug2011_ntuple.root");
+  myTree.Add("/data1/efe/ntuples/keng/2011A/PromptRecoPart2/DoubleMu_Run2011A_173692_ntuple.root");
+  myTree.Add("/data1/efe/ntuples/keng/last/data/DoubleMu_Run2011B_ntuple.root");
+*/
+  myTree.Add("/data1/efe/ntuples/keng/last/data/DoubleMu_Run2011A_ntuple.root");
+  myTree.Add("/data1/efe/ntuples/keng/last/data/DoubleMu_Run2011B_ntuple.root");
+  //
 
 
   //RelVal Old Geometry
@@ -43,7 +59,7 @@ void tree1r()
 
   TH1::AddDirectory(true);
   int event; 
-  //  int run,lumi,bxnumber;
+  int run,lumi,bxnumber;
   int realdata;
   //  int hlt_trigger_fired;
   //int sort_index_for_mu_tree;
@@ -73,6 +89,23 @@ void tree1r()
   //  float PFjetEta[30], PFjetPhi[30],PFjetPt[30],PFCorrjetPt[30],PFjetCEMF[30],PFjetNEMF[30];
   float PFjetEta[100], PFjetPhi[100],PFjetPt[100],PFjetRawPt[100],PFjetCEMF[100],PFjetNEMF[100];
 
+  int HLT_DoubleMu6_v1;
+  int HLT_DoubleMu7_v1;
+  int HLT_DoubleMu6_v2;
+  int HLT_DoubleMu7_v2;
+  int HLT_Mu13_Mu8_v2;
+  int HLT_Mu17_Mu8_v2;
+  int HLT_Mu13_Mu8_v3;
+  int HLT_Mu17_Mu8_v3;
+  int HLT_Mu13_Mu8_v4;
+  int HLT_Mu17_Mu8_v4;
+  int HLT_Mu13_Mu8_v6;
+  int HLT_Mu17_Mu8_v6;
+  int HLT_Mu13_Mu8_v7;
+  int HLT_Mu17_Mu8_v7;
+  int HLT_Mu17_Mu8_v10;
+  int HLT_Mu17_Mu8_v11;
+
   //met 
   //float caloMET, caloSET, pfMET, pfSET;
   //float caloMETX, pfMETX;
@@ -86,9 +119,9 @@ void tree1r()
   float vtxX[50],vtxXerr[50];
   int vtxisValid[50],vtxisFake[50];
   myTree.SetBranchAddress("event",  &event);
-  //  myTree.SetBranchAddress("run", &run);
-  //  myTree.SetBranchAddress("lumi", &lumi);
-  //  myTree.SetBranchAddress("bxnumber", &bxnumber);
+  myTree.SetBranchAddress("run", &run);
+  myTree.SetBranchAddress("lumi", &lumi);
+  myTree.SetBranchAddress("bxnumber", &bxnumber);
   myTree.SetBranchAddress("realdata",&realdata);
   //  myTree.SetBranchAddress("hlt_trigger_fired",&hlt_trigger_fired);
   //  myTree.SetBranchAddress("sort_index_for_mu_tree",&sort_index_for_mu_tree);
@@ -198,6 +231,25 @@ void tree1r()
   myTree.SetBranchAddress("vtxisValid",vtxisValid);
   myTree.SetBranchAddress("vtxisFake",vtxisFake);
 
+//HLT
+  myTree.SetBranchAddress("HLT_DoubleMu6_v1",&HLT_DoubleMu6_v1);
+  myTree.SetBranchAddress("HLT_DoubleMu7_v1",&HLT_DoubleMu7_v1);
+  myTree.SetBranchAddress("HLT_DoubleMu6_v2",&HLT_DoubleMu6_v2);
+  myTree.SetBranchAddress("HLT_DoubleMu7_v2",&HLT_DoubleMu7_v2);
+  myTree.SetBranchAddress("HLT_Mu13_Mu8_v2",&HLT_Mu13_Mu8_v2);
+  myTree.SetBranchAddress("HLT_Mu17_Mu8_v2",&HLT_Mu17_Mu8_v2);
+  myTree.SetBranchAddress("HLT_Mu13_Mu8_v3",&HLT_Mu13_Mu8_v3);
+  myTree.SetBranchAddress("HLT_Mu17_Mu8_v3",&HLT_Mu17_Mu8_v3);
+  myTree.SetBranchAddress("HLT_Mu13_Mu8_v4",&HLT_Mu13_Mu8_v4);
+  myTree.SetBranchAddress("HLT_Mu17_Mu8_v4",&HLT_Mu17_Mu8_v4);                               
+  myTree.SetBranchAddress("HLT_Mu13_Mu8_v6",&HLT_Mu13_Mu8_v6);
+  myTree.SetBranchAddress("HLT_Mu17_Mu8_v6",&HLT_Mu17_Mu8_v6);
+  myTree.SetBranchAddress("HLT_Mu13_Mu8_v7",&HLT_Mu13_Mu8_v7);
+  myTree.SetBranchAddress("HLT_Mu17_Mu8_v7",&HLT_Mu17_Mu8_v7);
+  myTree.SetBranchAddress("HLT_Mu17_Mu8_v10",&HLT_Mu17_Mu8_v10);
+  myTree.SetBranchAddress("HLT_Mu17_Mu8_v11",&HLT_Mu17_Mu8_v11);
+
+
 
   //  cout<<"r_TESTTTTTT = "<<r_test<<endl;
   //  cout<<"USING  "<< r_test*100 <<"   PERCENT OF ALL EVENTS FOR THE MEASURED!!!!!!"<<endl;
@@ -246,7 +298,7 @@ void tree1r()
   Y_bin_limits[1] = 1.0;
   Y_bin_limits[2] = 1.25;
   Y_bin_limits[3] = 1.50;//!!!!!!!
-  Y_bin_limits[4] = 2.5;///
+  Y_bin_limits[4] = 2.4;///
 
  // eta and pt dependence efficiency (DoubleMuon HLT + ID) to each muon leg..
  const Float_t etlow[5]   = {20,30,40,50,1000};
@@ -293,6 +345,18 @@ void tree1r()
 
   TProfile *h_costheta_vs_mass = new TProfile("h_costheta_vs_mass","h_costheta_vs_mass",22,-1.05,1.05);
 
+  
+  TProfile *h_Y_MZ = new TProfile("h_Y_MZ","h_Y_MZ",17,-2.5,2.5);
+  TProfile *h_Y_MZ_F = new TProfile("h_Y_MZ_F","h_Y_MZ_F",17,-2.5,2.5);
+  TProfile *h_Y_MZ_B = new TProfile("h_Y_MZ_B","h_Y_MZ_B",17,-2.5,2.5);
+  TH1D *hcostheta_test = new TH1D("hcostheta_test","hcostheta_test",22,-1.05,1.05);
+  TH1D *hf_test = new TH1D("hf_test","hf_test",nb, xAxis_AFB);
+  TH1D *hb_test = new TH1D("hb_test","hb_test",nb, xAxis_AFB);
+  TH1D *tmp1 = new TH1D("tmp1","tmp1",nb, xAxis_AFB);
+  TH1D *tmp2 = new TH1D("tmp2","tmp2",nb, xAxis_AFB);
+  TH1D *h_Y_F = new TH1D("h_Y_F","h_Y_F",17,-2.5,2.5);
+  TH1D *h_Y_B = new TH1D("h_Y_B","h_Y_B",17,-2.5,2.5);
+
   for (int j=0;j<nb_Y;j++){
     sprintf(name_h,"hMeasCos_Forward_Y_%i_",j);
     hMeasCos_M_Y_Forward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
@@ -307,6 +371,13 @@ void tree1r()
     sprintf(name_h,"hMeasCos_Backward_Y_FineBin_%i_",j);
     hMeasCos_M_Y_Backward_FineBin[j] = new TH1D(name_h,name_h,100,40,640);
     hMeasCos_M_Y_Backward_FineBin[j]->Sumw2();
+
+    sprintf(name_h,"SS_%i",j);
+    h_mass_ss_y[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"SS_F_%i",j);
+    h_mass_ss_y_Forward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
+    sprintf(name_h,"SS_B_%i",j);
+    h_mass_ss_y_Backward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
   }
 
 
@@ -315,15 +386,42 @@ void tree1r()
 
 
   Int_t nevent = myTree.GetEntries();
+  cout<<"number of events:   "<<nevent<<endl;
   //nevent = 200000;
   for (Int_t iev=0;iev<nevent;iev++) {
     if (iev%100000 == 0) cout<<iev<<"/"<<nevent<<endl;
     myTree.GetEntry(iev);
 
+    int HLT_pass = 0;
+
+    
+    if( run>=160410 && run<=163262 && (HLT_DoubleMu6_v1 || HLT_DoubleMu7_v1 )) HLT_pass = 1;
+    if( run>=163270 && run<=163794 && (HLT_DoubleMu6_v2 || HLT_DoubleMu7_v2)) HLT_pass = 1;
+    if( run==163795 && lumi<24 && lumi>32 && (HLT_DoubleMu6_v2 || HLT_DoubleMu7_v2)) HLT_pass = 1;
+    if( run==163795 && lumi>=24 && lumi<=32 && HLT_DoubleMu7_v2) HLT_pass = 1;  
+    if( run>=163796 && run<=163816 && (HLT_DoubleMu6_v2 || HLT_DoubleMu7_v2)) HLT_pass = 1;
+    if( run==163817 && lumi>118 && (HLT_DoubleMu6_v2 || HLT_DoubleMu7_v2)) HLT_pass = 1; 
+    if( run==163817 && lumi<=118 && HLT_DoubleMu7_v2) HLT_pass = 1;
+    if( run>=163818 && run<=163869 && (HLT_DoubleMu6_v2 || HLT_DoubleMu7_v2)) HLT_pass = 1; 
+    if( run>=165088 && run<=165633 && HLT_Mu13_Mu8_v2) HLT_pass = 1;
+    if( run>=165970 && run<=166164 && (HLT_Mu13_Mu8_v2 || HLT_Mu17_Mu8_v2)) HLT_pass = 1;
+    if( run==166346 && (HLT_Mu13_Mu8_v3 || HLT_Mu17_Mu8_v3))HLT_pass = 1;
+    if( run>=166374 && run<=167043 && (HLT_Mu13_Mu8_v2 || HLT_Mu17_Mu8_v2)) HLT_pass = 1;
+    if( run>=167078 && run<=167913 && (HLT_Mu13_Mu8_v4 || HLT_Mu17_Mu8_v4)) HLT_pass = 1;
+    if( run>=170826 && run<=173198 && (HLT_Mu13_Mu8_v6 || HLT_Mu17_Mu8_v6)) HLT_pass = 1;
+    if( run>=173236 && run<=173692 && (HLT_Mu13_Mu8_v7 || HLT_Mu17_Mu8_v7)) HLT_pass = 1;
+
+    if( run>=175832 && run<=178380 && (HLT_Mu13_Mu8_v7 || HLT_Mu17_Mu8_v7)) HLT_pass = 1;
+    if( run>=178420 && run<=179889 && HLT_Mu17_Mu8_v10) HLT_pass = 1;
+    if( run>=179959 && 180252 && HLT_Mu17_Mu8_v11) HLT_pass = 1;
+
+    if (!HLT_pass) continue;
+
 
     int common = 0;
+    int common_qcd = 0;
     float ptcut = 20.;
-    float etacut = 2.4;
+    float etacut = 2.4;//!!!!!!
 
     float MZ__RECO = 0;
     float sab__RECO = 1./sqrt(2.);
@@ -340,6 +438,7 @@ void tree1r()
 
 
     int index1[10],index2[10];//if (RecMuonIsoSumPt[j]/RecMuonPt[j] > 0.15) continue;   
+    int index1_qcd[10],index2_qcd[10];
     for (int j = 0; j < MuInx; ++j){
       for (int jk = j; jk < MuInx; ++jk){
 	/*
@@ -364,9 +463,62 @@ void tree1r()
 	    common++;
           }
 	}
+///////////////////////////QCD//////////////////////////
+        if ((RecMuonglmuon_charge[j]*RecMuonglmuon_charge[jk]) == 1){
+            if (RecMuonPt[j] > ptcut && RecMuonPt[jk] > ptcut && 
+                RecMuonIsoSumPt[j] < 3. && RecMuonIsoSumPt[jk] < 3. && 
+                fabs(RecMuonEta[j]) <etacut && fabs(RecMuonEta[jk]) <etacut &&
+                fabs(RecMuonglmuon_dxy[j]) < 0.2 && fabs(RecMuonglmuon_dxy[jk]) < 0.2 &&
+                cosine < -0.025){
+		    index1_qcd[common_qcd] = j;
+                    index2_qcd[common_qcd] = jk;
+                    common_qcd++;
+             }
+        }
       }
     }
 
+//-----------------------------QCD----------------------
+    int loose1_qcd = 0;
+    int loose2_qcd = 0;
+    int tight_hltalso1_qcd = 0;
+    int tight_hltalso2_qcd = 0;
+    int select_qcd = 0;
+    float MZmuon_qcd = 0;
+    float Ymuon_qcd = -9999.;
+    float qT_qcd = 0;
+    int ind1_qcd = -99;
+    int ind2_qcd = -99;
+
+    if (common_qcd > 1) cout<<"more than 2 same sign muons!!"<<endl;
+    if (common_qcd > 1) common_qcd = 1;//!!!
+    for (int gg = 0;gg<common_qcd;++gg){
+      ind1_qcd = index1_qcd[gg];
+      ind2_qcd = index2_qcd[gg];
+      if (RecMuontkmuon_pixelhits[ind1_qcd] >= 1 && RecMuonglmuon_trackerHits[ind1_qcd] > 10) loose1_qcd = 1;
+      if (RecMuontkmuon_pixelhits[ind2_qcd] >= 1 && RecMuonglmuon_trackerHits[ind2_qcd] > 10) loose2_qcd = 1;
+      if (RecMuonglmuon_normalizedChi2[ind1_qcd] < 10 && RecMuonglmuon_muonHits[ind1_qcd] >= 1 && RecNumberOfUsedStations[ind1_qcd] > 1) tight_hltalso1_qcd = 1;
+      if (RecMuonglmuon_normalizedChi2[ind2_qcd] < 10 && RecMuonglmuon_muonHits[ind2_qcd] >= 1 && RecNumberOfUsedStations[ind2_qcd] > 1) tight_hltalso2_qcd = 1;
+    }
+    if (((loose1_qcd && tight_hltalso2_qcd) && (loose2_qcd && tight_hltalso1_qcd)) && ind1_qcd!=-99 && ind2_qcd!=-99){//or replaced by and
+      float p1dotp2 = RecMuonPx[ind1_qcd]*RecMuonPx[ind2_qcd]+RecMuonPy[ind1_qcd]*RecMuonPy[ind2_qcd]+RecMuonPz[ind1_qcd]*RecMuonPz[ind2_qcd];
+      MZmuon_qcd = RecMuonM[ind1_qcd]+RecMuonM[ind2_qcd]+2*(RecMuonE[ind1_qcd]*RecMuonE[ind2_qcd]-p1dotp2);
+      if (MZmuon_qcd < 0.) MZmuon_qcd = -1.*sqrt(fabs(MZmuon_qcd));
+      if (MZmuon_qcd > 0.) MZmuon_qcd = sqrt(MZmuon_qcd);
+      Ymuon_qcd = 0.5*log((RecMuonE[ind1_qcd]+RecMuonE[ind2_qcd]+RecMuonPz[ind1_qcd]+RecMuonPz[ind2_qcd])/(RecMuonE[ind1_qcd]+RecMuonE[ind2_qcd]-RecMuonPz[ind1_qcd]-RecMuonPz[ind2_qcd]));
+      qT_qcd = sqrt(pow(RecMuonPx[ind1_qcd] + RecMuonPx[ind2_qcd],2)+pow(RecMuonPy[ind1_qcd] + RecMuonPy[ind2_qcd],2));
+      if (MZmuon_qcd > 40.){
+        for (int j=0;j<nb_Y;j++){
+           if (fabs(Ymuon_qcd) > Y_bin_limits[j] && fabs(Ymuon_qcd) < Y_bin_limits[j+1]){ 
+               h_mass_ss_y[j]->Fill(MZmuon_qcd);
+           }
+        }
+      }
+    }
+//------------------------------------------------------
+
+
+    //------------------------Muon ID--------------------------------------------
     int loose1 = 0;
     int loose2 = 0;
     int tight_hltalso1 = 0;
@@ -378,8 +530,7 @@ void tree1r()
     int ind1 = -99;
     int ind2 = -99;
 
-    //------------------------Muon ID--------------------------------------------
-
+    if (common > 1) common = 1;//!!!
     for (int gg = 0;gg<common;++gg){
       ind1 = index1[gg];
       ind2 = index2[gg];
@@ -397,6 +548,7 @@ void tree1r()
       Ymuon = 0.5*log((RecMuonE[ind1]+RecMuonE[ind2]+RecMuonPz[ind1]+RecMuonPz[ind2])/(RecMuonE[ind1]+RecMuonE[ind2]-RecMuonPz[ind1]-RecMuonPz[ind2]));
       qT = sqrt(pow(RecMuonPx[ind1] + RecMuonPx[ind2],2)+pow(RecMuonPy[ind1] + RecMuonPy[ind2],2));
       if (MZmuon > 40.){   
+        if (RecMuonglmuon_charge[ind1]*RecMuonglmuon_charge[ind2] == 1) cout<<"CHARGE NOT CONSERVED!!!!"<<endl;
 	hMass->Fill(MZmuon);
 	//eo debug
 	select = 1;
@@ -425,7 +577,6 @@ void tree1r()
 
 	//debug Y>1.50
 	if (MZmuon > 200. && MZmuon < 600.){
-	  h_debug_y_vs_costheta->Fill(Ymuon,costhetaCSreco__RECO);
 	  if (fabs(Ymuon) > 1.50 && fabs(Ymuon) < etacut){
 	    h_debug_eta1->Fill(RecMuonEta[ind1]);
 	    h_debug_eta2->Fill(RecMuonEta[ind2]);
@@ -454,7 +605,24 @@ void tree1r()
     if (realdata){
 
       if (select){
+	if (MZ__RECO > 96 && MZ__RECO < 106){
+	  h_debug_y_vs_costheta->Fill(Ymuon,costhetaCSreco__RECO);
+	  h_Y_MZ->Fill(Ymuon,MZ__RECO);
+	  if (costhetaCSreco__RECO > 0){
+	    h_Y_MZ_F->Fill(Ymuon,MZ__RECO);
+	    h_Y_F->Fill(Ymuon);
+	  }
+	  if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1.){
+	    h_Y_MZ_B->Fill(Ymuon,MZ__RECO);
+	    h_Y_B->Fill(Ymuon);	    
+	  }
+	}
        	for (int j=0;j<nb_Y;j++){
+	  if (fabs(Ymuon) > 2.1 && MZ__RECO > 96 && MZ__RECO < 106){ 
+	    hcostheta_test->Fill(costhetaCSreco__RECO);
+	    if (costhetaCSreco__RECO > 0) hf_test->Fill(MZ__RECO);
+	    if (costhetaCSreco__RECO < 0 && costhetaCSreco__RECO >= -1.) hb_test->Fill(MZ__RECO);
+	  }
 	  if (fabs(Ymuon) > Y_bin_limits[j] && fabs(Ymuon) < Y_bin_limits[j+1]){ 
 	    //if (MZ__RECO > 200. && fabs(Ymuon) > 1.5 ) cout<<costhetaCSreco__RECO<<"   "<<MZ__RECO<<endl;
 	    if (costhetaCSreco__RECO > 0){ 
@@ -530,6 +698,35 @@ void tree1r()
     hMass->SaveAs("mass.C");
 
     h_costheta_vs_mass->SaveAs("mass_vs_costheta.C");
+ 
+    hf_test->SaveAs("hf_test.C");
+    hb_test->SaveAs("hb_test.C");
+
+    hcostheta_test->SaveAs("hcostheta_test.C");
+    tmp1->Add(hf_test);
+    tmp2->Add(hb_test);
+    tmp2->Scale(-1);
+    hf_test->Add(tmp2);
+    hb_test->Add(tmp1);
+    hf_test->Divide(hb_test);
+    hf_test->SaveAs("afb_gt_21.C");
+
+    h_Y_MZ->SaveAs("h_Y_MZ.C");
+    h_Y_MZ_F->SaveAs("h_Y_MZ_F.C");
+    h_Y_MZ_B->SaveAs("h_Y_MZ_B.C");
+
+    h_Y_F->SaveAs("h_Y_F.C");
+    h_Y_B->SaveAs("h_Y_B.C");
+
+    TCanvas *c_qcd = new TCanvas();
+    c_qcd->Divide(2,2);
+    for (int kkk=0;kkk<nb_Y;kkk++){
+      c_qcd->cd(kkk+1);
+      h_mass_ss_y[kkk];
+      h_mass_ss_y[kkk]->Draw();
+    }
+    c_qcd->SaveAs("QCD.C");
+
 }
 
 int main (int argc, char **argv){ 
