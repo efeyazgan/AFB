@@ -35,6 +35,8 @@ void tree1r()
 
 
   //electron channel results
+//2.2fb-1
+/*
 double data_rawf[10][4]={{919.549, 161.225, 114.686, 213.796},{1587.87, 242.604, 209.152, 380.354},{4252.71, 790.422, 588.089, 1011.48},{14450.3, 3415.45, 2900.96, 4737.51},{114926, 21250.8, 17301.3, 25210.2},{10400.4, 2385.94, 2165.35, 3767.42},{2318.45, 521.076, 427.034, 679.67},{1495.81, 312.803, 302.174, 382.06},{699.99, 132.54, 156.342, 165.151},{463.032, 101.813, 82.2866, 104.663}};
 
 double data_rawb[10][4]={{1025.17, 178.25, 109.946, 258.84},{1632.64, 240.525, 267.173, 447.941},{4462.98, 930.862, 774.94, 1279},{14757.3, 3392.39, 2974.86, 4886.41},{114284, 20193.3, 16382.4, 24302},{9777.02, 2170.33, 1915.11, 3401.42},{2076.66, 412.222, 287.256, 454.46},{1229.5, 193.52, 166.584, 216.275},{565.955, 88.6453, 63.8144, 103.612},{366.71, 55.6842, 29.5223, 50.8832}};
@@ -42,6 +44,28 @@ double data_rawb[10][4]={{1025.17, 178.25, 109.946, 258.84},{1632.64, 240.525, 2
 double data_bornf[10][4]={{1027.44, 186.354, 131.092, 237.769},{1720.44, 268.972, 222.142, 425.238},{3715.78, 706.914, 521.235, 776.014},{9100.19, 1915.61, 1370.9, 2186.43},{131932, 25345.5, 20939.2, 31591.9},{8842.55, 1591.68, 1279.28, 1540},{2492.01, 575.263, 437.939, 733.09},{1613.29, 330.636, 324.782, 368.519},{767.174, 141.878, 159.657, 171.12},{510.932, 108.615, 86.8051, 107.235}};
 
 double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066, 287.074, 469.554},{3924.67, 860.437, 723.842, 1088.61},{9396.52, 1919.8, 1555.14, 2334.73},{130896, 24128.8, 19868.1, 30519.3},{8233.6, 1441.25, 1114.77, 1274.24},{2228.67, 460.748, 281.269, 487.544},{1324.47, 197.199, 178.022, 209.672},{627.741, 97.9225, 62.6883, 106.979},{402.859, 60.6218, 33.4459, 51.2989}};
+*/
+
+//electron channel results 4.7fb-1 rereco
+double data_rawf[10][4]={{1520.12, 275.201, 176.974, 299.788},{2651.53, 449.408, 322.802, 547.026},{7361.16,
+1340.86, 1000.6, 1618.92},{25569.3, 6228.9, 5208.62, 7865.37},{219124, 39040.4, 30924.6, 44355.2},{21364,
+4465.61, 3908.25, 6316.4},{4688.31, 967.904, 784.925, 1206.71},{2958.9, 591.1, 569.188, 788.768},{1389.6,
+286.326, 269.066, 356.253},{951.896, 225.447, 170.174, 198.594}};
+
+double data_rawb[10][4]={{1568.24, 271.426, 183.525, 360.34},{2756.62, 450.648, 407.251, 637.226},{7760.21,
+1500.9, 1304.92, 1987.16},{25919.8, 6187.95, 5253.02, 8137.19},{217013, 37774.9, 29496, 42747.6},{20536.4,
+3955.56, 3323.61, 5575.38},{4223.03, 792.151, 589.899, 845.227},{2537.88, 393.841, 329.854, 471.685},{1184.48,
+180.693, 132.36, 241.845},{708.407, 98.6802, 86.8689, 109.023}};
+
+double data_bornf[10][4]={{2032.47, 347.939, 246.839, 482.776},{3333.05, 563.327, 419.571, 844.012},{7009.59,
+1323.82, 1001.95, 1668.76},{16905.1, 4013.2, 3221.87, 4342.67},{262092, 50607, 41656.3, 63686.3},{19023.4,
+3127.15, 2347.41, 2116.17},{5010.15, 1081.08, 864.444, 1416.53},{3145.34, 637.383, 582.557, 783.985},{1438.85,
+297.51, 271.972, 349.443},{989.231, 224.083, 174.624, 196.82}};
+
+double data_bornb[10][4]={{2065.58, 347.829, 221.071, 598.184},{3469.6, 569.572, 549.241, 927.423},{7552.99,
+1504.68, 1455.6, 2180.81},{17442.1, 4016.22, 3310.04, 5142.09},{259089, 48967, 39993.5, 61109.8},{18324.7,
+2631.98, 1710.06, 1649.78},{4474.22, 884.743, 643.55, 988.426},{2682.98, 408.144, 347.003, 459.528},{1262.65,
+185.787, 129.668, 243.716},{726.698, 103.363, 86.4341, 102.772}};
 
 
 
@@ -889,8 +913,10 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    h_RBB__4->SetBinContent(129,-0.06140612);
    h_RBB__4->SetBinContent(130,1.055411);
 
-//electron total systematics
+//electron total systematics born level (2.2 fb-1)
+
    TGraph *graph_ee1p = new TGraph(12);
+/*
    graph_ee1p->SetName("Graph");
    graph_ee1p->SetTitle("Graph");
    graph_ee1p->SetFillColor(1);
@@ -907,8 +933,9 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    graph_ee1p->SetPoint(8,131.6597,0.01149089);
    graph_ee1p->SetPoint(9,169.4964,0.03099402);
    graph_ee1p->SetPoint(10,284.1778,0.04299469);
-
+*/
    TGraph *graph_ee1m = new TGraph(12);
+/*
    graph_ee1m->SetName("Graph");
    graph_ee1m->SetTitle("Graph");
    graph_ee1m->SetPoint(0,37.65653,-0.00212277);
@@ -922,8 +949,9 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    graph_ee1m->SetPoint(8,131.6597,-0.008033601);
    graph_ee1m->SetPoint(9,169.4964,-0.02384241);
    graph_ee1m->SetPoint(10,284.1778,-0.02625386);
-
+*/
    TGraph *graph_ee2p = new TGraph(12);
+/*
    graph_ee2p->SetName("Graph");
    graph_ee2p->SetTitle("Graph");
    graph_ee2p->SetPoint(0,37.61235,0.07882547);
@@ -937,8 +965,9 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    graph_ee2p->SetPoint(8,131.6069,0.01389175);
    graph_ee2p->SetPoint(9,168.9787,0.02911937);
    graph_ee2p->SetPoint(10,269.5577,0.03126372);
-
+*/
    TGraph *graph_ee2m = new TGraph(12);
+/*
    graph_ee2m->SetName("Graph");
    graph_ee2m->SetTitle("Graph");
    graph_ee2m->SetFillColor(1);
@@ -955,8 +984,9 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    graph_ee2m->SetPoint(8,131.6069,-0.01298305);
    graph_ee2m->SetPoint(9,168.9787,-0.01717682);
    graph_ee2m->SetPoint(10,269.5577,-0.02817502);
-
+*/
    TGraph *graph_ee3p = new TGraph(12);
+/*
    graph_ee3p->SetName("Graph");
    graph_ee3p->SetTitle("Graph");
    graph_ee3p->SetFillColor(1);
@@ -973,8 +1003,9 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    graph_ee3p->SetPoint(8,131.7248,0.02972315);
    graph_ee3p->SetPoint(9,169.6304,0.02623899);
    graph_ee3p->SetPoint(10,267.3923,0.0530885);
-
+*/
    TGraph *graph_ee3m = new TGraph(12);
+/*
    graph_ee3m->SetName("Graph");
    graph_ee3m->SetTitle("Graph");
    graph_ee3m->SetPoint(0,37.68314,-0.04037242);
@@ -990,8 +1021,9 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    graph_ee3m->SetPoint(10,267.3923,-0.04740732);
 
 
-
+*/
    TGraph *graph_ee4p = new TGraph(12);
+/*
    graph_ee4p->SetName("Graph");
    graph_ee4p->SetTitle("Graph");
    graph_ee4p->SetPoint(0,37.73418,0.1128376);
@@ -1005,8 +1037,9 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    graph_ee4p->SetPoint(8,131.5414,0.0223309);
    graph_ee4p->SetPoint(9,169.7365,0.03394256);
    graph_ee4p->SetPoint(10,260.4229,0.02809115);
-
+*/
    TGraph *graph_ee4m = new TGraph(12);
+/*
    graph_ee4m->SetName("Graph");
    graph_ee4m->SetTitle("Graph");
    graph_ee4m->SetPoint(0,37.73418,-0.02553291);
@@ -1020,8 +1053,109 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
    graph_ee4m->SetPoint(8,131.5414,-0.02190383);
    graph_ee4m->SetPoint(9,169.7365,-0.008396404);
    graph_ee4m->SetPoint(10,260.4229,-0.03061301);
-
+*/
 //
+
+//electron born level systematics new --> for 4.7fb-1
+//graph_ee1p->SetPoint(0,37.6524,0.0121112);
+graph_ee1p->SetPoint(0,46.2169,0.016591);
+graph_ee1p->SetPoint(1,55.143,0.00478668);
+graph_ee1p->SetPoint(2,68.8793,0.00418062);
+graph_ee1p->SetPoint(3,82.5726,0.00446975);
+graph_ee1p->SetPoint(4,91.1683,0.00113677);
+graph_ee1p->SetPoint(5,99.3016,0.00514471);
+graph_ee1p->SetPoint(6,111.586,0.00541741);
+graph_ee1p->SetPoint(7,131.664,0.0103645);
+graph_ee1p->SetPoint(8,169.495,0.0334338);
+graph_ee1p->SetPoint(9,284.16,0.0299982);
+
+//graph_ee2p->SetPoint(0,37.6292,0.0123661);
+graph_ee2p->SetPoint(0,46.1956,0.0123371);
+graph_ee2p->SetPoint(1,55.1538,0.0180711);
+graph_ee2p->SetPoint(2,68.8997,0.0233498);
+graph_ee2p->SetPoint(3,82.5855,0.0113292);
+graph_ee2p->SetPoint(4,91.1705,0.00391337);
+graph_ee2p->SetPoint(5,99.3112,0.0185961);
+graph_ee2p->SetPoint(6,111.618,0.0235065);
+graph_ee2p->SetPoint(7,131.661,0.0217003);
+graph_ee2p->SetPoint(8,168.953,0.0244163);
+graph_ee2p->SetPoint(9,269.669,0.0467065);
+
+//graph_ee3p->SetPoint(0,37.6964,0.0783668);
+graph_ee3p->SetPoint(0,46.3845,0.060936);
+graph_ee3p->SetPoint(1,55.3016,0.0318448);
+graph_ee3p->SetPoint(2,68.9429,0.0194943);
+graph_ee3p->SetPoint(3,82.5749,0.0204629);
+graph_ee3p->SetPoint(4,91.1637,0.00290957);
+graph_ee3p->SetPoint(5,99.3144,0.0258041);
+graph_ee3p->SetPoint(6,111.613,0.0236497);
+graph_ee3p->SetPoint(7,131.777,0.0236311);
+graph_ee3p->SetPoint(8,169.752,0.0430125);
+graph_ee3p->SetPoint(9,267.512,0.0423474);
+
+//graph_ee4p->SetPoint(0,37.7308,0.0831928);
+graph_ee4p->SetPoint(0,46.3106,0.0605233);
+graph_ee4p->SetPoint(1,55.1145,0.0443099);
+graph_ee4p->SetPoint(2,68.8253,0.0265385);
+graph_ee4p->SetPoint(3,82.5697,0.038017);
+graph_ee4p->SetPoint(4,91.1609,0.00219557);
+graph_ee4p->SetPoint(5,99.294,0.0370842);
+graph_ee4p->SetPoint(6,111.707,0.0179342);
+graph_ee4p->SetPoint(7,131.54,0.025744);
+graph_ee4p->SetPoint(8,169.787,0.0268098);
+graph_ee4p->SetPoint(9,261.02,0.0572043);
+
+
+//graph_ee1m->SetPoint(0,37.6524,-0.0121112);
+graph_ee1m->SetPoint(0,46.2169,-0.016591);
+graph_ee1m->SetPoint(1,55.143,-0.00478668);
+graph_ee1m->SetPoint(2,68.8793,-0.00418062);
+graph_ee1m->SetPoint(3,82.5726,-0.00446975);
+graph_ee1m->SetPoint(4,91.1683,-0.00113677);
+graph_ee1m->SetPoint(5,99.3016,-0.00514471);
+graph_ee1m->SetPoint(6,111.586,-0.00541741);
+graph_ee1m->SetPoint(7,131.664,-0.0103645);
+graph_ee1m->SetPoint(8,169.495,-0.0334338);
+graph_ee1m->SetPoint(9,284.16,-0.0299982);
+
+//graph_ee2m->SetPoint(0,37.6292,-0.0123661);
+graph_ee2m->SetPoint(0,46.1956,-0.0123371);
+graph_ee2m->SetPoint(1,55.1538,-0.0180711);
+graph_ee2m->SetPoint(2,68.8997,-0.0233498);
+graph_ee2m->SetPoint(3,82.5855,-0.0113292);
+graph_ee2m->SetPoint(4,91.1705,-0.00391337);
+graph_ee2m->SetPoint(5,99.3112,-0.0185961);
+graph_ee2m->SetPoint(6,111.618,-0.0235065);
+graph_ee2m->SetPoint(7,131.661,-0.0217003);
+graph_ee2m->SetPoint(8,168.953,-0.0244163);
+graph_ee2m->SetPoint(9,269.669,-0.0467065);
+
+//graph_ee3m->SetPoint(0,37.6964,-0.0783668);
+graph_ee3m->SetPoint(0,46.3845,-0.060936);
+graph_ee3m->SetPoint(1,55.3016,-0.0318448);
+graph_ee3m->SetPoint(2,68.9429,-0.0194943);
+graph_ee3m->SetPoint(3,82.5749,-0.0204629);
+graph_ee3m->SetPoint(4,91.1637,-0.00290957);
+graph_ee3m->SetPoint(5,99.3144,-0.0258041);
+graph_ee3m->SetPoint(6,111.613,-0.0236497);
+graph_ee3m->SetPoint(7,131.777,-0.0236311);
+graph_ee3m->SetPoint(8,169.752,-0.0430125);
+graph_ee3m->SetPoint(9,267.512,-0.0423474);
+
+//graph_ee4m->SetPoint(0,37.7308,-0.0831928);
+graph_ee4m->SetPoint(0,46.3106,-0.0605233);
+graph_ee4m->SetPoint(1,55.1145,-0.0443099);
+graph_ee4m->SetPoint(2,68.8253,-0.0265385);
+graph_ee4m->SetPoint(3,82.5697,-0.038017);
+graph_ee4m->SetPoint(4,91.1609,-0.00219557);
+graph_ee4m->SetPoint(5,99.294,-0.0370842);
+graph_ee4m->SetPoint(6,111.707,-0.0179342);
+graph_ee4m->SetPoint(7,131.54,-0.025744);
+graph_ee4m->SetPoint(8,169.787,-0.0268098);
+graph_ee4m->SetPoint(9,261.02,-0.0572043);
+
+//electron channel systematics -- raw
+
 
    double xee1m[nb], xee2m[nb], xee3m[nb], xee4m[nb];
    double xee1p[nb], xee2p[nb], xee3p[nb], xee4p[nb];
@@ -1177,7 +1311,10 @@ double data_bornb[10][4]={{1160.67, 208.514, 115.657, 284.996},{1765.43, 257.066
 
 
 //----> 
-TFile input_fsr_file("RootFiles/MC_Y25_eta24_Official_Weights.root","read");
+//TFile input_fsr_file("RootFiles/MC_Y25_eta24_Official_Weights.root","read");//2.2fb-1 one for preapproval etc
+TFile input_fsr_file("RootFiles/MC_Y25_eta24_Weights_New_Eff.root","read");
+
+
 
   //TFile input_fsr_file("RootFiles/MC_Y21_eta21_Weights.root","read");
  
@@ -1737,9 +1874,12 @@ TFile input_fsr_file("RootFiles/MC_Y25_eta24_Official_Weights.root","read");
     h_Raw_Backward[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
     sprintf(name_h,"Raw_AFB_%i",j);
     h_Raw_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
-
     sprintf(name_h,"Raw_AFB_FineBin_%i",j);
     h_Raw_AFB_FineBin[j] = new TH1D(name_h,name_h,100, 40, 640);
+
+    h_Raw_AFB_Electron[j] = new TH1D(name_h,name_h,nb,xAxis_AFB);
+    sprintf(name_h,"Raw_AFB_FineBin_%i",j);
+
 
     sprintf(name_h,"MC_True_AFB_%i",j);
     h_MC_True_AFB[j] = new TH1D(name_h,name_h,nb, xAxis_AFB);
@@ -2157,6 +2297,10 @@ TFile input_fsr_file("RootFiles/MC_Y25_eta24_Official_Weights.root","read");
 
   double Raw_AFB[nb];
   double Raw_error[nb];
+
+  double Raw_AFB_Electron[nb];
+  double Raw_error_Electron[nb];
+
   double Raw_AFB_FineBin[nb];
   double Raw_error_FineBin[nb];
   double MC_Raw_AFB[nb];
@@ -2591,6 +2735,9 @@ TFile input_fsr_file("RootFiles/MC_Y25_eta24_Official_Weights.root","read");
       Raw_AFB[i] = 0;
       Raw_error[i] = 0;
 
+      Raw_AFB_Electron[i] = 0;
+      Raw_error_Electron[i] = 0;
+
       MC_True_AFB[i] = 0;
 
 
@@ -2783,10 +2930,16 @@ TFile input_fsr_file("RootFiles/MC_Y25_eta24_Official_Weights.root","read");
       }
       Raw_AFB[i] = AFB(hDataMeasCos_M_Y_Forward[k]->GetBinContent(i+1),hDataMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
       Raw_error[i] = RAWAFBERROR(Raw_AFB[i],hDataMeasCos_M_Y_Forward[k]->GetBinContent(i+1),hDataMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
-
+      
       h_Raw_AFB[k]->SetBinContent(i+1,Raw_AFB[i]);
       h_Raw_AFB[k]->SetBinError(i+1,Raw_error[i]);
 
+
+      Raw_AFB_Electron[i] = AFB(data_rawf[i][k],data_rawb[i][k]);
+      Raw_error_Electron[i] = RAWAFBERROR(Raw_AFB_Electron[i],data_rawf[i][k],data_rawb[i][k]);
+
+      h_Raw_AFB_Electron[k]->SetBinContent(i+1,Raw_AFB_Electron[i]);
+      h_Raw_AFB_Electron[k]->SetBinError(i+1,Raw_error_Electron[i]);
      
  
       MC_Raw_AFB[i] = AFB(hMeasCos_M_Y_Forward[k]->GetBinContent(i+1),hMeasCos_M_Y_Backward[k]->GetBinContent(i+1));
@@ -5135,7 +5288,71 @@ TCanvas *r22 = new TCanvas();
   float AFB_x1[nb];
   float AFB_x2[nb];
   float AFB_x3[nb];
-  
+ 
+//electron
+  float AFB0_Electron[nb];
+  float AFB1_Electron[nb];
+  float AFB2_Electron[nb];
+  float AFB3_Electron[nb];
+  float AFB_Err0_Electron[nb];
+  float AFB_Err1_Electron[nb];
+  float AFB_Err2_Electron[nb];
+  float AFB_Err3_Electron[nb];
+  float AFB_x0_Electron[nb];
+  float AFB_x1_Electron[nb];
+  float AFB_x2_Electron[nb];
+  float AFB_x3_Electron[nb];
+  AFB_x0_Electron[0] = 37.6524;
+  AFB_x0_Electron[1] = 46.2169;
+  AFB_x0_Electron[2] = 55.143;
+  AFB_x0_Electron[3] = 68.8793;
+  AFB_x0_Electron[4] = 82.5726;
+  AFB_x0_Electron[5] = 91.1683;
+  AFB_x0_Electron[6] = 99.3016;
+  AFB_x0_Electron[7] = 111.586;
+  AFB_x0_Electron[8] = 131.664;
+  AFB_x0_Electron[9] = 169.495;
+  AFB_x0_Electron[10] = 284.16;
+
+  AFB_x1_Electron[0] = 37.6292;
+  AFB_x1_Electron[1] = 46.1956;
+  AFB_x1_Electron[2] = 55.1538;
+  AFB_x1_Electron[3] = 68.8997;
+  AFB_x1_Electron[4] = 82.5855;
+  AFB_x1_Electron[5] = 91.1705;
+  AFB_x1_Electron[6] = 99.3112;
+  AFB_x1_Electron[7] = 111.618;
+  AFB_x1_Electron[8] = 131.661;
+  AFB_x1_Electron[9] = 168.953;
+  AFB_x1_Electron[10] = 269.669;
+
+  AFB_x2_Electron[0] = 37.6964;
+  AFB_x2_Electron[1] = 46.3845;
+  AFB_x2_Electron[2] = 55.3016;
+  AFB_x2_Electron[3] = 68.9429;
+  AFB_x2_Electron[4] = 82.5749;
+  AFB_x2_Electron[5] = 91.1637;
+  AFB_x2_Electron[6] = 99.3144;
+  AFB_x2_Electron[7] = 111.613;
+  AFB_x2_Electron[8] = 131.777;
+  AFB_x2_Electron[9] = 169.752;
+  AFB_x2_Electron[10] = 267.512;
+
+  AFB_x3_Electron[0] = 37.7308;
+  AFB_x3_Electron[1] = 46.3106;
+  AFB_x3_Electron[2] = 55.1145;
+  AFB_x3_Electron[3] = 68.8253;
+  AFB_x3_Electron[4] = 82.5697;
+  AFB_x3_Electron[5] = 91.1609;
+  AFB_x3_Electron[6] = 99.294;
+  AFB_x3_Electron[7] = 111.707;
+  AFB_x3_Electron[8] = 131.54;
+  AFB_x3_Electron[9] = 169.787;
+  AFB_x3_Electron[10] = 261.02;
+
+//////////
+
+ 
   float AFB0_UnDet[nb];
   float AFB1_UnDet[nb];
   float AFB2_UnDet[nb];
@@ -5196,6 +5413,11 @@ TCanvas *r22 = new TCanvas();
 	AFB_Err0[i] = h_Raw_AFB[j]->GetBinError(i+1);
 	AFB_x0[i] = hExpectedMass_RAW_M_Y[j][i]->GetMean();
 
+//electron
+        AFB0_Electron[i] = h_Raw_AFB_Electron[j]->GetBinContent(i+1);
+        AFB_Err0_Electron[i] = h_Raw_AFB_Electron[j]->GetBinError(i+1);
+//
+
 	AFB0_UnDet[i] = h_Unfolded_UnDet_AFB[j]->GetBinContent(i+1);
 	AFB_Err0_UnDet[i] = h_Unfolded_UnDet_AFB[j]->GetBinError(i+1);
 	AFB_x0_UnDet[i] = hExpectedMass_UnDet_M_Y[j][i]->GetMean();
@@ -5216,6 +5438,11 @@ TCanvas *r22 = new TCanvas();
 	AFB1[i] = h_Raw_AFB[j]->GetBinContent(i+1);
 	AFB_Err1[i] = h_Raw_AFB[j]->GetBinError(i+1);
 	AFB_x1[i] = hExpectedMass_RAW_M_Y[j][i]->GetMean();
+
+//electron
+        AFB1_Electron[i] = h_Raw_AFB_Electron[j]->GetBinContent(i+1);
+        AFB_Err1_Electron[i] = h_Raw_AFB_Electron[j]->GetBinError(i+1);
+//
 
 	AFB1_UnDet[i] = h_Unfolded_UnDet_AFB[j]->GetBinContent(i+1);
 	AFB_Err1_UnDet[i] = h_Unfolded_UnDet_AFB[j]->GetBinError(i+1);
@@ -5238,6 +5465,11 @@ TCanvas *r22 = new TCanvas();
 	AFB_Err2[i] = h_Raw_AFB[j]->GetBinError(i+1);
 	AFB_x2[i] = hExpectedMass_RAW_M_Y[j][i]->GetMean();
 
+//electron
+        AFB2_Electron[i] = h_Raw_AFB_Electron[j]->GetBinContent(i+1);
+        AFB_Err2_Electron[i] = h_Raw_AFB_Electron[j]->GetBinError(i+1);
+//
+
 	AFB2_UnDet[i] = h_Unfolded_UnDet_AFB[j]->GetBinContent(i+1);
 	AFB_Err2_UnDet[i] = h_Unfolded_UnDet_AFB[j]->GetBinError(i+1);
 	AFB_x2_UnDet[i] = hExpectedMass_UnDet_M_Y[j][i]->GetMean();
@@ -5258,6 +5490,12 @@ TCanvas *r22 = new TCanvas();
 	AFB3[i] = h_Raw_AFB[j]->GetBinContent(i+1);
 	AFB_Err3[i] = h_Raw_AFB[j]->GetBinError(i+1);
 	AFB_x3[i] = hExpectedMass_RAW_M_Y[j][i]->GetMean();
+
+//electron
+        AFB3_Electron[i] = h_Raw_AFB_Electron[j]->GetBinContent(i+1);
+        AFB_Err3_Electron[i] = h_Raw_AFB_Electron[j]->GetBinError(i+1);
+//
+
 
 	AFB3_UnDet[i] = h_Unfolded_UnDet_AFB[j]->GetBinContent(i+1);
 	AFB_Err3_UnDet[i] = h_Unfolded_UnDet_AFB[j]->GetBinError(i+1);
@@ -5408,6 +5646,15 @@ TCanvas *r22 = new TCanvas();
   gr[2] = new TGraphErrors(nb,AFB_x2,AFB2,0,AFB_Err2);
   gr[3] = new TGraphErrors(nb,AFB_x3,AFB3,0,AFB_Err3);
 
+//electron///////
+  TGraph *gr_Electron[nb_Y];
+  gr_Electron[0] = new TGraphErrors(nb,AFB_x0_Electron,AFB0_Electron,0,AFB_Err0_Electron);
+  gr_Electron[1] = new TGraphErrors(nb,AFB_x1_Electron,AFB1_Electron,0,AFB_Err1_Electron);
+  gr_Electron[2] = new TGraphErrors(nb,AFB_x2_Electron,AFB2_Electron,0,AFB_Err2_Electron);
+  gr_Electron[3] = new TGraphErrors(nb,AFB_x3_Electron,AFB3_Electron,0,AFB_Err3_Electron);
+////////////////////
+
+
   TGraph *gr_UnDet[nb_Y];
   gr_UnDet[0] = new TGraphErrors(nb,AFB_x0_UnDet,AFB0_UnDet,0,AFB_Err0_UnDet);
   gr_UnDet[1] = new TGraphErrors(nb,AFB_x1_UnDet,AFB1_UnDet,0,AFB_Err1_UnDet);
@@ -5521,6 +5768,102 @@ TCanvas *r22 = new TCanvas();
   gr[3]->SetLineWidth(2);
   gr[3]->Draw("P");
   r24->SaveAs("raw_AFB_with_systematics.C");
+
+
+///raw electron//////
+
+  TCanvas *r24_Electron = new TCanvas();
+  r24_Electron->Divide(2,2);
+  r24_Electron->cd(1);
+
+  TH2F* frame1a_Electron = new TH2F("frame1a_Electron","|Y|=0.00-1.00",100,30,400,100,-0.2,0.5);
+  frame1a_Electron->GetXaxis()->SetRangeUser(40,1500);
+  frame1a_Electron->GetYaxis()->SetRangeUser(-0.2,0.5);
+  frame1a_Electron->GetXaxis()->SetTitle("M(e^{+}e^{-}) [GeV]");
+  frame1a_Electron->GetYaxis()->SetTitle("A_{FB}");
+  frame1a_Electron->GetYaxis()->CenterTitle();
+  frame1a_Electron->Draw();
+  gPad->SetLogx();
+/*
+  gr_afb_band1->SetMarkerStyle(28);
+  gr_afb_band1->SetFillColor(4);
+  gr_afb_band1->SetLineColor(4);
+  gr_afb_band1->SetMarkerColor(4);
+  gr_afb_band1->Draw("F");
+*/
+  gr_Electron[0]->SetMarkerStyle(8);
+  gr_Electron[0]->SetLineWidth(2);
+  gr_Electron[0]->Draw("AP");
+
+
+
+  r24_Electron->cd(2);
+
+  TH2F* frame2a_Electron = new TH2F("frame2a_Electron","|Y|=0.00-1.00",100,30,400,100,-0.2,0.5);
+  frame2a_Electron->GetXaxis()->SetRangeUser(40,1500);
+  frame2a_Electron->GetYaxis()->SetRangeUser(-0.2,0.5);
+  frame2a_Electron->GetXaxis()->SetTitle("M(e^{+}e^{-}) [GeV]");
+  frame2a_Electron->GetYaxis()->SetTitle("A_{FB}");
+  frame2a_Electron->GetYaxis()->CenterTitle();
+  frame2a_Electron->Draw();
+  gPad->SetLogx();
+/*
+  gr_afb_band1->SetMarkerStyle(28);
+  gr_afb_band1->SetFillColor(4);
+  gr_afb_band1->SetLineColor(4);
+  gr_afb_band1->SetMarkerColor(4);
+  gr_afb_band1->Draw("F");
+*/
+  gr_Electron[1]->SetMarkerStyle(8);
+  gr_Electron[1]->SetLineWidth(2);
+  gr_Electron[1]->Draw("AP");
+
+
+  r24_Electron->cd(3);
+
+  TH2F* frame3a_Electron = new TH2F("frame3a_Electron","|Y|=0.00-1.00",100,30,400,100,-0.2,0.5);
+  frame3a_Electron->GetXaxis()->SetRangeUser(40,1500);
+  frame3a_Electron->GetYaxis()->SetRangeUser(-0.2,0.5);
+  frame3a_Electron->GetXaxis()->SetTitle("M(e^{+}e^{-}) [GeV]");
+  frame3a_Electron->GetYaxis()->SetTitle("A_{FB}");
+  frame3a_Electron->GetYaxis()->CenterTitle();
+  frame3a_Electron->Draw();
+  gPad->SetLogx();
+/*
+  gr_afb_band1->SetMarkerStyle(28);
+  gr_afb_band1->SetFillColor(4);
+  gr_afb_band1->SetLineColor(4);
+  gr_afb_band1->SetMarkerColor(4);
+  gr_afb_band1->Draw("F");
+*/
+  gr_Electron[2]->SetMarkerStyle(8);
+  gr_Electron[2]->SetLineWidth(2);
+  gr_Electron[2]->Draw("AP");
+
+  r24_Electron->cd(4);
+
+  TH2F* frame4a_Electron = new TH2F("frame4a_Electron","|Y|=0.00-1.00",100,30,400,100,-0.2,0.5);
+  frame4a_Electron->GetXaxis()->SetRangeUser(40,1500);
+  frame4a_Electron->GetYaxis()->SetRangeUser(-0.2,0.5);
+  frame4a_Electron->GetXaxis()->SetTitle("M(e^{+}e^{-}) [GeV]");
+  frame4a_Electron->GetYaxis()->SetTitle("A_{FB}");
+  frame4a_Electron->GetYaxis()->CenterTitle();
+  frame4a_Electron->Draw();
+  gPad->SetLogx();
+/*
+  gr_afb_band1->SetMarkerStyle(28);
+  gr_afb_band1->SetFillColor(4);
+  gr_afb_band1->SetLineColor(4);
+  gr_afb_band1->SetMarkerColor(4);
+  gr_afb_band1->Draw("F");
+*/
+  gr_Electron[3]->SetMarkerStyle(8);
+  gr_Electron[3]->SetLineWidth(2);
+  gr_Electron[3]->Draw("AP");
+
+
+  r24_Electron->SaveAs("electron_raw.C");
+////////////////////
 
 //undet
   TGraph *gr_afb_band1_undet = new TGraph(nb*2,band_x1_UnDet,band_afb_y1_undet);
@@ -5727,10 +6070,10 @@ TCanvas *r22 = new TCanvas();
   r26c->Divide(2,2);
   r26c->cd(1);
 
-  TH2F* frame1a_comb = new TH2F("frame1a_comb","|Y|=0.00-1.00",100,30,400,100,-0.4,0.6);
+  TH2F* frame1a_comb = new TH2F("frame1a_comb","|Y|=0-1",100,30,400,100,-0.4,0.6);
   frame1a_comb->GetXaxis()->SetRangeUser(40,1500);
   frame1a_comb->GetYaxis()->SetRangeUser(-0.4,0.6);
-  frame1a_comb->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+  frame1a_comb->GetXaxis()->SetTitle("M(l^{+}l^{-}) [GeV]");
   frame1a_comb->GetYaxis()->SetTitle("A_{FB}");
   frame1a_comb->GetYaxis()->CenterTitle();
   frame1a_comb->Draw();
@@ -5750,17 +6093,17 @@ TCanvas *r22 = new TCanvas();
   TLatex *tex = new TLatex(42,0.50,"CMS Preliminary");
   tex->SetLineWidth(1);
   tex->Draw();
-  tex = new TLatex(42,0.40,"2.2 fb^{-1} at #sqrt{s} = 7 TeV");
+  tex = new TLatex(42,0.40,"4.7 fb^{-1} at #sqrt{s} = 7 TeV");
   tex->SetLineWidth(1);
   tex->Draw();
 
 
   r26c->cd(2);
 
-  TH2F* frame2a_comb = new TH2F("frame2a_comb","|Y|=1.00-1.25",100,30,400,100,-0.4,0.6);
+  TH2F* frame2a_comb = new TH2F("frame2a_comb","|Y|=1-1.25",100,30,400,100,-0.4,0.6);
   frame2a_comb->GetXaxis()->SetRangeUser(40,1500);
   frame2a_comb->GetYaxis()->SetRangeUser(-0.4,0.6);
-  frame2a_comb->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+  frame2a_comb->GetXaxis()->SetTitle("M(l^{+}l^{-}) [GeV]");
   frame2a_comb->GetYaxis()->SetTitle("A_{FB}");
   frame2a_comb->GetYaxis()->CenterTitle();
   frame2a_comb->Draw();
@@ -5781,15 +6124,15 @@ TCanvas *r22 = new TCanvas();
   tex = new TLatex(42,0.50,"CMS Preliminary");
   tex->SetLineWidth(1);
   tex->Draw();
-  tex = new TLatex(42,0.40,"2.2 fb^{-1} at #sqrt{s} = 7 TeV");
+  tex = new TLatex(42,0.40,"4.7 fb^{-1} at #sqrt{s} = 7 TeV");
   tex->SetLineWidth(1);
   tex->Draw();
 
   r26c->cd(3);
-  TH2F* frame3a_comb = new TH2F("frame3a_comb","|Y|=1.25-1.50",100,30,400,100,-0.4,0.6);
+  TH2F* frame3a_comb = new TH2F("frame3a_comb","|Y|=1.25-1.5",100,30,400,100,-0.4,0.6);
   frame3a_comb->GetXaxis()->SetRangeUser(40,1500);
   frame3a_comb->GetYaxis()->SetRangeUser(-0.4,0.6);
-  frame3a_comb->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+  frame3a_comb->GetXaxis()->SetTitle("M(l^{+}lu^{-}) [GeV]");
   frame3a_comb->GetYaxis()->SetTitle("A_{FB}");
   frame3a_comb->GetYaxis()->CenterTitle();
   frame3a_comb->Draw();
@@ -5810,15 +6153,15 @@ TCanvas *r22 = new TCanvas();
   tex = new TLatex(42,0.50,"CMS Preliminary");
   tex->SetLineWidth(1);
   tex->Draw();
-  tex = new TLatex(42,0.40,"2.2 fb^{-1} at #sqrt{s} = 7 TeV");
+  tex = new TLatex(42,0.40,"4.7 fb^{-1} at #sqrt{s} = 7 TeV");
   tex->SetLineWidth(1);
   tex->Draw();
 
   r26c->cd(4);
-  TH2F* frame4a_comb = new TH2F("frame4a_comb","|Y|=1.50-2.10",100,30,400,100,-0.4,0.6);
+  TH2F* frame4a_comb = new TH2F("frame4a_comb","|Y|=1.5-2.4",100,30,400,100,-0.4,0.6);
   frame4a_comb->GetXaxis()->SetRangeUser(40,1500);
   frame4a_comb->GetYaxis()->SetRangeUser(-0.4,0.6);
-  frame4a_comb->GetXaxis()->SetTitle("M(#mu^{+}#mu^{-}) [GeV]");
+  frame4a_comb->GetXaxis()->SetTitle("M(l^{+}l^{-}) [GeV]");
   frame4a_comb->GetYaxis()->SetTitle("A_{FB}");
   frame4a_comb->GetYaxis()->CenterTitle();
   frame4a_comb->Draw();
@@ -5838,7 +6181,7 @@ TCanvas *r22 = new TCanvas();
   tex = new TLatex(42,0.50,"CMS Preliminary");
   tex->SetLineWidth(1);
   tex->Draw();
-  tex = new TLatex(42,0.40,"2.2 fb^{-1} at #sqrt{s} = 7 TeV");
+  tex = new TLatex(42,0.40,"4.7 fb^{-1} at #sqrt{s} = 7 TeV");
   tex->SetLineWidth(1);
   tex->Draw();
 
